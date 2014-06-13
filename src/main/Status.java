@@ -17,17 +17,16 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package main;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Status {
-	
-	static public void printStatusToConsole(String strWhereIam) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		//System.out.println(strWhereIam + ": " + sdf.format(new Date()));
-		Userinterface.setTextinTextPane(strWhereIam + ": " + sdf.format(new Date()));
-	}
+
+    static public void printStatusToConsole(String strWhereIam) {
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        //System.out.println(strWhereIam + ": " + sdf.format(new Date()));
+        Userinterface.setTextinTextPane(strWhereIam + ": " + sdf.format(new Date()));
+    }
 }
