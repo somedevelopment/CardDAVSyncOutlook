@@ -171,15 +171,17 @@ public class Userinterface {
 
         btnSaveConfig = new JButton("Save Configuration");
         btnSaveConfig.addActionListener(new ActionListener() {
-            @SuppressWarnings("deprecation")
+            @Override
             public void actionPerformed(ActionEvent e) {
                 //Write Config File
-                File file = new File("conf\\config.txt");
+                String confDir = "conf";
+                new File(confDir).mkdir();
+                File file = new File(confDir + File.separator + "config.txt");
                 try {
                     FileWriter writer = new FileWriter(file);
                     writer.write(textUsername.getText());
                     writer.write(System.getProperty("line.separator"));
-                    writer.write(passwordField.getText());
+                    writer.write(passwordField.getPassword());
                     writer.write(System.getProperty("line.separator"));
                     writer.write(textHostURL.getText());
                     writer.write(System.getProperty("line.separator"));
