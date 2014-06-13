@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package webDAVStuff;
+package webdav;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import mainPackage.Status;
+import main.Status;
 
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
@@ -50,9 +50,9 @@ import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.client.methods.DavMethod;
 import org.apache.jackrabbit.webdav.client.methods.PropFindMethod;
 
-import contactStuff.Contact;
-import contactStuff.Contacts;
-import contactStuff.Contacts.Addressbook;
+import contact.Contact;
+import contact.Contacts;
+import contact.Contacts.Addressbook;
 
 public class ManageContactsWebDAV {
 	
@@ -179,7 +179,7 @@ public class ManageContactsWebDAV {
 					
 					String strFileToDownload = hostConfig.getHost()+currResponse.getHref();
 				
-					if (strFileToDownload.contains(".vcf")) { //Prüfen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schön
+					if (strFileToDownload.contains(".vcf")) { //Prï¿½fen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schï¿½n
 						String strNewContact = readVCardsFromWebDAV(strFileToDownload);
 						if (strNewContact != null) {
 								Contact tmpContact;

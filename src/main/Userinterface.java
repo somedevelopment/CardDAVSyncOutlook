@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package mainPackage;
+package main;
 
 import java.awt.EventQueue;
 
@@ -39,9 +39,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 
-import outlookStuff.ManageContactsOutlook;
-import webDAVStuff.ManageContactsWebDAV;
-import contactStuff.Contacts;
+import outlook.ManageContactsOutlook;
+import webdav.ManageContactsWebDAV;
+import contact.Contacts;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

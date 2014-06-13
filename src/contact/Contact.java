@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package contactStuff;
+package contact;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -430,7 +430,7 @@ public class Contact {
 			
 
 	public Boolean compareContact(Contact toCompareContact) {
-		mainPackage.Status.printStatusToConsole("Compare: "+this.getLastName()+", "+this.getFirstName());
+		main.Status.printStatusToConsole("Compare: "+this.getLastName()+", "+this.getFirstName());
 		
 		if (this.getAnniversary() != null) {
 			if (toCompareContact.getAnniversary() != null) {

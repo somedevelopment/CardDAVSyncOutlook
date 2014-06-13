@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package outlookStuff;
+package outlook;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -33,16 +33,16 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import mainPackage.Status;
+import main.Status;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 
-import contactStuff.Contact;
-import contactStuff.Contacts;
-import contactStuff.Contacts.Addressbook;
+import contact.Contact;
+import contact.Contacts;
+import contact.Contacts.Addressbook;
 
 public class ManageContactsOutlook {
 	

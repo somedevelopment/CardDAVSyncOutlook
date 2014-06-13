@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package contactStuff;
+package contact;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import mainPackage.Status;
+import main.Status;
 
 public class Contacts {
 	
@@ -185,7 +185,7 @@ public class Contacts {
 		List<Contact> listDelOutlookContacts = new ArrayList<Contact>();
 		List<Contact> listDelDAVContacts = new ArrayList<Contact>();
 		
-		//Prüfen ob ein Kontakt zu löschen ist im Vergleich zum letzten mal
+		//Prï¿½fen ob ein Kontakt zu lï¿½schen ist im Vergleich zum letzten mal
 		if (!listSyncContacts.isEmpty()) {
 			Iterator<String> iter = listSyncContacts.iterator();
 			while(iter.hasNext()) {
@@ -207,7 +207,7 @@ public class Contacts {
 		}
 		
 		
-		/** Compare Addressbücher **/
+		/** Compare Addressbï¿½cher **/
 		//Leading Outlook
 		Iterator<Entry<String, Contact>> iterOutlookContacts = hasTabOutlookContacts.entrySet().iterator();
 		while(iterOutlookContacts.hasNext()) {
