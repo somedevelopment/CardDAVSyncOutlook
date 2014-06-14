@@ -142,7 +142,7 @@ public class ManageContactsWebDAV {
      *
      * Public Section
      */
-    public void connectHTTP(String strUser, String strPass, String strHost) {
+    public void connectHTTP(String strUser, String strPass, String strHost, boolean insecure) {
         //Connect WebDAV with credentials
         hostConfig = new HostConfiguration();
         hostConfig.setHost(strHost);
@@ -154,9 +154,11 @@ public class ManageContactsWebDAV {
         creds = new UsernamePasswordCredentials(strUser, strPass);
         client.getState().setCredentials(AuthScope.ANY, creds);
         client.setHostConfiguration(hostConfig);
-        
-        Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
-        Protocol.registerProtocol("https", easyhttps);
+
+        if (insecure) {
+            Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+            Protocol.registerProtocol("https", easyhttps);
+        }
 
         Status.printStatusToConsole("WebDav Connection generated");
     }
@@ -165,19 +167,19 @@ public class ManageContactsWebDAV {
         MultiStatusResponse[] responses = getContentToRessource(strCardDAVUrl);
         if (responses == null)
             return false;
-        
+
         try {
             for (MultiStatusResponse response : responses) {
                 String strFileToDownload = hostConfig.getHost() + response.getHref();
                 //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
-                if (strFileToDownload.contains(".vcf")) { 
+                if (strFileToDownload.contains(".vcf")) {
                     String strNewContact = readVCardsFromWebDAV(strFileToDownload);
                     if (strNewContact != null) {
                         Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
                         allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
 
                         Status.printStatusToConsole("Load WebDav Contact " +
-                                tmpContact.getFirstName() + ", " + 
+                                tmpContact.getFirstName() + ", " +
                                 tmpContact.getLastName());
                     }
                 }
@@ -199,32 +201,32 @@ public class ManageContactsWebDAV {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to WebDAV " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write Changed Contact to WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     uploadVCardsToWebDAV(
                             generateWebDavUriFilename(
-                                    currentOutlookEntry.getValue(), 
-                                    strCardDAVUrl), 
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl),
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to WebDAV " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write New Contact to WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     uploadVCardsToWebDAV(
                             generateWebDavUriFilename(
-                                    currentOutlookEntry.getValue(), 
-                                    strCardDAVUrl), 
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl),
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact from WebDAV " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Delete Contact from WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     deleteVCardsFromWebDAV(
                             generateWebDavUriFilename(
-                                    currentOutlookEntry.getValue(), 
+                                    currentOutlookEntry.getValue(),
                                     strCardDAVUrl));
                     listDelDAVContacts.add(currentOutlookEntry.getValue());
                     break;
@@ -232,13 +234,13 @@ public class ManageContactsWebDAV {
                     //Do nothing
                     break;
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Changed Contact to WebDAV  " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write Changed Contact to WebDAV  " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     uploadVCardsToWebDAV(
                             generateWebDavUriFilename(
-                                    currentOutlookEntry.getValue(), 
-                                    strCardDAVUrl), 
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl),
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case UNCHANGED:

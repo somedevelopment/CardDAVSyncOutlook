@@ -21,6 +21,7 @@ package main;
 
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
+import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
@@ -58,6 +59,7 @@ public class Userinterface {
     private WebPasswordField passwordField;
     private WebTextField usernameField;
     private WebTextField textHostURL;
+    private WebCheckBox insecureSSLBox;
 
     static private WebTextPane textPane;
     static private StyledDocument docTextPane;
@@ -104,7 +106,7 @@ public class Userinterface {
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
                     webDAVConnection.connectHTTP(usernameField.getText().trim(),
                             String.valueOf(passwordField.getPassword()).trim(),
-                            server);
+                            server, insecureSSLBox.isSelected());
 
                     //Load WebDAV Contacts, if connection true proceed
                     boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
@@ -182,6 +184,8 @@ public class Userinterface {
             writer.write(passwordField.getPassword());
             writer.write(System.getProperty("line.separator"));
             writer.write(textHostURL.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(Boolean.toString(insecureSSLBox.isSelected()));
             writer.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -208,17 +212,8 @@ public class Userinterface {
             }
         });
 
-        textPane = new WebTextPane();
-        textPane.setEditable(false);
-
-        WebScrollPane scrollPane = new WebScrollPane(textPane);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
-
-        docTextPane = textPane.getStyledDocument();
-
-        //textPane.getCaret().
-        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+        WebLabel lblHost = new WebLabel("CardDAV calendar address:");
+        textHostURL = new WebTextField();
 
         WebLabel lblUsername = new WebLabel("Username:");
 
@@ -230,9 +225,17 @@ public class Userinterface {
         passwordField = new WebPasswordField();
         passwordField.setColumns(14);
 
-        textHostURL = new WebTextField();
+        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
 
-        WebLabel lblHost = new WebLabel("CardDAV calendar address:");
+        // log pane
+        textPane = new WebTextPane();
+        textPane.setEditable(false);
+        WebScrollPane scrollPane = new WebScrollPane(textPane);
+        scrollPane.setPreferredSize(new Dimension(400, 300));
+        docTextPane = textPane.getStyledDocument();
+        //textPane.getCaret().
+        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         //Load config
         Status.printStatusToConsole("Load Config");
@@ -242,6 +245,7 @@ public class Userinterface {
                 usernameField.setText(in.readLine());
                 passwordField.setText(in.readLine());
                 textHostURL.setText(in.readLine());
+                insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -267,6 +271,7 @@ public class Userinterface {
         accountPanel.add(usernameField);
         accountPanel.add(lblPassword);
         accountPanel.add(passwordField);
+        accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
         northPanel.add(btnSync);
         frame.add(northPanel, BorderLayout.NORTH);
