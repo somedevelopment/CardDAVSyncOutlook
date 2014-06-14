@@ -161,33 +161,32 @@ public class ManageContactsWebDAV {
         Status.printStatusToConsole("WebDav Connection generated");
     }
 
-    public Boolean loadContactsFromWebDav(String strCardDAVUrl, Contacts allContacts, String strWorkingDir) {
+    public boolean loadContactsFromWebDav(String strCardDAVUrl, Contacts allContacts, String strWorkingDir) {
         MultiStatusResponse[] responses = getContentToRessource(strCardDAVUrl);
+        if (responses == null)
+            return false;
+        
+        try {
+            for (MultiStatusResponse response : responses) {
+                String strFileToDownload = hostConfig.getHost() + response.getHref();
+                //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
+                if (strFileToDownload.contains(".vcf")) { 
+                    String strNewContact = readVCardsFromWebDAV(strFileToDownload);
+                    if (strNewContact != null) {
+                        Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
+                        allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
 
-        if (responses != null) {
-            try {
-                for (MultiStatusResponse response : responses) {
-                    String strFileToDownload = hostConfig.getHost() + response.getHref();
-                    if (strFileToDownload.contains(".vcf")) { //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
-                        String strNewContact = readVCardsFromWebDAV(strFileToDownload);
-                        if (strNewContact != null) {
-                            Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
-                            allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
-                            
-                            Status.printStatusToConsole("Load WebDav Contact " +
-                                    tmpContact.getFirstName() + ", " + 
-                                    tmpContact.getLastName());
-                        }
+                        Status.printStatusToConsole("Load WebDav Contact " +
+                                tmpContact.getFirstName() + ", " + 
+                                tmpContact.getLastName());
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-
             return true;
-        } else {
-            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {

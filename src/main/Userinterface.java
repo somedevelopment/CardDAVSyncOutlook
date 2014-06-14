@@ -102,7 +102,7 @@ public class Userinterface {
                         run = false;
                         continue;
                     }
-                    String server = host.getAuthority();
+                    String server = host.getProtocol() + "://" + host.getAuthority();
                     String fullPath = server + "/" + host.getPath();
                     
                     //Connect WebDAV
@@ -112,7 +112,8 @@ public class Userinterface {
                             server);
 
                     //Load WebDAV Contacts, if connection true proceed
-                    if (webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir)) {
+                    boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
+                    if (loaded) {
 
                         //Load Outlook Contacts
                         outlookContacts.loadContacts(allContacts, intOutlookFolder, strWorkingdir);

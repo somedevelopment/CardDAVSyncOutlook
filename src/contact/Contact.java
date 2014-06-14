@@ -110,7 +110,8 @@ public class Contact {
 
         if (!this.vcard.getNotes().isEmpty()) {
             if (this.vcard.getNotes().get(0) != null) {
-                if (this.findUID(this.vcard.getNotes().get(0).getValue()).toString() == null) {
+                Uid uid = this.findUID(this.vcard.getNotes().get(0).getValue());
+                if (uid == null || uid.toString() == null) {
                     String strNote = this.vcard.getNotes().get(0).getValue() + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
                     this.vcard.getNotes().get(0).setValue(strNote);
 
