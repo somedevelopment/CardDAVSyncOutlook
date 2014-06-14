@@ -60,11 +60,10 @@ public class ManageContactsOutlook {
 //        else
 //            libName = "jacob-1.17-x86";
 //        try {
-//            //System.loadLibrary(libName);
+//            System.loadLibrary(libName);
 //        } catch (UnsatisfiedLinkError e) {
 //            Status.printStatusToConsole("Native code library failed to load");
 //            System.err.println(e);
-//            throw e;
 //        }
     }
 
@@ -257,7 +256,7 @@ public class ManageContactsOutlook {
                 Date noDateOutlook = dataFormat.parse("Sat Jan 01 00:00:00 CET 4501");
                 Dispatch.put(dipContact, "Birthday", noDateOutlook);
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
 
@@ -268,7 +267,7 @@ public class ManageContactsOutlook {
                 Date noDateOutlook = dataFormat.parse("Sat Jan 01 00:00:00 CET 4501");
                 Dispatch.put(dipContact, "Anniversary", noDateOutlook);
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
 
@@ -398,7 +397,7 @@ public class ManageContactsOutlook {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
 
         this.dipNamespace = axc.getProperty("Session").toDispatch();
@@ -512,7 +511,7 @@ public class ManageContactsOutlook {
                 }
 
             } catch (ParseException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
 
 			//Uid uid = findUID(strBody);

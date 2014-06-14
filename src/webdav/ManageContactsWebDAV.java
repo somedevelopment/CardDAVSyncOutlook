@@ -88,9 +88,9 @@ public class ManageContactsWebDAV {
             responses = multiStatus.getResponses();
             pFind.releaseConnection();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         } catch (DavException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
 
         return responses;
@@ -113,9 +113,9 @@ public class ManageContactsWebDAV {
             httpMethod.releaseConnection();
             return strWriter.toString();
         } catch (HttpException e) {
-            e.printStackTrace();
+            System.err.println(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
 
         return null;
@@ -129,7 +129,7 @@ public class ManageContactsWebDAV {
             this.client.executeMethod(httpMethod);
             httpMethod.releaseConnection();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
@@ -139,7 +139,7 @@ public class ManageContactsWebDAV {
             this.client.executeMethod(httpMethod);
             httpMethod.releaseConnection();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
@@ -188,7 +188,7 @@ public class ManageContactsWebDAV {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
 
             return true;

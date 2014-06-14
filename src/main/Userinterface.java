@@ -146,7 +146,7 @@ public class Userinterface {
                     Userinterface window = new Userinterface();
                     window.frame.setVisible(true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.err.println(e);
                 }
             }
         });
@@ -360,7 +360,7 @@ public class Userinterface {
                 docTextPane.insertString(0, strText + "\n", null);
             }
         } catch (BadLocationException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 }

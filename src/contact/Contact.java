@@ -104,7 +104,7 @@ public class Contact {
             try {
                 org.apache.commons.io.FileUtils.writeByteArrayToFile(tmpFile, this.vcard.getPhotos().get(0).getData());
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(e);
             }
         }
 
@@ -341,7 +341,7 @@ public class Contact {
                 try {
                     this.vcard.addPhoto(new Photo(Files.readAllBytes(tmpFile.toPath()), ImageType.JPEG));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println(e);
                 }
             }
         }
@@ -350,7 +350,7 @@ public class Contact {
             SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
             this.dateLastModificationTme = sdf.parse(strLastModificationTime);
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
@@ -371,7 +371,7 @@ public class Contact {
                     imageB = ImageIO.read(new File(strPathToComparePicture));
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println(e);
                 }
 
                 int[] pixelOfA = new int[imageA.getWidth() * imageA.getHeight()];

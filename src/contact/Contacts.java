@@ -82,7 +82,7 @@ public class Contacts {
 
             file = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
@@ -156,7 +156,7 @@ public class Contacts {
             iter = null;
             writer = null;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
