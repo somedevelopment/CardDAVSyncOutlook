@@ -358,36 +358,31 @@ public class Contact {
      * Private Section
      */
     private Boolean comparePictures(String strPathToComparePicture) {
-        BufferedImage imageA = null;
-        BufferedImage imageB = null;
+        BufferedImage imageA;
+        BufferedImage imageB;
 
         File fileImageA = new File(this.strPathToContactPicture);
         File fileImageB = new File(strPathToComparePicture);
 
-        if (fileImageA.exists()) {
-            if (fileImageB.exists()) {
-                try {
-                    imageA = ImageIO.read(new File(this.strPathToContactPicture));
-                    imageB = ImageIO.read(new File(strPathToComparePicture));
+        if (fileImageA.exists() && fileImageB.exists()) {
+            try {
+                imageA = ImageIO.read(new File(this.strPathToContactPicture));
+                imageB = ImageIO.read(new File(strPathToComparePicture));
 
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-
-                int[] pixelOfA = new int[imageA.getWidth() * imageA.getHeight()];
-                imageA.getData().getPixel(0, 0, pixelOfA);
-
-                int[] pixelOfB = new int[imageB.getWidth() * imageB.getHeight()];
-                imageB.getData().getPixel(0, 0, pixelOfB);
-
-                return Arrays.equals(pixelOfA, pixelOfB);
-            } else {
+            } catch (IOException e) {
+                System.err.println(e);
                 return false;
             }
-        } else if (fileImageB.exists()) {
-            return false;
-        }
 
+            int[] pixelOfA = new int[imageA.getWidth() * imageA.getHeight()];
+            imageA.getData().getPixel(0, 0, pixelOfA);
+
+            int[] pixelOfB = new int[imageB.getWidth() * imageB.getHeight()];
+            imageB.getData().getPixel(0, 0, pixelOfB);
+
+            return Arrays.equals(pixelOfA, pixelOfB);
+        } 
+        
         return false;
     }
 
@@ -415,7 +410,7 @@ public class Contact {
                 tmpFile.delete();
             }
 
-            tmpFile = null;
+            //tmpFile = null;
         }
     }
 
@@ -1066,7 +1061,7 @@ public class Contact {
         this.strFileOnDavServer = strFileOnDavServer;
     }
 
-    public String getContactAsString() {
+    public final String getContactAsString() {
         return this.vcard.write();
     }
 

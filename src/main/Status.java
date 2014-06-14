@@ -24,9 +24,9 @@ import java.util.Date;
 
 public class Status {
 
-    static public void printStatusToConsole(String strWhereIam) {
+    static public void printStatusToConsole(String message) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         //System.out.println(strWhereIam + ": " + sdf.format(new Date()));
-        Userinterface.setTextinTextPane(strWhereIam + ": " + sdf.format(new Date()));
+        Userinterface.setTextinTextPane(sdf.format(new Date()) + ": " + message);
     }
 }

@@ -62,7 +62,7 @@ public class ManageContactsWebDAV {
     private HttpClient client = null;
     private Credentials creds = null;
 
-    private int intMaxConnections = 20;
+    private final int intMaxConnections = 20;
 
     /**
      *
@@ -78,7 +78,7 @@ public class ManageContactsWebDAV {
     }
 
     private MultiStatusResponse[] getContentToRessource(String strResourcePath) {
-        DavMethod pFind = null;
+        DavMethod pFind;
         MultiStatusResponse[] responses = null;
 
         try {
@@ -87,9 +87,7 @@ public class ManageContactsWebDAV {
             MultiStatus multiStatus = pFind.getResponseBodyAsMultiStatus();
             responses = multiStatus.getResponses();
             pFind.releaseConnection();
-        } catch (IOException e) {
-            System.err.println(e);
-        } catch (DavException e) {
+        } catch (IOException | DavException e) {
             System.err.println(e);
         }
 
@@ -104,10 +102,9 @@ public class ManageContactsWebDAV {
             StringWriter strWriter = new StringWriter();
 
             if (httpMethod.getResponseContentLength() > 0) {
-                InputStream inputStream = httpMethod.getResponseBodyAsStream();
-
-                IOUtils.copy(inputStream, strWriter, "UTF-8");
-                inputStream.close();
+                try (InputStream inputStream = httpMethod.getResponseBodyAsStream()) {
+                    IOUtils.copy(inputStream, strWriter, "UTF-8");
+                }
             }
 
             httpMethod.releaseConnection();
@@ -146,7 +143,6 @@ public class ManageContactsWebDAV {
     /**
      *
      * Public Section
-     *
      */
     public void connectHTTP(String strUser, String strPass, String strHost) {
         //Connect WebDAV with credentials
@@ -169,19 +165,15 @@ public class ManageContactsWebDAV {
 
         if (responses != null) {
             try {
-                MultiStatusResponse currResponse;
-                for (int i = 0; i < responses.length; i++) {
-                    currResponse = responses[i];
-
-                    String strFileToDownload = hostConfig.getHost() + currResponse.getHref();
-
-                    if (strFileToDownload.contains(".vcf")) { //Pr�fen ob es sich wirklich um ein Kontakt handelt - nicht wirklich sch�n
+                for (MultiStatusResponse response : responses) {
+                    String strFileToDownload = hostConfig.getHost() + response.getHref();
+                    if (strFileToDownload.contains(".vcf")) { //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
                         String strNewContact = readVCardsFromWebDAV(strFileToDownload);
                         if (strNewContact != null) {
-                            Contact tmpContact;
-                            allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir));
-
-                            Status.printStatusToConsole("Load WebDav Contact " + 
+                            Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
+                            allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
+                            
+                            Status.printStatusToConsole("Load WebDav Contact " +
                                     tmpContact.getFirstName() + ", " + 
                                     tmpContact.getLastName());
                         }
@@ -198,7 +190,7 @@ public class ManageContactsWebDAV {
     }
 
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {
-        List<Contact> listDelDAVContacts = new ArrayList<Contact>();
+        List<Contact> listDelDAVContacts = new ArrayList();
 
         Iterator<Entry<String, Contact>> iterDavContacts = allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet().iterator();
 

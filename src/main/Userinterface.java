@@ -141,6 +141,7 @@ public class Userinterface {
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     Userinterface window = new Userinterface();
@@ -183,8 +184,7 @@ public class Userinterface {
                 String confDir = "conf";
                 new File(confDir).mkdir();
                 File file = new File(confDir + File.separator + "config.txt");
-                try {
-                    FileWriter writer = new FileWriter(file);
+                try (FileWriter writer = new FileWriter(file)) {
                     writer.write(textUsername.getText());
                     writer.write(System.getProperty("line.separator"));
                     writer.write(passwordField.getPassword());
@@ -194,9 +194,8 @@ public class Userinterface {
                     writer.write(textOwncloudURL.getText());
 
                     writer.flush();
-                    writer.close();
                 } catch (IOException e1) {
-                    e1.printStackTrace();
+                    System.err.println(e1);
                 }
                 Status.printStatusToConsole("Config Saved");
 
@@ -238,26 +237,24 @@ public class Userinterface {
 
         //Load config
         Status.printStatusToConsole("Load Config");
-        try {
-            File file = new File("conf\\config.txt");
 
-            if (file.exists()) {
-                BufferedReader in = new BufferedReader(new FileReader(file));
+        File file = new File("conf\\config.txt");
 
+        if (file.exists()) {
+            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
                 textUsername.setText(in.readLine());
                 passwordField.setText(in.readLine());
                 textHostURL.setText(in.readLine());
                 textOwncloudURL.setText(in.readLine());
-
-                in.close();
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+            } catch (IOException e1) {
+                System.err.println(e1);
+            } 
         }
 
         JButton btnSync = new JButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.PLAIN, 12));
         btnSync.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 new Thread(syncWorker).start();
             }
@@ -348,8 +345,44 @@ public class Userinterface {
                         .addGap(259))
         );
         frame.getContentPane().setLayout(groupLayout);
-        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, btnSaveConfig, textPane, scrollPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, lblUsername}));
-        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, btnSaveConfig, textPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
+        frame.getContentPane().setFocusTraversalPolicy(
+                new FocusTraversalOnArray(
+                        new Component[]{
+                            textUsername, 
+                            passwordField, 
+                            textHostURL, 
+                            textOwncloudURL, 
+                            btnSync, 
+                            btnSaveConfig, 
+                            textPane,
+                            scrollPane, 
+                            lblStatus, 
+                            lblOwncloudUrl, 
+                            lblHost, 
+                            lblPassword, 
+                            lblUsername
+                        }
+                )
+        );
+        frame.setFocusTraversalPolicy(
+                new FocusTraversalOnArray(
+                        new Component[]{
+                            textUsername, 
+                            passwordField, 
+                            textHostURL, 
+                            textOwncloudURL,
+                            btnSync, 
+                            btnSaveConfig, 
+                            textPane, 
+                            lblStatus, 
+                            lblOwncloudUrl, 
+                            lblHost, 
+                            lblPassword, 
+                            frame.getContentPane(), 
+                            scrollPane, 
+                            lblUsername}
+                )
+        );
     }
 
     static public void setTextinTextPane(String strText) {

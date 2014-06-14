@@ -62,27 +62,18 @@ public class Contacts {
      *
      */
     private void loadUidsFromFile(String strWorkingDir) {
-        try {
-            Status.printStatusToConsole("Load last Sync UIDs");
-            File file = new File((strWorkingDir + "lastSync.txt"));
-
-            if (file.exists()) {
-                BufferedReader in = new BufferedReader(
-                        new FileReader(strWorkingDir + "lastSync.txt"));
-
-                String line = null;
+        Status.printStatusToConsole("Load last Sync UIDs");
+        File file = new File((strWorkingDir + "lastSync.txt"));
+        if (file.exists()) {
+            try (BufferedReader in = new BufferedReader(
+                    new FileReader(strWorkingDir + "lastSync.txt"))) {
+                String line;
                 while ((line = in.readLine()) != null) {
                     this.listSyncContacts.add(line);
                 }
-                line = null;
-
-                in.close();
-                in = null;
+            } catch (IOException e) {
+                System.err.println(e);
             }
-
-            file = null;
-        } catch (IOException e) {
-            System.err.println(e);
         }
     }
 
@@ -152,9 +143,6 @@ public class Contacts {
 
             writer.flush();
             writer.close();
-
-            iter = null;
-            writer = null;
         } catch (IOException e) {
             System.err.println(e);
         }
@@ -166,7 +154,6 @@ public class Contacts {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
 
-            entry = null;
         }
 
         iter = hasTabOutlookContacts.entrySet().iterator();
@@ -174,10 +161,7 @@ public class Contacts {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
 
-            entry = null;
         }
-
-        iter = null;
     }
 
     public void compareAdressbooks() {
@@ -208,7 +192,7 @@ public class Contacts {
         }
 
         /**
-         * Compare Addressb�cher *
+         * Compare address books
          */
         //Leading Outlook
         Iterator<Entry<String, Contact>> iterOutlookContacts = hasTabOutlookContacts.entrySet().iterator();

@@ -358,7 +358,7 @@ public class ManageContactsOutlook {
         int countAttachements = Dispatch.call((Dispatch) dipAttachments, "Count").toInt();
         for (int j = 1; j <= countAttachements; j++) {
             Dispatch currentAttachement;
-            currentAttachement = Dispatch.call(dipAttachments, "Item", new Integer(j)).toDispatch();
+            currentAttachement = Dispatch.call(dipAttachments, "Item", j).toDispatch();
 
             if (Dispatch.get(currentAttachement, "FileName").toString().equals("ContactPicture.jpg")) {
                 strPathToTmpPicture = strWorkingDir + Math.random() + ".jpg";
@@ -367,10 +367,8 @@ public class ManageContactsOutlook {
                 Dispatch.call(currentAttachement, "SaveAsFile", strPathToTmpPicture);
             }
             currentAttachement.safeRelease();
-            currentAttachement = null;
         }
         dipAttachments.safeRelease();
-        dipAttachments = null;
 
         return strPathToTmpPicture;
     }
@@ -383,12 +381,12 @@ public class ManageContactsOutlook {
     public String openOutlook() {
         try {
             ComThread.InitMTA(true);
-        } catch (UnsatisfiedLinkError ex) {
+        } catch (UnsatisfiedLinkError e) {
             Status.printStatusToConsole("Cannot open com library");
-            ex.printStackTrace();
+            System.err.println(e);
         }
 
-        String strProgrammID = null;
+        String strProgrammID;
 
         this.axc = new ActiveXComponent("Outlook.Application");
         this.dipOutlook = axc.getObject();
@@ -426,15 +424,15 @@ public class ManageContactsOutlook {
     }
 
     public void loadContacts(Contacts allContacts, int intOutlookFolder, String strWorkingDir) {
-        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) new Integer(intOutlookFolder)).toDispatch();
+        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) intOutlookFolder).toDispatch();
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
         int count = Dispatch.call(dipContactItems, "Count").toInt();
 
         for (int i = 1; i <= count; i++) {
-            Dispatch dipContact = null;
-            dipContact = Dispatch.call(dipContactItems, "Item", new Integer(i)).toDispatch();
+            Dispatch dipContact;
+            dipContact = Dispatch.call(dipContactItems, "Item", i).toDispatch();
 
             String strEntryID = Dispatch.get(dipContact, "EntryID").toString().trim();
 
@@ -539,7 +537,7 @@ public class ManageContactsOutlook {
     }
 
     public void writeContacts(Contacts allContacts, int intOutlookFolder, String strWorkingDir) {
-        List<Contact> listDelOutlookContacts = new ArrayList<Contact>();
+        List<Contact> listDelOutlookContacts = new ArrayList();
 
         Iterator<Entry<String, Contact>> iterOutlookContacts = allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet().iterator();
 
