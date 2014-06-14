@@ -78,7 +78,8 @@ public class Userinterface {
 
             String strWorkingdir = System.getProperty("user.dir");
             strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
-
+            new File(strWorkingdir).mkdir();
+            
             while (run) {
                 textPane.setText("");
 
