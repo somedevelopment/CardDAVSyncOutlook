@@ -73,7 +73,7 @@ public class ManageContactsOutlook {
      * Private Section
      *
      */
-    private Dispatch generatePutDispatchContact(Dispatch dipContact, Contact dataContact, String strWorkingDir) {
+    private Dispatch generatePutDispatchContact(Dispatch dipContact, Contact dataContact) {
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 
         if (dataContact.getTitle() != null) {
@@ -327,23 +327,23 @@ public class ManageContactsOutlook {
         return dipContact;
     }
 
-    private void newContact(Contact newContact, String strWorkingDir) {
+    private void newContact(Contact newContact) {
         Dispatch dipContact = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
 
-        Dispatch.call(generatePutDispatchContact(dipContact, newContact, strWorkingDir), "Save");
+        Dispatch.call(generatePutDispatchContact(dipContact, newContact), "Save");
 
         dipContact.safeRelease();
     }
 
-    private void updateContact(Contact toUpdateContact, String strWorkingDir) {
+    private void updateContact(Contact toUpdateContact) {
         Dispatch dipContact = Dispatch.call(dipNamespace, "GetItemFromID", toUpdateContact.getEntryID()).toDispatch();
 
-        Dispatch.call(generatePutDispatchContact(dipContact, toUpdateContact, strWorkingDir), "Save");
+        Dispatch.call(generatePutDispatchContact(dipContact, toUpdateContact), "Save");
 
         dipContact.safeRelease();
     }
 
-    private void deleteContact(Contact toDeleteContact, int intOutlookFolder) {
+    private void deleteContact(Contact toDeleteContact) {
         Dispatch dipContact = Dispatch.call(dipNamespace, "GetItemFromID", toDeleteContact.getEntryID()).toDispatch();
 
         Dispatch.call(dipContact, "Delete");
@@ -549,20 +549,28 @@ public class ManageContactsOutlook {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    updateContact(currentOutlookEntry.getValue(), strWorkingDir);
+                    Status.printStatusToConsole("Write Changed Contact to Outlook " + 
+                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                            currentOutlookEntry.getValue().getLastName());
+                    updateContact(currentOutlookEntry.getValue());
                     break;
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    updateContact(currentOutlookEntry.getValue(), strWorkingDir);
+                    Status.printStatusToConsole("Write Changed Contact to Outlook " + 
+                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                            currentOutlookEntry.getValue().getLastName());
+                    updateContact(currentOutlookEntry.getValue());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    newContact(currentOutlookEntry.getValue(), strWorkingDir);
+                    Status.printStatusToConsole("Write New Contact to Outlook " + 
+                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                            currentOutlookEntry.getValue().getLastName());
+                    newContact(currentOutlookEntry.getValue());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    deleteContact(currentOutlookEntry.getValue(), intOutlookFolder);
+                    Status.printStatusToConsole("Delete Contact to Outlook " + 
+                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                            currentOutlookEntry.getValue().getLastName());
+                    deleteContact(currentOutlookEntry.getValue());
                     listDelOutlookContacts.add(currentOutlookEntry.getValue());
                     break;
                 case READIN:
