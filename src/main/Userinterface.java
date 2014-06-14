@@ -34,7 +34,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -211,7 +210,6 @@ public class Userinterface {
 
         textPane = new WebTextPane();
         textPane.setEditable(false);
-        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 
         WebScrollPane scrollPane = new WebScrollPane(textPane);
         scrollPane.setPreferredSize(new Dimension(400, 300));
@@ -223,25 +221,18 @@ public class Userinterface {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         WebLabel lblUsername = new WebLabel("Username:");
-        lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
 
         usernameField = new WebTextField();
-        usernameField.setFont(new Font("Calibri", Font.PLAIN, 12));
         usernameField.setColumns(14);
 
         WebLabel lblPassword = new WebLabel("Password:");
-        lblPassword.setFont(new Font("Calibri", Font.BOLD, 12));
 
         passwordField = new WebPasswordField();
-        passwordField.setEchoChar('*');
-        passwordField.setFont(new Font("Calibri", Font.PLAIN, 12));
         passwordField.setColumns(14);
 
         textHostURL = new WebTextField();
-        textHostURL.setFont(new Font("Calibri", Font.PLAIN, 12));
 
         WebLabel lblHost = new WebLabel("CardDAV calendar address:");
-        lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
         //Load config
         Status.printStatusToConsole("Load Config");
@@ -257,7 +248,6 @@ public class Userinterface {
         }
 
         WebButton btnSync = new WebButton("Start Synchronization");
-        btnSync.setFont(new Font("Calibri", Font.PLAIN, 12));
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -266,7 +256,6 @@ public class Userinterface {
         });
 
         WebLabel lblStatus = new WebLabel("Status:");
-        lblStatus.setFont(new Font("Calibri", Font.BOLD, 12));
 
         WebPanel northPanel = new WebPanel();
         northPanel.setLayout(new GridLayout(0, 1, 0, 0));
