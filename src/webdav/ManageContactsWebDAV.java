@@ -19,6 +19,9 @@
  */
 package webdav;
 
+import contact.Contact;
+import contact.Contacts;
+import contact.Contacts.Addressbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -26,9 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-
 import main.Status;
-
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -41,6 +42,7 @@ import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
@@ -48,10 +50,6 @@ import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.client.methods.DavMethod;
 import org.apache.jackrabbit.webdav.client.methods.PropFindMethod;
-
-import contact.Contact;
-import contact.Contacts;
-import contact.Contacts.Addressbook;
 
 public class ManageContactsWebDAV {
 
@@ -88,7 +86,7 @@ public class ManageContactsWebDAV {
             responses = multiStatus.getResponses();
             pFind.releaseConnection();
         } catch (IOException | DavException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
 
         return responses;
@@ -110,9 +108,9 @@ public class ManageContactsWebDAV {
             httpMethod.releaseConnection();
             return strWriter.toString();
         } catch (HttpException e) {
-            System.err.println(e);
+            e.printStackTrace();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
 
         return null;
@@ -126,7 +124,7 @@ public class ManageContactsWebDAV {
             this.client.executeMethod(httpMethod);
             httpMethod.releaseConnection();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -136,7 +134,7 @@ public class ManageContactsWebDAV {
             this.client.executeMethod(httpMethod);
             httpMethod.releaseConnection();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -156,6 +154,9 @@ public class ManageContactsWebDAV {
         creds = new UsernamePasswordCredentials(strUser, strPass);
         client.getState().setCredentials(AuthScope.ANY, creds);
         client.setHostConfiguration(hostConfig);
+        
+        Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+        Protocol.registerProtocol("https", easyhttps);
 
         Status.printStatusToConsole("WebDav Connection generated");
     }
@@ -180,7 +181,7 @@ public class ManageContactsWebDAV {
                     }
                 }
             } catch (Exception e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
 
             return true;

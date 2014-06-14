@@ -63,7 +63,7 @@ public class ManageContactsOutlook {
 //            System.loadLibrary(libName);
 //        } catch (UnsatisfiedLinkError e) {
 //            Status.printStatusToConsole("Native code library failed to load");
-//            System.err.println(e);
+//            e.printStackTrace();
 //        }
     }
 
@@ -256,7 +256,7 @@ public class ManageContactsOutlook {
                 Date noDateOutlook = dataFormat.parse("Sat Jan 01 00:00:00 CET 4501");
                 Dispatch.put(dipContact, "Birthday", noDateOutlook);
             } catch (ParseException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
 
@@ -267,7 +267,7 @@ public class ManageContactsOutlook {
                 Date noDateOutlook = dataFormat.parse("Sat Jan 01 00:00:00 CET 4501");
                 Dispatch.put(dipContact, "Anniversary", noDateOutlook);
             } catch (ParseException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
 
@@ -383,7 +383,7 @@ public class ManageContactsOutlook {
             ComThread.InitMTA(true);
         } catch (UnsatisfiedLinkError e) {
             Status.printStatusToConsole("Cannot open com library");
-            System.err.println(e);
+            e.printStackTrace();
         }
 
         String strProgrammID;
@@ -395,7 +395,7 @@ public class ManageContactsOutlook {
         try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
 
         this.dipNamespace = axc.getProperty("Session").toDispatch();
@@ -509,7 +509,7 @@ public class ManageContactsOutlook {
                 }
 
             } catch (ParseException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
 
 			//Uid uid = findUID(strBody);

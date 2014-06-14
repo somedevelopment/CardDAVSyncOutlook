@@ -72,7 +72,7 @@ public class Contacts {
                     this.listSyncContacts.add(line);
                 }
             } catch (IOException e) {
-                System.err.println(e);
+                e.printStackTrace();
             }
         }
     }
@@ -144,7 +144,7 @@ public class Contacts {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 

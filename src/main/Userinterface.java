@@ -147,7 +147,7 @@ public class Userinterface {
                     Userinterface window = new Userinterface();
                     window.frame.setVisible(true);
                 } catch (Exception e) {
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
             }
         });
@@ -195,7 +195,7 @@ public class Userinterface {
 
                     writer.flush();
                 } catch (IOException e1) {
-                    System.err.println(e1);
+                    e1.printStackTrace();
                 }
                 Status.printStatusToConsole("Config Saved");
 
@@ -205,6 +205,7 @@ public class Userinterface {
 
         frame = new JFrame();
         frame.setBounds(100, 100, 617, 445);
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JLabel lblUsername = new JLabel("Username:");
@@ -247,7 +248,7 @@ public class Userinterface {
                 textHostURL.setText(in.readLine());
                 textOwncloudURL.setText(in.readLine());
             } catch (IOException e1) {
-                System.err.println(e1);
+                e1.printStackTrace();
             } 
         }
 
@@ -393,7 +394,7 @@ public class Userinterface {
                 docTextPane.insertString(0, strText + "\n", null);
             }
         } catch (BadLocationException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }
