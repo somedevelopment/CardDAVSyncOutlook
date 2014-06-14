@@ -66,7 +66,7 @@ public class Userinterface {
 
     //Start Worker Thread for Update Text Area
     Runnable syncWorker = new Runnable() {
-        @SuppressWarnings("deprecation")
+        @Override
         public void run() {
             boolean run = true;
 
@@ -85,14 +85,20 @@ public class Userinterface {
 
                 //Get Outlook instance
                 ManageContactsOutlook outlookContacts = new ManageContactsOutlook();
-                if (outlookContacts.openOutlook() != null) {
+                
+                String id = outlookContacts.openOutlook();
+                if (id != null) {
 
                     //Connect WebDAV
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(textUsername.getText().trim(), passwordField.getText().trim(), textHostURL.getText().trim());
+                    webDAVConnection.connectHTTP(textUsername.getText().trim(), 
+                            String.valueOf(passwordField.getPassword()).trim(), 
+                            textHostURL.getText().trim());
 
                     //Load WebDAV Contacts, if connection true proceed
-                    if (webDAVConnection.loadContactsFromWebDav(textHostURL.getText().trim() + textOwncloudURL.getText().trim(), allContacts, strWorkingdir)) {
+                    if (webDAVConnection.loadContactsFromWebDav(textHostURL.getText().trim() + 
+                            textOwncloudURL.getText().trim(), 
+                            allContacts, strWorkingdir)) {
 
                         //Load Outlook Contacts
                         outlookContacts.loadContacts(allContacts, intOutlookFolder, strWorkingdir);
@@ -100,7 +106,7 @@ public class Userinterface {
                         //Compare and modify Contacts
                         Status.printStatusToConsole("Compare Adressbooks");
                         allContacts.compareAdressbooks();
-						//allContacts.printStatus();
+                        //allContacts.printStatus();
 
                         //Write Data
                         outlookContacts.writeContacts(allContacts, intOutlookFolder, strWorkingdir);
