@@ -19,6 +19,15 @@
  */
 package main;
 
+import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.panel.WebPanel;
+import com.alee.laf.rootpane.WebFrame;
+import com.alee.laf.scroll.WebScrollPane;
+import com.alee.laf.text.WebPasswordField;
+import com.alee.laf.text.WebTextField;
+import com.alee.laf.text.WebTextPane;
 import contact.Contacts;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -27,7 +36,6 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -39,19 +47,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
@@ -60,12 +56,11 @@ import webdav.ManageContactsWebDAV;
 
 public class Userinterface {
 
-    private JFrame frame;
-    private JPasswordField passwordField;
-    private JTextField usernameField;
-    private JTextField textHostURL;
+    private WebPasswordField passwordField;
+    private WebTextField usernameField;
+    private WebTextField textHostURL;
 
-    static private JTextPane textPane;
+    static private WebTextPane textPane;
     static private StyledDocument docTextPane;
 
     //Start Worker Thread for Update Text Area
@@ -79,7 +74,7 @@ public class Userinterface {
             String strWorkingdir = System.getProperty("user.dir");
             strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
             new File(strWorkingdir).mkdir();
-            
+
             while (run) {
                 textPane.setText("");
 
@@ -90,7 +85,7 @@ public class Userinterface {
 
                 //Get Outlook instance
                 ManageContactsOutlook outlookContacts = new ManageContactsOutlook();
-                
+
                 String id = outlookContacts.openOutlook();
                 if (id != null) {
 
@@ -105,11 +100,11 @@ public class Userinterface {
                     }
                     String server = host.getProtocol() + "://" + host.getAuthority();
                     String fullPath = server + "/" + host.getPath();
-                    
+
                     //Connect WebDAV
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(usernameField.getText().trim(), 
-                            String.valueOf(passwordField.getPassword()).trim(), 
+                    webDAVConnection.connectHTTP(usernameField.getText().trim(),
+                            String.valueOf(passwordField.getPassword()).trim(),
                             server);
 
                     //Load WebDAV Contacts, if connection true proceed
@@ -161,7 +156,6 @@ public class Userinterface {
             public void run() {
                 try {
                     Userinterface window = new Userinterface();
-                    window.frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -173,6 +167,9 @@ public class Userinterface {
      * Create the application.
      */
     public Userinterface() {
+
+        WebLookAndFeel.install();
+
         initialize();
     }
 
@@ -191,30 +188,18 @@ public class Userinterface {
             e1.printStackTrace();
         }
     }
-    
+
     /**
      * Initialize the contents of the frame.
      */
     private void initialize() {
-        textPane = new JTextPane();
-        textPane.setEditable(false);
-        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 
-        JScrollPane scrollPane = new JScrollPane(textPane);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
-        
-        docTextPane = textPane.getStyledDocument();
-
-        //textPane.getCaret().
-        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-        frame = new JFrame();
+        final WebFrame frame = new WebFrame();
         //frame.setBounds(100, 100, 617, 445);
         frame.setResizable(false);
         frame.setTitle("CardDAVSyncOutlook");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e){
@@ -224,25 +209,38 @@ public class Userinterface {
             }
         });
 
-        JLabel lblUsername = new JLabel("Username:");
+        textPane = new WebTextPane();
+        textPane.setEditable(false);
+        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
+
+        WebScrollPane scrollPane = new WebScrollPane(textPane);
+        scrollPane.setPreferredSize(new Dimension(400, 300));
+
+        docTextPane = textPane.getStyledDocument();
+
+        //textPane.getCaret().
+        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        WebLabel lblUsername = new WebLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
-        
-        usernameField = new JTextField();
+
+        usernameField = new WebTextField();
         usernameField.setFont(new Font("Calibri", Font.PLAIN, 12));
         usernameField.setColumns(14);
-        
-        JLabel lblPassword = new JLabel("Password:");
+
+        WebLabel lblPassword = new WebLabel("Password:");
         lblPassword.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        passwordField = new JPasswordField();
+        passwordField = new WebPasswordField();
         passwordField.setEchoChar('*');
         passwordField.setFont(new Font("Calibri", Font.PLAIN, 12));
         passwordField.setColumns(14);
 
-        textHostURL = new JTextField();
+        textHostURL = new WebTextField();
         textHostURL.setFont(new Font("Calibri", Font.PLAIN, 12));
 
-        JLabel lblHost = new JLabel("CardDAV calendar address:");
+        WebLabel lblHost = new WebLabel("CardDAV calendar address:");
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
         //Load config
@@ -255,10 +253,10 @@ public class Userinterface {
                 textHostURL.setText(in.readLine());
             } catch (IOException e1) {
                 e1.printStackTrace();
-            } 
+            }
         }
 
-        JButton btnSync = new JButton("Start Synchronization");
+        WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.PLAIN, 12));
         btnSync.addActionListener(new ActionListener() {
             @Override
@@ -267,14 +265,14 @@ public class Userinterface {
             }
         });
 
-        JLabel lblStatus = new JLabel("Status:");
+        WebLabel lblStatus = new WebLabel("Status:");
         lblStatus.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        Panel northPanel = new Panel();
+        WebPanel northPanel = new WebPanel();
         northPanel.setLayout(new GridLayout(0, 1, 0, 0));
         northPanel.add(lblHost);
         northPanel.add(textHostURL);
-        Panel accountPanel = new Panel();
+        WebPanel accountPanel = new WebPanel();
         accountPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         accountPanel.add(lblUsername);
         accountPanel.add(usernameField);
@@ -284,19 +282,19 @@ public class Userinterface {
         northPanel.add(btnSync);
         frame.add(northPanel, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
-        
+
         frame.getContentPane().setFocusTraversalPolicy(
                 new FocusTraversalOnArray(
                         new Component[]{
-                            usernameField, 
-                            passwordField, 
-                            textHostURL, 
-                            btnSync, 
+                            usernameField,
+                            passwordField,
+                            textHostURL,
+                            btnSync,
                             textPane,
-                            scrollPane, 
-                            lblStatus, 
-                            lblHost, 
-                            lblPassword, 
+                            scrollPane,
+                            lblStatus,
+                            lblHost,
+                            lblPassword,
                             lblUsername
                         }
                 )
@@ -304,21 +302,22 @@ public class Userinterface {
         frame.setFocusTraversalPolicy(
                 new FocusTraversalOnArray(
                         new Component[]{
-                            usernameField, 
-                            passwordField, 
-                            textHostURL, 
-                            btnSync, 
-                            textPane, 
-                            lblStatus, 
-                            lblHost, 
-                            lblPassword, 
-                            frame.getContentPane(), 
-                            scrollPane, 
+                            usernameField,
+                            passwordField,
+                            textHostURL,
+                            btnSync,
+                            textPane,
+                            lblStatus,
+                            lblHost,
+                            lblPassword,
+                            frame.getContentPane(),
+                            scrollPane,
                             lblUsername}
                 )
         );
-        
+
         frame.pack();
+        frame.setVisible(true);
     }
 
     static public void setTextinTextPane(String strText) {
