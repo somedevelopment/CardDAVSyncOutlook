@@ -56,6 +56,9 @@ import webdav.ManageContactsWebDAV;
 
 public class Userinterface {
 
+    private final String confDir = "conf";
+    private final String confPath = confDir + File.separator + "config.txt";
+
     private WebPasswordField passwordField;
     private WebTextField usernameField;
     private WebTextField textHostURL;
@@ -171,33 +174,7 @@ public class Userinterface {
 
         WebLookAndFeel.install();
 
-        initialize();
-    }
-
-    private void saveConfig() {
-        String confDir = "conf";
-        new File(confDir).mkdir();
-        File file = new File(confDir + File.separator + "config.txt");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(usernameField.getText());
-            writer.write(System.getProperty("line.separator"));
-            writer.write(passwordField.getPassword());
-            writer.write(System.getProperty("line.separator"));
-            writer.write(textHostURL.getText());
-            writer.write(System.getProperty("line.separator"));
-            writer.write(Boolean.toString(insecureSSLBox.isSelected()));
-            writer.flush();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
-
-        final WebFrame frame = new WebFrame();
+final WebFrame frame = new WebFrame();
         //frame.setBounds(100, 100, 617, 445);
         frame.setResizable(false);
         frame.setTitle("CardDAVSyncOutlook");
@@ -239,7 +216,7 @@ public class Userinterface {
 
         //Load config
         Status.printStatusToConsole("Load Config");
-        File file = new File("conf\\config.txt");
+        File file = new File(confPath);
         if (file.exists()) {
             try (BufferedReader in = new BufferedReader(new FileReader(file))) {
                 usernameField.setText(in.readLine());
@@ -312,6 +289,23 @@ public class Userinterface {
 
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private void saveConfig() {
+        new File(confDir).mkdir();
+        File file = new File(confPath);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(usernameField.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(passwordField.getPassword());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(textHostURL.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(Boolean.toString(insecureSSLBox.isSelected()));
+            writer.flush();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
     }
 
     static public void setTextinTextPane(String strText) {
