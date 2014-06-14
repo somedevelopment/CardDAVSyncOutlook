@@ -19,37 +19,34 @@
  */
 package main;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.Font;
-
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.StyledDocument;
-
-import outlook.ManageContactsOutlook;
-import webdav.ManageContactsWebDAV;
 import contact.Contacts;
-
-import java.awt.event.ActionListener;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.awt.Component;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.StyledDocument;
+import outlook.ManageContactsOutlook;
+import webdav.ManageContactsWebDAV;
 
 public class Userinterface {
 
@@ -62,7 +59,6 @@ public class Userinterface {
     static private JTextPane textPane;
     static private JScrollPane scrollPane;
     static private StyledDocument docTextPane;
-    private JButton btnSaveConfig;
 
     //Start Worker Thread for Update Text Area
     Runnable syncWorker = new Runnable() {
@@ -160,6 +156,24 @@ public class Userinterface {
         initialize();
     }
 
+    private void saveConfig() {
+        String confDir = "conf";
+        new File(confDir).mkdir();
+        File file = new File(confDir + File.separator + "config.txt");
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(textUsername.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(passwordField.getPassword());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(textHostURL.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(textOwncloudURL.getText());
+            writer.flush();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+    
     /**
      * Initialize the contents of the frame.
      */
@@ -176,37 +190,20 @@ public class Userinterface {
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-        btnSaveConfig = new JButton("Save Configuration");
-        btnSaveConfig.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Write Config File
-                String confDir = "conf";
-                new File(confDir).mkdir();
-                File file = new File(confDir + File.separator + "config.txt");
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.write(textUsername.getText());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(passwordField.getPassword());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(textHostURL.getText());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(textOwncloudURL.getText());
-
-                    writer.flush();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                Status.printStatusToConsole("Config Saved");
-
-            }
-        });
-        btnSaveConfig.setFont(new Font("Calibri", Font.PLAIN, 12));
-
         frame = new JFrame();
         frame.setBounds(100, 100, 617, 445);
         frame.setResizable(false);
+        frame.setTitle("CardDAVSyncOutlook");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                Userinterface.this.saveConfig();
+                frame.setVisible(false);
+                frame.dispose();
+            }
+        });
 
         JLabel lblUsername = new JLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -264,6 +261,8 @@ public class Userinterface {
         JLabel lblStatus = new JLabel("Status:");
         lblStatus.setFont(new Font("Calibri", Font.BOLD, 12));
 
+        
+        
         GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
         groupLayout.setHorizontalGroup(
                 groupLayout.createParallelGroup(Alignment.LEADING)
@@ -278,7 +277,7 @@ public class Userinterface {
                                         .addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
                                                 .addComponent(textHostURL, 459, 459, 459)
                                                 .addComponent(textOwncloudURL, GroupLayout.PREFERRED_SIZE, 459, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnSaveConfig, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)))
+                                                ))
                                 .addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
                                         .addGap(18)
                                         .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -342,7 +341,6 @@ public class Userinterface {
                                         .addComponent(textOwncloudURL, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lblOwncloudUrl, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(btnSaveConfig)
                         .addGap(259))
         );
         frame.getContentPane().setLayout(groupLayout);
@@ -354,7 +352,6 @@ public class Userinterface {
                             textHostURL, 
                             textOwncloudURL, 
                             btnSync, 
-                            btnSaveConfig, 
                             textPane,
                             scrollPane, 
                             lblStatus, 
@@ -373,7 +370,6 @@ public class Userinterface {
                             textHostURL, 
                             textOwncloudURL,
                             btnSync, 
-                            btnSaveConfig, 
                             textPane, 
                             lblStatus, 
                             lblOwncloudUrl, 
