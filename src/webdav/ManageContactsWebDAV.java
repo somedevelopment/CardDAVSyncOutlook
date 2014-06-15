@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -194,10 +195,8 @@ public class ManageContactsWebDAV {
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {
         List<Contact> listDelDAVContacts = new ArrayList();
 
-        Iterator<Entry<String, Contact>> iterDavContacts = allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet().iterator();
-
-        while (iterDavContacts.hasNext()) {
-            Entry<String, Contact> currentOutlookEntry = iterDavContacts.next();
+        HashMap<String, Contact> webdavAddressbook = allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK);
+        for (Entry<String, Contact> currentOutlookEntry : webdavAddressbook.entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:

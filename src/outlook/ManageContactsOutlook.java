@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -539,10 +540,8 @@ public class ManageContactsOutlook {
     public void writeContacts(Contacts allContacts, int intOutlookFolder, String strWorkingDir) {
         List<Contact> listDelOutlookContacts = new ArrayList();
 
-        Iterator<Entry<String, Contact>> iterOutlookContacts = allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet().iterator();
-
-        while (iterOutlookContacts.hasNext()) {
-            Entry<String, Contact> currentOutlookEntry = iterOutlookContacts.next();
+        HashMap<String, Contact> outlookAddressbook = allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK);
+        for (Entry<String, Contact> currentOutlookEntry : outlookAddressbook.entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
