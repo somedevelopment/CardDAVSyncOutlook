@@ -55,7 +55,6 @@ import ezvcard.property.Url;
 public class Contact {
 
     public enum Status {
-
         CHANGED,
         UNCHANGED,
         DELETE,
@@ -382,8 +381,8 @@ public class Contact {
             imageB.getData().getPixel(0, 0, pixelOfB);
 
             return Arrays.equals(pixelOfA, pixelOfB);
-        } 
-        
+        }
+
         return false;
     }
 
@@ -586,15 +585,15 @@ public class Contact {
         if (this.getEmail2Address() != null) {
             if (toCompareContact.getEmail2Address() != null) {
                 if (!this.getEmail2Address().equals(toCompareContact.getEmail2Address())) {
-                    //mainPackage.Status.printStatusToConsole("getEmail2Address");		
+                    //mainPackage.Status.printStatusToConsole("getEmail2Address");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getEmail2Address");	
+                //mainPackage.Status.printStatusToConsole("getEmail2Address");
                 return false;
             }
         } else if (toCompareContact.getEmail2Address() != null) {
-            //mainPackage.Status.printStatusToConsole("getEmail2Address");	
+            //mainPackage.Status.printStatusToConsole("getEmail2Address");
             return false;
         }
 
@@ -631,7 +630,7 @@ public class Contact {
         if (this.getMobileTelephoneNumber() != null) {
             if (toCompareContact.getMobileTelephoneNumber() != null) {
                 if (!this.getMobileTelephoneNumber().equals(toCompareContact.getMobileTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getMobileTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getMobileTelephoneNumber");
                     return false;
                 }
             } else {
@@ -646,7 +645,7 @@ public class Contact {
         if (this.getBusinessTelephoneNumber() != null) {
             if (toCompareContact.getBusinessTelephoneNumber() != null) {
                 if (!this.getBusinessTelephoneNumber().equals(toCompareContact.getBusinessTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessTelephoneNumber");
                     return false;
                 }
             } else {
@@ -661,37 +660,37 @@ public class Contact {
         if (this.getBusiness2TelephoneNumber() != null) {
             if (toCompareContact.getBusiness2TelephoneNumber() != null) {
                 if (!this.getBusiness2TelephoneNumber().equals(toCompareContact.getBusiness2TelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getBusiness2TelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getBusiness2TelephoneNumber");
             return false;
         }
 
         if (this.getHomeTelephoneNumber() != null) {
             if (toCompareContact.getHomeTelephoneNumber() != null) {
                 if (!this.getHomeTelephoneNumber().equals(toCompareContact.getHomeTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getHomeTelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getHomeTelephoneNumber");
             return false;
         }
 
         if (this.getBusinessFaxNumber() != null) {
             if (toCompareContact.getBusinessFaxNumber() != null) {
                 if (!this.getBusinessFaxNumber().equals(toCompareContact.getBusinessFaxNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessFaxNumber");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessFaxNumber");
                     return false;
                 }
             } else {
@@ -706,22 +705,22 @@ public class Contact {
         if (this.getHome2TelephoneNumber() != null) {
             if (toCompareContact.getHome2TelephoneNumber() != null) {
                 if (!this.getHome2TelephoneNumber().equals(toCompareContact.getHome2TelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getHome2TelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
             return false;
         }
 
         if (this.getHomeFaxNumber() != null) {
             if (toCompareContact.getHomeFaxNumber() != null) {
                 if (!this.getHomeFaxNumber().equals(toCompareContact.getHomeFaxNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeFaxNumber");	
+                    //mainPackage.Status.printStatusToConsole("getHomeFaxNumber");
                     return false;
                 }
             } else {
@@ -736,37 +735,37 @@ public class Contact {
         if (this.getHome2TelephoneNumber() != null) {
             if (toCompareContact.getHome2TelephoneNumber() != null) {
                 if (!this.getHome2TelephoneNumber().equals(toCompareContact.getHome2TelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getHome2TelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getHome2TelephoneNumber");
             return false;
         }
 
         if (this.getHomeAddressCity() != null) {
             if (toCompareContact.getHomeAddressCity() != null) {
                 if (!this.getHomeAddressCity().equals(toCompareContact.getHomeAddressCity())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeAddressCity");	
+                    //mainPackage.Status.printStatusToConsole("getHomeAddressCity");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHomeAddressCity");	
+                //mainPackage.Status.printStatusToConsole("getHomeAddressCity");
                 return false;
             }
         } else if (toCompareContact.getHomeAddressCity() != null) {
-            //mainPackage.Status.printStatusToConsole("getHomeAddressCity");	
+            //mainPackage.Status.printStatusToConsole("getHomeAddressCity");
             return false;
         }
 
         if (this.getHomeAddressCountry() != null) {
             if (toCompareContact.getHomeAddressCountry() != null) {
                 if (!this.getHomeAddressCountry().equals(toCompareContact.getHomeAddressCountry())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeAddressCountry");	
+                    //mainPackage.Status.printStatusToConsole("getHomeAddressCountry");
                     return false;
                 }
             } else {
@@ -781,11 +780,11 @@ public class Contact {
         if (this.getHomeAddressPostalCode() != null) {
             if (toCompareContact.getHomeAddressPostalCode() != null) {
                 if (!this.getHomeAddressPostalCode().equals(toCompareContact.getHomeAddressPostalCode())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeAddressPostalCode");	
+                    //mainPackage.Status.printStatusToConsole("getHomeAddressPostalCode");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHomeAddressPostalCode");				
+                //mainPackage.Status.printStatusToConsole("getHomeAddressPostalCode");
                 return false;
             }
         } else if (toCompareContact.getHomeAddressPostalCode() != null) {
@@ -796,7 +795,7 @@ public class Contact {
         if (this.getHomeAddressState() != null) {
             if (toCompareContact.getHomeAddressState() != null) {
                 if (!this.getHomeAddressState().equals(toCompareContact.getHomeAddressState())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeAddressState");	
+                    //mainPackage.Status.printStatusToConsole("getHomeAddressState");
                     return false;
                 }
             } else {
@@ -811,37 +810,37 @@ public class Contact {
         if (this.getHomeAddressStreet() != null) {
             if (toCompareContact.getHomeAddressStreet() != null) {
                 if (!this.getHomeAddressStreet().equals(toCompareContact.getHomeAddressStreet())) {
-                    //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");	
+                    //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");	
+                //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");
                 return false;
             }
         } else if (toCompareContact.getHomeAddressStreet() != null) {
-            //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");	
+            //mainPackage.Status.printStatusToConsole("getHomeAddressStreet");
             return false;
         }
 
         if (this.getBusinessAddressCity() != null) {
             if (toCompareContact.getBusinessAddressCity() != null) {
                 if (!this.getBusinessAddressCity().equals(toCompareContact.getBusinessAddressCity())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");	
+                //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");
                 return false;
             }
         } else if (toCompareContact.getBusinessAddressCity() != null) {
-            //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");		
+            //mainPackage.Status.printStatusToConsole("getBusinessAddressCity");
             return false;
         }
 
         if (this.getBusinessAddressCountry() != null) {
             if (toCompareContact.getBusinessAddressCountry() != null) {
                 if (!this.getBusinessAddressCountry().equals(toCompareContact.getBusinessAddressCountry())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessAddressCountry");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessAddressCountry");
                     return false;
                 }
             } else {
@@ -849,18 +848,18 @@ public class Contact {
                 return false;
             }
         } else if (toCompareContact.getBusinessAddressCountry() != null) {
-            //mainPackage.Status.printStatusToConsole("getBusinessAddressCountry");					
+            //mainPackage.Status.printStatusToConsole("getBusinessAddressCountry");
             return false;
         }
 
         if (this.getBusinessAddressPostalCode() != null) {
             if (toCompareContact.getBusinessAddressPostalCode() != null) {
                 if (!this.getBusinessAddressPostalCode().equals(toCompareContact.getBusinessAddressPostalCode())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessAddressPostalCode");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessAddressPostalCode");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getBusinessAddressPostalCode");				
+                //mainPackage.Status.printStatusToConsole("getBusinessAddressPostalCode");
                 return false;
             }
         } else if (toCompareContact.getBusinessAddressPostalCode() != null) {
@@ -871,7 +870,7 @@ public class Contact {
         if (this.getBusinessAddressState() != null) {
             if (toCompareContact.getBusinessAddressState() != null) {
                 if (!this.getBusinessAddressState().equals(toCompareContact.getBusinessAddressState())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessAddressState");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessAddressState");
                     return false;
                 }
             } else {
@@ -886,66 +885,66 @@ public class Contact {
         if (this.getBusinessAddressStreet() != null) {
             if (toCompareContact.getBusinessAddressStreet() != null) {
                 if (!this.getBusinessAddressStreet().equals(toCompareContact.getBusinessAddressStreet())) {
-                    //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");	
+                    //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");				
+                //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");
                 return false;
             }
         } else if (toCompareContact.getBusinessAddressStreet() != null) {
-            //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");	
+            //mainPackage.Status.printStatusToConsole("getBusinessAddressStreet");
             return false;
         }
         if (this.getBody() != null) {
             if (toCompareContact.getBody() != null) {
                 if (!this.getBody().equals(toCompareContact.getBody())) {
-                    //mainPackage.Status.printStatusToConsole("getBody");	
+                    //mainPackage.Status.printStatusToConsole("getBody");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getBody");	
+                //mainPackage.Status.printStatusToConsole("getBody");
                 return false;
             }
         } else if (toCompareContact.getBody() != null) {
-            //mainPackage.Status.printStatusToConsole("getBody");	
+            //mainPackage.Status.printStatusToConsole("getBody");
             return false;
         }
 
         if (this.getAssistantTelephoneNumber() != null) {
             if (toCompareContact.getAssistantTelephoneNumber() != null) {
                 if (!this.getAssistantTelephoneNumber().equals(toCompareContact.getAssistantTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getAssistantTelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getAssistantTelephoneNumber");
             return false;
         }
 
         if (this.getCallbackTelephoneNumber() != null) {
             if (toCompareContact.getCallbackTelephoneNumber() != null) {
                 if (!this.getCallbackTelephoneNumber().equals(toCompareContact.getCallbackTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getCallbackTelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getCallbackTelephoneNumber");
             return false;
         }
 
         if (this.getCarTelephoneNumber() != null) {
             if (toCompareContact.getCarTelephoneNumber() != null) {
                 if (!this.getCarTelephoneNumber().equals(toCompareContact.getCarTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getCarTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getCarTelephoneNumber");
                     return false;
                 }
             } else {
@@ -960,7 +959,7 @@ public class Contact {
         if (this.getCompanyMainTelephoneNumber() != null) {
             if (toCompareContact.getCompanyMainTelephoneNumber() != null) {
                 if (!this.getCompanyMainTelephoneNumber().equals(toCompareContact.getCompanyMainTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getCompanyMainTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getCompanyMainTelephoneNumber");
                     return false;
                 }
             } else {
@@ -975,22 +974,22 @@ public class Contact {
         if (this.getOtherTelephoneNumber() != null) {
             if (toCompareContact.getOtherTelephoneNumber() != null) {
                 if (!this.getOtherTelephoneNumber().equals(toCompareContact.getOtherTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getOtherTelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getOtherTelephoneNumber");
             return false;
         }
 
         if (this.getPrimaryTelephoneNumber() != null) {
             if (toCompareContact.getPrimaryTelephoneNumber() != null) {
                 if (!this.getPrimaryTelephoneNumber().equals(toCompareContact.getPrimaryTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getPrimaryTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getPrimaryTelephoneNumber");
                     return false;
                 }
             } else {
@@ -1005,22 +1004,22 @@ public class Contact {
         if (this.getRadioTelephoneNumber() != null) {
             if (toCompareContact.getRadioTelephoneNumber() != null) {
                 if (!this.getRadioTelephoneNumber().equals(toCompareContact.getRadioTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");
                     return false;
                 }
             } else {
-                //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");	
+                //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");
                 return false;
             }
         } else if (toCompareContact.getRadioTelephoneNumber() != null) {
-            //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");	
+            //mainPackage.Status.printStatusToConsole("getRadioTelephoneNumber");
             return false;
         }
 
         if (this.getTTYTDDTelephoneNumber() != null) {
             if (toCompareContact.getTTYTDDTelephoneNumber() != null) {
                 if (!this.getTTYTDDTelephoneNumber().equals(toCompareContact.getTTYTDDTelephoneNumber())) {
-                    //mainPackage.Status.printStatusToConsole("getTTYTDDTelephoneNumber");	
+                    //mainPackage.Status.printStatusToConsole("getTTYTDDTelephoneNumber");
                     return false;
                 }
             } else {
@@ -1472,7 +1471,6 @@ public class Contact {
                 }
             }
         }
-
         return null;
     }
 
@@ -1489,7 +1487,6 @@ public class Contact {
                 }
             }
         }
-
         return null;
     }
 
@@ -1501,7 +1498,6 @@ public class Contact {
                 }
             }
         }
-
         return null;
     }
 
@@ -1509,7 +1505,6 @@ public class Contact {
         if (!this.vcard.getBirthdays().isEmpty()) {
             return this.vcard.getBirthday().getDate();
         }
-
         return null;
     }
 
@@ -1517,7 +1512,6 @@ public class Contact {
         if (!this.vcard.getAnniversaries().isEmpty()) {
             return this.vcard.getAnniversary().getDate();
         }
-
         return null;
     }
 

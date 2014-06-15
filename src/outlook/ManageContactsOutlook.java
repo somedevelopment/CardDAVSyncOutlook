@@ -47,7 +47,7 @@ public class ManageContactsOutlook {
     ActiveXComponent axc = null;
     Dispatch dipNamespace = null;
     Dispatch dipOutlook = null;
-    
+
     public ManageContactsOutlook() {
         // add directory with jacob library (loaded later) to library path
         String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
@@ -512,7 +512,7 @@ public class ManageContactsOutlook {
                 e.printStackTrace();
             }
 
-			//Uid uid = findUID(strBody);
+            //Uid uid = findUID(strBody);
             String strPathToTmpPicture = downloadContactPicture(dipContact, strWorkingDir);
 
             String strLastModificationTime = Dispatch.get(dipContact, "LastModificationTime").toString().trim();
@@ -546,26 +546,26 @@ public class ManageContactsOutlook {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write Changed Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write Changed Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to Outlook " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Write New Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     newContact(currentOutlookEntry.getValue());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact to Outlook " + 
-                            currentOutlookEntry.getValue().getFirstName() + ", " + 
+                    Status.printStatusToConsole("Delete Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     deleteContact(currentOutlookEntry.getValue());
                     listDelOutlookContacts.add(currentOutlookEntry.getValue());
