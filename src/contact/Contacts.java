@@ -39,18 +39,16 @@ public class Contacts {
         OUTLOOKADDRESSBOOK
     }
 
-    static private HashMap<String, Contact> hasTabDAVContacts = null;
-    static private HashMap<String, Contact> hasTabOutlookContacts = null;
-
-    private List<String> listSyncContacts = null;
+    private final HashMap<String, Contact> davContacts;
+    private final HashMap<String, Contact> outlookContacts;
+    private final List<String> listSyncContacts;
 
     /**
-     * Construction
-     *
+     * Constructor
      */
     public Contacts(String strWorkingDir) {
-        hasTabDAVContacts = new HashMap();
-        hasTabOutlookContacts = new HashMap();
+        davContacts = new HashMap();
+        outlookContacts = new HashMap();
         listSyncContacts = new ArrayList();
 
         this.loadUidsFromFile(strWorkingDir);
@@ -58,7 +56,6 @@ public class Contacts {
 
     /**
      * Private
-     *
      */
     private void loadUidsFromFile(String strWorkingDir) {
         Status.printStatusToConsole("Load last Sync UIDs");
@@ -78,15 +75,14 @@ public class Contacts {
 
     /**
      * Public
-     *
      */
     public void addContact(Addressbook whichAdressbook, Contact conContact) {
         switch (whichAdressbook) {
             case WEBDAVADDRESSBOOK:
-                hasTabDAVContacts.put(conContact.getUid(), conContact);
+                davContacts.put(conContact.getUid(), conContact);
                 break;
             case OUTLOOKADDRESSBOOK:
-                hasTabOutlookContacts.put(conContact.getUid(), conContact);
+                outlookContacts.put(conContact.getUid(), conContact);
                 break;
         }
     }
@@ -94,12 +90,12 @@ public class Contacts {
     public void removeContact(Addressbook whichAdressbook, String strUidKey) {
         switch (whichAdressbook) {
             case WEBDAVADDRESSBOOK:
-                hasTabDAVContacts.get(strUidKey).deleteTmpContactPictureFile();
-                hasTabDAVContacts.remove(strUidKey);
+                davContacts.get(strUidKey).deleteTmpContactPictureFile();
+                davContacts.remove(strUidKey);
                 break;
             case OUTLOOKADDRESSBOOK:
-                hasTabOutlookContacts.get(strUidKey).deleteTmpContactPictureFile();
-                hasTabOutlookContacts.remove(strUidKey);
+                outlookContacts.get(strUidKey).deleteTmpContactPictureFile();
+                outlookContacts.remove(strUidKey);
                 break;
         }
     }
@@ -107,9 +103,9 @@ public class Contacts {
     public HashMap<String, Contact> getAddressbook(Addressbook whichAdressbook) {
         switch (whichAdressbook) {
             case WEBDAVADDRESSBOOK:
-                return hasTabDAVContacts;
+                return davContacts;
             case OUTLOOKADDRESSBOOK:
-                return hasTabOutlookContacts;
+                return outlookContacts;
         }
 
         return null;
@@ -118,9 +114,9 @@ public class Contacts {
     public Contact getContact(Addressbook whichAdressbook, String strUidSearchContact) {
         switch (whichAdressbook) {
             case WEBDAVADDRESSBOOK:
-                return hasTabDAVContacts.get(strUidSearchContact);
+                return davContacts.get(strUidSearchContact);
             case OUTLOOKADDRESSBOOK:
-                return hasTabOutlookContacts.get(strUidSearchContact);
+                return outlookContacts.get(strUidSearchContact);
             default:
                 return null;
         }
@@ -131,11 +127,7 @@ public class Contacts {
         FileWriter writer;
         try {
             writer = new FileWriter(file);
-
-            Iterator<Entry<String, Contact>> iter = hasTabDAVContacts.entrySet().iterator();
-
-            while (iter.hasNext()) {
-                Entry<String, Contact> entry = iter.next();
+            for (Entry<String, Contact> entry : davContacts.entrySet()) {
                 writer.write(entry.getValue().getUid());
                 writer.write(System.getProperty("line.separator"));
             }
@@ -148,14 +140,14 @@ public class Contacts {
     }
 
     public void deleteTmpContactPictures() {
-        Iterator<Entry<String, Contact>> iter = hasTabDAVContacts.entrySet().iterator();
+        Iterator<Entry<String, Contact>> iter = davContacts.entrySet().iterator();
         while (iter.hasNext()) {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
 
         }
 
-        iter = hasTabOutlookContacts.entrySet().iterator();
+        iter = outlookContacts.entrySet().iterator();
         while (iter.hasNext()) {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
@@ -170,87 +162,88 @@ public class Contacts {
         List<Contact> listDelDAVContacts = new ArrayList();
 
         // look for contacts in both address books that were present during last
-        // sync and were deleted in one address book and mark them as
+        // sync and were deleted in one address book. Mark them as
         // "to delete" in the other one
         for (String currentUID : listSyncContacts){
-            if (hasTabDAVContacts.get(currentUID) == null) {
-                    if (hasTabOutlookContacts.get(currentUID) != null) {
-                        hasTabOutlookContacts.get(currentUID).setStatus(Contact.Status.DELETE);
-                    }
+            if (davContacts.get(currentUID) == null) {
+                if (outlookContacts.get(currentUID) != null) {
+                    outlookContacts.get(currentUID).setStatus(Contact.Status.DELETE);
                 }
+            }
 
-                if (hasTabOutlookContacts.get(currentUID) == null) {
-                    if (hasTabDAVContacts.get(currentUID) != null) {
-                        hasTabDAVContacts.get(currentUID).setStatus(Contact.Status.DELETE);
-                    }
-                }
-        }
-
-        //Leading Outlook
-        for (Entry<String, Contact> currentOutlookEntry : hasTabOutlookContacts.entrySet()) {
-            Contact currentOutlookContact = currentOutlookEntry.getValue();
-            String currentOutlookKey = currentOutlookEntry.getKey();
-
-            if ((currentOutlookContact.getStatus() == Contact.Status.READIN) ||
-                    (currentOutlookContact.getStatus() == Contact.Status.UIDADDED)) {
-                Contact currentDAVContact = hasTabDAVContacts.get(currentOutlookKey);
-
-                if (currentDAVContact != null) {
-                    if (currentOutlookContact.compareContact(currentDAVContact)) {
-							//System.out.println("\n1. "+ currentOutlookContact.getContactAsString());
-                        //System.out.println("\n2. "+ currentDAVContact.getContactAsString());
-                        currentOutlookContact.setStatus(Contact.Status.UNCHANGED);
-                        currentDAVContact.setStatus(Contact.Status.UNCHANGED);
-                    } else {
-                        if (currentOutlookContact.getLastModificationTime().getTime() >
-                                currentDAVContact.getLastModificationTime().getTime()) {
-                            listDelDAVContacts.add(currentDAVContact);
-
-                            Contact newContact = new Contact(currentOutlookContact,
-                                    Contact.Status.CHANGED);
-                            listNewDAVContacts.add(newContact);
-
-                            currentOutlookContact.setStatus(Contact.Status.UNCHANGED);
-                            currentDAVContact.setStatus(Contact.Status.DELETE);
-
-                            //System.out.println("\n3. "+ currentDAVContact.getContactAsString());
-                            //System.out.println("\n4. "+ newContact.getContactAsString());
-                            //System.out.println("\n5. "+ currentOutlookContact.getContactAsString());
-                        } else {
-                            listDelOutlookContacts.add(currentOutlookContact);
-
-                            Contact newContact = new Contact(currentDAVContact, Contact.Status.CHANGED);
-                            newContact.setEntryID(currentOutlookContact.getEntryID());
-                            listNewOutlookContacts.add(newContact);
-
-                            currentDAVContact.setStatus(Contact.Status.UNCHANGED);
-                            currentOutlookContact.setStatus(Contact.Status.DELETE);
-
-                            //System.out.println("\n6. "+ currentDAVContact.getContactAsString());
-                            //System.out.println("\n7. "+ newContact.getContactAsString());
-                            //System.out.println("\n8. "+ currentOutlookContact.getContactAsString());
-                        }
-                    }
-                } else {
-                    Contact newContact = new Contact(currentOutlookContact, Contact.Status.NEW);
-                    listNewDAVContacts.add(newContact);
-						//System.out.println("\n9. "+ newContact.getContactAsString());
-
+            if (outlookContacts.get(currentUID) == null) {
+                if (davContacts.get(currentUID) != null) {
+                    davContacts.get(currentUID).setStatus(Contact.Status.DELETE);
                 }
             }
         }
 
+        //Leading Outlook
+        for (Entry<String, Contact> currentOutlookEntry : outlookContacts.entrySet()) {
+            Contact currentOutlookContact = currentOutlookEntry.getValue();
+            String currentOutlookKey = currentOutlookEntry.getKey();
+
+            if (currentOutlookContact.getStatus() != Contact.Status.READIN &&
+                    currentOutlookContact.getStatus() != Contact.Status.UIDADDED) {
+                continue;
+            }
+
+            Contact currentDAVContact = davContacts.get(currentOutlookKey);
+            if (currentDAVContact == null) {
+                // corresponding dav contact does not exist, insert it
+                Contact newContact = new Contact(currentOutlookContact, Contact.Status.NEW);
+                listNewDAVContacts.add(newContact);
+                continue;
+            }
+
+            if (currentOutlookContact.equalTo(currentDAVContact)) {
+                currentOutlookContact.setStatus(Contact.Status.UNCHANGED);
+                currentDAVContact.setStatus(Contact.Status.UNCHANGED);
+                continue;
+            }
+
+            if (currentOutlookContact.getLastModificationTime().getTime() >
+                    currentDAVContact.getLastModificationTime().getTime()) {
+                // outlook contact is newer then dav contact, dav contact will
+                // be replaced
+                listDelDAVContacts.add(currentDAVContact);
+
+                Contact newContact = new Contact(currentOutlookContact,
+                        Contact.Status.CHANGED);
+                listNewDAVContacts.add(newContact);
+
+                currentOutlookContact.setStatus(Contact.Status.UNCHANGED);
+                currentDAVContact.setStatus(Contact.Status.DELETE);
+                continue;
+            }
+
+            // dav contact is newer then outlook contact, outlook contact will
+            // be replaced
+            listDelOutlookContacts.add(currentOutlookContact);
+
+            Contact newContact = new Contact(currentDAVContact, Contact.Status.CHANGED);
+            newContact.setEntryID(currentOutlookContact.getEntryID());
+            listNewOutlookContacts.add(newContact);
+
+            currentDAVContact.setStatus(Contact.Status.UNCHANGED);
+            currentOutlookContact.setStatus(Contact.Status.DELETE);
+
+            //System.out.println("\n6. "+ currentDAVContact.getContactAsString());
+            //System.out.println("\n7. "+ newContact.getContactAsString());
+            //System.out.println("\n8. "+ currentOutlookContact.getContactAsString());
+        }
+
         //Leading WebDav
-        for (Entry<String, Contact> currentDAVEntry : hasTabDAVContacts.entrySet()) {
+        for (Entry<String, Contact> currentDAVEntry : davContacts.entrySet()) {
             Contact currentDAVContact = currentDAVEntry.getValue();
             String currentDAVKey = currentDAVEntry.getKey();
 
             if (currentDAVContact.getStatus() == Contact.Status.READIN ||
                     (currentDAVContact.getStatus() == Contact.Status.UIDADDED)) {
-                Contact currentOutlookContact = hasTabOutlookContacts.get(currentDAVKey);
+                Contact currentOutlookContact = outlookContacts.get(currentDAVKey);
 
                 if (currentOutlookContact != null) {
-                    if (currentDAVContact.compareContact(currentOutlookContact)) {
+                    if (currentDAVContact.equalTo(currentOutlookContact)) {
                         currentOutlookContact.setStatus(Contact.Status.UNCHANGED);
                         currentDAVContact.setStatus(Contact.Status.UNCHANGED);
 
@@ -295,66 +288,36 @@ public class Contacts {
         }
 
         //Made Changes out of temporary Lists
-        if (!listDelDAVContacts.isEmpty()) {
-            Iterator<Contact> iter = listDelDAVContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                this.removeContact(Addressbook.WEBDAVADDRESSBOOK, currentContact.getUid());
-            }
+        for (Contact currentContact : listDelDAVContacts) {
+            this.removeContact(Addressbook.WEBDAVADDRESSBOOK, currentContact.getUid());
         }
 
-        if (!listDelOutlookContacts.isEmpty()) {
-            Iterator<Contact> iter = listDelOutlookContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                this.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
-            }
+        for (Contact currentContact : listDelOutlookContacts) {
+            this.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
         }
 
-        if (!listNewDAVContacts.isEmpty()) {
-            Iterator<Contact> iter = listNewDAVContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                this.addContact(Contacts.Addressbook.WEBDAVADDRESSBOOK, currentContact);
-            }
+        for (Contact currentContact : listNewDAVContacts) {
+            this.addContact(Contacts.Addressbook.WEBDAVADDRESSBOOK, currentContact);
         }
 
-        if (!listNewOutlookContacts.isEmpty()) {
-            Iterator<Contact> iter = listNewOutlookContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                this.addContact(Contacts.Addressbook.OUTLOOKADDRESSBOOK, currentContact);
-            }
+        for (Contact currentContact : listNewOutlookContacts) {
+            this.addContact(Contacts.Addressbook.OUTLOOKADDRESSBOOK, currentContact);
         }
     }
 
     public void printStatus() {
-        Iterator<Entry<String, Contact>> iterContacts = hasTabDAVContacts.entrySet().iterator();
+        Status.printStatusToConsole("Outlook Contacts: ");
+        this.print(outlookContacts);
+        Status.printStatusToConsole("DAV Contacs: ");
+        this.print(davContacts);;
+    }
 
-        while (iterContacts.hasNext()) {
-            Entry<String, Contact> entry = iterContacts.next();
-            Contact currentContact = entry.getValue();
-
-            Status.printStatusToConsole("DAVContact: " +
-                    currentContact.getFirstName() + "," +
-                    currentContact.getLastName() + ": " +
-                    currentContact.getStatus());
-        }
-
-        iterContacts = hasTabOutlookContacts.entrySet().iterator();
-
-        while (iterContacts.hasNext()) {
-            Entry<String, Contact> entry = iterContacts.next();
-            Contact currentContact = entry.getValue();
-
-            Status.printStatusToConsole("Outlook Contact: " +
-                    currentContact.getFirstName() + "," +
-                    currentContact.getLastName() + ": " +
-                    currentContact.getStatus());
-        }
+    private void print(HashMap<String, Contact> addressBook) {
+       for (Contact contact : addressBook.values()) {
+           String s = contact.getFirstName() + "," +
+                   contact.getLastName() + ": " +
+                   contact.getStatus();
+           Status.printStatusToConsole(s);
+       }
     }
 }

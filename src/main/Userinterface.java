@@ -121,7 +121,7 @@ public class Userinterface {
                         //Compare and modify Contacts
                         Status.printStatusToConsole("Compare Adressbooks");
                         allContacts.compareAdressbooks();
-                        //allContacts.printStatus();
+                        allContacts.printStatus();
 
                         //Write Data
                         outlookContacts.writeContacts(allContacts, intOutlookFolder, strWorkingdir);
