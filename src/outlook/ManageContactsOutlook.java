@@ -545,25 +545,25 @@ public class ManageContactsOutlook {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " +
+                    Status.printStatusToConsole("Write contact with UID to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to Outlook " +
+                    Status.printStatusToConsole("Write changed Contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to Outlook " +
+                    Status.printStatusToConsole("Write new Contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     newContact(currentOutlookEntry.getValue());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact to Outlook " +
+                    Status.printStatusToConsole("Delete contact in Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     deleteContact(currentOutlookEntry.getValue());

@@ -87,6 +87,9 @@ public class Contact {
         this.dateLastModificationTme = toCopyContact.getLastModificationTime();
     }
 
+    /**
+     * Create WebDAV contact.
+     */
     public Contact(String strVCardData, String strFileOnDavServer, String strWorkingDir) {
         this.statusConntact = Status.READIN;
 
@@ -132,6 +135,9 @@ public class Contact {
         this.dateLastModificationTme = this.vcard.getRevision().getValue();
     }
 
+    /**
+     * Create Outlook contact.
+     */
     public Contact(String strEntryID, String strTitle, String strFirstName, String strMiddleName, String strLastName, String strSuffix,
             String strCompanyName, String strJobTitle, String strEmail1Address, String strEmail2Address, String strEmail3Address,
             String strWebPage, String strMobileTelephoneNumber, String strAssistantTelephoneNumber, String strCallbackTelephoneNumber,
