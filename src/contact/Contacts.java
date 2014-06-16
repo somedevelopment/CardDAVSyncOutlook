@@ -230,6 +230,18 @@ public class Contacts {
             }
         }
 
+        // apply changes saved in temporary lists
+        for (Contact contact : replacedOutlookContacts) {
+            this.removeContact(Addressbook.OUTLOOKADDRESSBOOK, contact.getUid());
+        }
+
+        for (Contact contact : replacedlDAVContacts) {
+            this.removeContact(Addressbook.WEBDAVADDRESSBOOK, contact.getUid());
+        }
+        for (Contact contact : newDAVContacts) {
+            this.addContact(Contacts.Addressbook.WEBDAVADDRESSBOOK, contact);
+        }
+
         //Leading WebDav
         for (Entry<String, Contact> davEntry : davContacts.entrySet()) {
             Contact davContact = davEntry.getValue();
@@ -250,19 +262,8 @@ public class Contacts {
             // all other cases already handled
         }
 
-        //Made Changes out of temporary Lists
-        for (Contact contact : replacedOutlookContacts) {
-            this.removeContact(Addressbook.OUTLOOKADDRESSBOOK, contact.getUid());
-        }
         for (Contact contact : newOutlookContacts) {
             this.addContact(Contacts.Addressbook.OUTLOOKADDRESSBOOK, contact);
-        }
-
-        for (Contact contact : replacedlDAVContacts) {
-            this.removeContact(Addressbook.WEBDAVADDRESSBOOK, contact.getUid());
-        }
-        for (Contact contact : newDAVContacts) {
-            this.addContact(Contacts.Addressbook.WEBDAVADDRESSBOOK, contact);
         }
     }
 
