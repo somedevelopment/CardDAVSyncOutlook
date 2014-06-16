@@ -71,10 +71,10 @@ public class Contact {
     private Status statusConntact = null;
     private Date dateLastModificationTme = null;
 
+    /** Constructor Section **/
+
     /**
-     *
-     * Construction Section
-     *
+     * Create a copy of an existing contact.
      */
     public Contact(Contact toCopyContact, Contact.Status state) {
         this.statusConntact = state;
@@ -88,7 +88,7 @@ public class Contact {
     }
 
     /**
-     * Create WebDAV contact.
+     * Create contact from WebDAV.
      */
     public Contact(String strVCardData, String strFileOnDavServer, String strWorkingDir) {
         this.statusConntact = Status.READIN;
@@ -136,7 +136,7 @@ public class Contact {
     }
 
     /**
-     * Create Outlook contact.
+     * Create contact from Outlook.
      */
     public Contact(String strEntryID, String strTitle, String strFirstName, String strMiddleName, String strLastName, String strSuffix,
             String strCompanyName, String strJobTitle, String strEmail1Address, String strEmail2Address, String strEmail3Address,
