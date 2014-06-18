@@ -76,6 +76,8 @@ public class ManageContactsOutlook {
     private Dispatch generatePutDispatchContact(Dispatch dipContact, Contact dataContact) {
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 
+        Dispatch.put(dipContact, "User1", dataContact.getUid());
+
         if (dataContact.getTitle() != null) {
             Dispatch.put(dipContact, "Title", dataContact.getTitle());
         } else {
@@ -330,6 +332,9 @@ public class ManageContactsOutlook {
     private void newContact(Contact newContact) {
         Dispatch dipContact = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
 
+        // damn, can't do that. Read only
+        //Dispatch.put(dipContact, "EntryID", newContact.getEntryID());
+
         Dispatch.call(generatePutDispatchContact(dipContact, newContact), "Save");
 
         dipContact.safeRelease();
@@ -435,6 +440,8 @@ public class ManageContactsOutlook {
             Dispatch dipContact;
             dipContact = Dispatch.call(dipContactItems, "Item", i).toDispatch();
 
+            String strUid = Dispatch.get(dipContact, "User1").toString().trim();
+
             String strEntryID = Dispatch.get(dipContact, "EntryID").toString().trim();
 
             String strTitle = Dispatch.get(dipContact, "Title").toString().trim();
@@ -519,7 +526,7 @@ public class ManageContactsOutlook {
             String strLastModificationTime = Dispatch.get(dipContact, "LastModificationTime").toString().trim();
 
             //Add Contact
-            allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
+            allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
                     strCompanyName, strJobTitle, strEmail1Address, strEmail2Address, strEmail3Address,
                     strWebPage, strMobileTelephoneNumber, strAssistantTelephoneNumber, strCallbackTelephoneNumber,
                     strCarTelephoneNumber, strCompanyMainTelephoneNumber, strOtherTelephoneNumber,
@@ -551,13 +558,13 @@ public class ManageContactsOutlook {
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case CHANGED:
-                    Status.printStatusToConsole("Write changed Contact to Outlook " +
+                    Status.printStatusToConsole("Write changed contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     updateContact(currentOutlookEntry.getValue());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write new Contact to Outlook " +
+                    Status.printStatusToConsole("Write new contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     newContact(currentOutlookEntry.getValue());

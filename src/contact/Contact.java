@@ -66,6 +66,8 @@ public class Contact {
     private VCard vcard = null;
     private String strPathToContactPicture = null;
     private String strUid = null;
+    // unique ID of an item in outlook. Changes when item is moved or recreated
+    // from backup
     private String strEntryID = null;
     private String strFileOnDavServer = null;
     private Status statusConntact = null;
@@ -110,27 +112,27 @@ public class Contact {
             }
         }
 
-        if (!this.vcard.getNotes().isEmpty()) {
-            if (this.vcard.getNotes().get(0) != null) {
-                Uid uid = this.findUID(this.vcard.getNotes().get(0).getValue());
-                if (uid == null || uid.toString() == null) {
-                    String strNote = this.vcard.getNotes().get(0).getValue() + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
-                    this.vcard.getNotes().get(0).setValue(strNote);
-
-                    this.statusConntact = Status.UIDADDED;
-                }
-            } else {
-                String strNote = (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
-                Note note = new Note(strNote);
-                this.vcard.addNote(note);
-                this.statusConntact = Status.UIDADDED;
-            }
-        } else {
-            String strNote = System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator");
-            Note note = new Note(strNote);
-            this.vcard.addNote(note);
-            this.statusConntact = Status.UIDADDED;
-        }
+//        if (!this.vcard.getNotes().isEmpty()) {
+//            if (this.vcard.getNotes().get(0) != null) {
+//                Uid uid = this.findUID(this.vcard.getNotes().get(0).getValue());
+//                if (uid == null || uid.toString() == null) {
+//String strNote = this.vcard.getNotes().get(0).getValue() + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+//                    this.vcard.getNotes().get(0).setValue(strNote);
+//
+//                    this.statusConntact = Status.UIDADDED;
+//                }
+//            } else {
+//String strNote = (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+//                Note note = new Note(strNote);
+//                this.vcard.addNote(note);
+//                this.statusConntact = Status.UIDADDED;
+//            }
+//        } else {
+//String strNote = System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator");
+//            Note note = new Note(strNote);
+//            this.vcard.addNote(note);
+//            this.statusConntact = Status.UIDADDED;
+//        }
 
         this.dateLastModificationTme = this.vcard.getRevision().getValue();
     }
@@ -138,7 +140,7 @@ public class Contact {
     /**
      * Create contact from Outlook.
      */
-    public Contact(String strEntryID, String strTitle, String strFirstName, String strMiddleName, String strLastName, String strSuffix,
+    public Contact(String strUid, String strEntryID, String strTitle, String strFirstName, String strMiddleName, String strLastName, String strSuffix,
             String strCompanyName, String strJobTitle, String strEmail1Address, String strEmail2Address, String strEmail3Address,
             String strWebPage, String strMobileTelephoneNumber, String strAssistantTelephoneNumber, String strCallbackTelephoneNumber,
             String strCarTelephoneNumber, String strCompanyMainTelephoneNumber, String strOtherTelephoneNumber,
@@ -152,16 +154,24 @@ public class Contact {
 
         this.vcard = new VCard();
 
-        if (null != this.findUID(strBody)) {
-            this.vcard.setUid(this.findUID(strBody));
-            this.strUid = this.vcard.getUid().getValue();
-        } else {
-            vcard.setUid(Uid.random());
-            this.strUid = vcard.getUid().getValue();
-
-            strBody = strBody + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+//        if (null != this.findUID(strBody)) {
+//            this.vcard.setUid(this.findUID(strBody));
+//            this.strUid = this.vcard.getUid().getValue();
+//        } else {
+//            vcard.setUid(Uid.random());
+//            this.strUid = vcard.getUid().getValue();
+//
+//            strBody = strBody + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
+//            this.statusConntact = Status.UIDADDED;
+//        }
+        
+        if (strUid.isEmpty()) {
+            this.vcard.setUid(Uid.random());
             this.statusConntact = Status.UIDADDED;
+        } else {
+            this.vcard.setUid(new Uid(strUid.trim()));
         }
+        this.strUid = this.vcard.getUid().getValue();
 
         this.strFileOnDavServer = null;
 
