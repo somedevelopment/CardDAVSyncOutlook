@@ -112,28 +112,6 @@ public class Contact {
             }
         }
 
-//        if (!this.vcard.getNotes().isEmpty()) {
-//            if (this.vcard.getNotes().get(0) != null) {
-//                Uid uid = this.findUID(this.vcard.getNotes().get(0).getValue());
-//                if (uid == null || uid.toString() == null) {
-//String strNote = this.vcard.getNotes().get(0).getValue() + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
-//                    this.vcard.getNotes().get(0).setValue(strNote);
-//
-//                    this.statusConntact = Status.UIDADDED;
-//                }
-//            } else {
-//String strNote = (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
-//                Note note = new Note(strNote);
-//                this.vcard.addNote(note);
-//                this.statusConntact = Status.UIDADDED;
-//            }
-//        } else {
-//String strNote = System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator");
-//            Note note = new Note(strNote);
-//            this.vcard.addNote(note);
-//            this.statusConntact = Status.UIDADDED;
-//        }
-
         this.dateLastModificationTme = this.vcard.getRevision().getValue();
     }
 
@@ -154,17 +132,6 @@ public class Contact {
 
         this.vcard = new VCard();
 
-//        if (null != this.findUID(strBody)) {
-//            this.vcard.setUid(this.findUID(strBody));
-//            this.strUid = this.vcard.getUid().getValue();
-//        } else {
-//            vcard.setUid(Uid.random());
-//            this.strUid = vcard.getUid().getValue();
-//
-//            strBody = strBody + (System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator") + "---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---\n" + this.strUid + "\n---_End_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---" + System.getProperty("line.separator") + System.getProperty("line.separator") + System.getProperty("line.separator"));
-//            this.statusConntact = Status.UIDADDED;
-//        }
-        
         if (strUid.isEmpty()) {
             this.vcard.setUid(Uid.random());
             this.statusConntact = Status.UIDADDED;
@@ -400,18 +367,6 @@ public class Contact {
         }
 
         return false;
-    }
-
-    private Uid findUID(String strBody) {
-        if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-            String[] result = strBody.split("\n");
-            for (int i = 0; i < result.length; i++) {
-                if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-                    return new Uid(result[i + 1].trim());
-                }
-            }
-        }
-        return null;
     }
 
     /**
