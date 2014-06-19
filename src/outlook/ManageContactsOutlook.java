@@ -20,6 +20,7 @@
 package outlook;
 
 import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.ComFailException;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
@@ -404,7 +405,12 @@ public class ManageContactsOutlook {
             e.printStackTrace();
         }
 
-        this.dipNamespace = axc.getProperty("Session").toDispatch();
+        try {
+            this.dipNamespace = axc.getProperty("Session").toDispatch();
+        } catch (ComFailException e) {
+            Status.printStatusToConsole("Can't connect to Outlook, is it running?");
+            return null;
+        }
 
         strProgrammID = this.axc.getProgramId();
         Status.printStatusToConsole("ProgramID Outlook: " + strProgrammID);
