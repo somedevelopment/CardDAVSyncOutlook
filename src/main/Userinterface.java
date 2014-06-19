@@ -64,6 +64,8 @@ public class Userinterface {
     private WebTextField textHostURL;
     private WebCheckBox insecureSSLBox;
 
+    private Thread worker = null;
+
     static private WebTextPane textPane;
     static private StyledDocument docTextPane;
 
@@ -226,7 +228,12 @@ final WebFrame frame = new WebFrame();
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Thread(syncWorker).start();
+                if (worker != null && worker.isAlive()) {
+                    // already running
+                    return;
+                }
+                worker = new Thread(syncWorker);
+                worker.start();
             }
         });
 
