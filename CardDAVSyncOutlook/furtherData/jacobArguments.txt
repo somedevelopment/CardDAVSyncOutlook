@@ -1,0 +1,2 @@
+-Dcom.jacob.debug=true
+-Dcom.jacob.autogc=true

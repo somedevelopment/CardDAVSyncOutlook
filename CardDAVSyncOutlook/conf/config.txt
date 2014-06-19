@@ -1,0 +1,4 @@
+Username
+Password
+http://192.168.0.5
+/owncloud/remote.php/carddav/addressbooks/<user>/<addressbook>
