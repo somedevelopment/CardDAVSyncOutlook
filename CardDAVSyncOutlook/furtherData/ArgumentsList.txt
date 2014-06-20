@@ -1,4 +1,0 @@
--Dcom.jacob.debug=true
--Dcom.jacob.autogc=true
--Dlogback.configurationFile=conf\Logback.xml
--Djava.library.path="lib"

@@ -1,1 +1,0 @@
--Dlogback.configurationFile=Logback.xml
