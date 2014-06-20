@@ -17,7 +17,6 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package appointment;
 
 import java.util.Hashtable;
@@ -26,73 +25,71 @@ import java.util.Map.Entry;
 
 import main.Status;
 
-
 public class Appointments {
-	
- 	public enum Calenders {
-		WEBDAVCALENDER,
-		OUTLOOKCALENDER
-	}
 
-	static private Hashtable<String, Appointment> hasTabDAVAppointments = null;
-	static private Hashtable<String, Appointment> hasTabOutlookAppointments = null;
-	
-	
-	/**
-	 * 
-	 * Construction Section
-	 * 
-	 */	
-	public Appointments() {
-		hasTabDAVAppointments = new Hashtable<String, Appointment>();
-		hasTabOutlookAppointments = new Hashtable<String, Appointment>();
-	}
+    public enum Calenders {
 
-	/**
-	 * Public
-	 * 
-	 */
-	
-	public void addAppointment(Calenders whichCalender, Appointment appAppointment) {
-		switch (whichCalender) {
-			case WEBDAVCALENDER:
-				hasTabDAVAppointments.put(appAppointment.getEntryID(), appAppointment);
-				break;
-			case OUTLOOKCALENDER:
-				hasTabOutlookAppointments.put(appAppointment.getEntryID(), appAppointment);
-				break;
-		}
-	}
-		
-	public Hashtable<String, Appointment> getCalenders(Calenders whichAdressbook) {
-		switch (whichAdressbook) {
-			case WEBDAVCALENDER:
-				return hasTabDAVAppointments;
-			case OUTLOOKCALENDER:
-				return hasTabOutlookAppointments;
-		}
-		
-		return null;
-	}
+        WEBDAVCALENDER,
+        OUTLOOKCALENDER
+    }
 
-	public void printAppointments() {
-		Iterator<Entry<String, Appointment>> iterAppointment = hasTabDAVAppointments.entrySet().iterator();
-		
-		while(iterAppointment.hasNext()) {
-			Entry<String, Appointment> entry = iterAppointment.next();
-			Appointment currentAppointment = entry.getValue();
-			
-			Status.printStatusToConsole("DAV Appointment: "+currentAppointment.getSensitivity()+" "+currentAppointment.getSubject());
-		}
-		
-		iterAppointment = hasTabOutlookAppointments.entrySet().iterator();
-		
-		while(iterAppointment.hasNext()) {
-			Entry<String, Appointment> entry = iterAppointment.next();
-			Appointment currentAppointment = entry.getValue();
-			
-			Status.printStatusToConsole("Outlook Appointment: "+currentAppointment.getSensitivity()+" "+currentAppointment.getSubject());
-		}
-	}
+    static private Hashtable<String, Appointment> hasTabDAVAppointments = null;
+    static private Hashtable<String, Appointment> hasTabOutlookAppointments = null;
+
+    /**
+     *
+     * Construction Section
+     *
+     */
+    public Appointments() {
+        hasTabDAVAppointments = new Hashtable<String, Appointment>();
+        hasTabOutlookAppointments = new Hashtable<String, Appointment>();
+    }
+
+    /**
+     * Public
+     *
+     */
+    public void addAppointment(Calenders whichCalender, Appointment appAppointment) {
+        switch (whichCalender) {
+            case WEBDAVCALENDER:
+                hasTabDAVAppointments.put(appAppointment.getEntryID(), appAppointment);
+                break;
+            case OUTLOOKCALENDER:
+                hasTabOutlookAppointments.put(appAppointment.getEntryID(), appAppointment);
+                break;
+        }
+    }
+
+    public Hashtable<String, Appointment> getCalenders(Calenders whichAdressbook) {
+        switch (whichAdressbook) {
+            case WEBDAVCALENDER:
+                return hasTabDAVAppointments;
+            case OUTLOOKCALENDER:
+                return hasTabOutlookAppointments;
+        }
+
+        return null;
+    }
+
+    public void printAppointments() {
+        Iterator<Entry<String, Appointment>> iterAppointment = hasTabDAVAppointments.entrySet().iterator();
+
+        while (iterAppointment.hasNext()) {
+            Entry<String, Appointment> entry = iterAppointment.next();
+            Appointment currentAppointment = entry.getValue();
+
+            Status.printStatusToConsole("DAV Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
+        }
+
+        iterAppointment = hasTabOutlookAppointments.entrySet().iterator();
+
+        while (iterAppointment.hasNext()) {
+            Entry<String, Appointment> entry = iterAppointment.next();
+            Appointment currentAppointment = entry.getValue();
+
+            Status.printStatusToConsole("Outlook Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
+        }
+    }
 
 }

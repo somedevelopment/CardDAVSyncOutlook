@@ -17,7 +17,6 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package utilities;
 
 import java.io.File;
@@ -43,84 +42,85 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class XMLUtilities {
-	
-	static public Document loadXMLFile(String strXMLFile) {
-		try {
-			Status.printStatusToConsole("Load: "+ strXMLFile);
-			
-			File fileXMLFile = new File(strXMLFile);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder;
-			
-			dBuilder = dbFactory.newDocumentBuilder();
-			dbFactory.setNamespaceAware(true);
-			Document docXMLFile = dBuilder.parse(fileXMLFile);
-			docXMLFile.getDocumentElement().normalize();
-			
-			return docXMLFile;
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
 
-	static public void printDocumentToSTDOUT(Document docXMLFile, OutputStream outStream) {
-		try {	
-			Status.printStatusToConsole("Print XML File");
-			
-		    TransformerFactory tf = TransformerFactory.newInstance();
-		    Transformer transformer;
-		
-			transformer = tf.newTransformer();
-		    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-		    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-		    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		    transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-		    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "8");
-	
-		    transformer.transform(new DOMSource(docXMLFile), new StreamResult(new OutputStreamWriter(outStream, "UTF-8")));  
-		} catch (UnsupportedEncodingException | TransformerException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * @author http://www.journaldev.com/1237/java-convert-string-to-xml-document-and-xml-document-to-string
-	 */
-	static public String convertDocumentToString(Document docXMLFile) {
+    static public Document loadXMLFile(String strXMLFile) {
         try {
-        	Status.printStatusToConsole("Save XML File");
-        	
+            Status.printStatusToConsole("Load: " + strXMLFile);
+
+            File fileXMLFile = new File(strXMLFile);
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder;
+
+            dBuilder = dbFactory.newDocumentBuilder();
+            dbFactory.setNamespaceAware(true);
+            Document docXMLFile = dBuilder.parse(fileXMLFile);
+            docXMLFile.getDocumentElement().normalize();
+
+            return docXMLFile;
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    static public void printDocumentToSTDOUT(Document docXMLFile, OutputStream outStream) {
+        try {
+            Status.printStatusToConsole("Print XML File");
+
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer;
-            
+
+            transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "8");
+
+            transformer.transform(new DOMSource(docXMLFile), new StreamResult(new OutputStreamWriter(outStream, "UTF-8")));
+        } catch (UnsupportedEncodingException | TransformerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @author
+     * http://www.journaldev.com/1237/java-convert-string-to-xml-document-and-xml-document-to-string
+     */
+    static public String convertDocumentToString(Document docXMLFile) {
+        try {
+            Status.printStatusToConsole("Save XML File");
+
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer;
+
             transformer = tf.newTransformer();
             StringWriter writer = new StringWriter();
-            
+
             transformer.transform(new DOMSource(docXMLFile), new StreamResult(writer));
             String strXMLAsString = writer.getBuffer().toString();
             return strXMLAsString;
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-         
+
         return null;
     }
-// 
+//
 //    public static Document convertStringToDocument(String xmlStr) {
-//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); 
-//        DocumentBuilder builder; 
-//        try { 
-//            builder = factory.newDocumentBuilder(); 
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder builder;
+//        try {
+//            builder = factory.newDocumentBuilder();
 //            Document doc = builder.parse( new InputSource( new StringReader( xmlStr ) ) );
 //            return doc;
-//        } catch (Exception e) { 
-//            e.printStackTrace(); 
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
 //        return null;
 //    }

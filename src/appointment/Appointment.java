@@ -17,169 +17,171 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package appointment;
 
 public class Appointment {
 
-	public enum Status {
-		CHANGED,
-		UNCHANGED,
-		DELETE,
-		NEW,
-		READIN
-	}
-	
-	public enum Sensitivity {
-		Normal,
-		Personal,
-		Private,
-		Confidential;
-		
-	    public static Sensitivity fromString(String x) {
-	        switch(new Integer(x)) {
-	        case 0:
-	            return Normal;
-	        case 1:
-	            return Personal;
-	        case 2:
-	            return Private;
-	        case 3:
-	            return Confidential;
-	        }
-	        
-	        return null;
-	    }
-	}
-	
-	private String strEntryID;
-	private String strSubject;
-	private String strBody;
-	private Sensitivity senSensitivity;
-	private String strStartUTC;
-	private String strEndUTC;
-	private String strAllDayEvent;
-	private Boolean bolIsRecurring;
-	private String strLocation;
-	private String strRequiredAttendees;
-	private String strOptionalAttendees;
-	private String strReminderMinutesBeforeStart;
-	
-	/**
-	 * Construction Section
-	 */	
-	public Appointment(String strEntryID, String strSubject, String strBody, Sensitivity senSensitivity, String strStartUTC, 
-			String strEndUTC, String strAllDayEvent, Boolean bolIsReurring, String strLocation, String strRequiredAttendees,
-			String strOptionalAttendees, String strReminderMinutesBeforeStart) {
-		this.strEntryID = strEntryID;
-		this.strSubject = strSubject;
-		this.strBody = strBody;
-		this.senSensitivity = senSensitivity;
-		this.strStartUTC = strStartUTC;
-		this.strEndUTC = strEndUTC;
-		this.strAllDayEvent = strAllDayEvent;
-		this.bolIsRecurring = bolIsReurring;
-		this.strLocation = strLocation;
-		this.strRequiredAttendees = strReminderMinutesBeforeStart;
-		this.strOptionalAttendees = strOptionalAttendees;
-		this.strReminderMinutesBeforeStart = strReminderMinutesBeforeStart;
-	}
+    public enum Status {
 
-	/**
-	 * Getter/Setter Section
-	 */	
-	public String getSubject() {
-		return strSubject;
-	}
+        CHANGED,
+        UNCHANGED,
+        DELETE,
+        NEW,
+        READIN
+    }
 
-	public void setSubject(String strSubject) {
-		this.strSubject = strSubject;
-	}
+    public enum Sensitivity {
 
-	public String getBody() {
-		return strBody;
-	}
+        Normal,
+        Personal,
+        Private,
+        Confidential;
 
-	public void setBody(String strBody) {
-		this.strBody = strBody;
-	}
+        public static Sensitivity fromString(String x) {
+            switch (new Integer(x)) {
+                case 0:
+                    return Normal;
+                case 1:
+                    return Personal;
+                case 2:
+                    return Private;
+                case 3:
+                    return Confidential;
+            }
 
-	public Sensitivity getSensitivity() {
-		return senSensitivity;
-	}
+            return null;
+        }
+    }
 
-	public void setSensitivity(Sensitivity senSensitivity) {
-		this.senSensitivity = senSensitivity;
-	}
-	public String getEntryID() {
-		return strEntryID;
-	}
+    private String strEntryID;
+    private String strSubject;
+    private String strBody;
+    private Sensitivity senSensitivity;
+    private String strStartUTC;
+    private String strEndUTC;
+    private String strAllDayEvent;
+    private Boolean bolIsRecurring;
+    private String strLocation;
+    private String strRequiredAttendees;
+    private String strOptionalAttendees;
+    private String strReminderMinutesBeforeStart;
 
-	public void setEntryID(String strEntryID) {
-		this.strEntryID = strEntryID;
-	}
+    /**
+     * Construction Section
+     */
+    public Appointment(String strEntryID, String strSubject, String strBody, Sensitivity senSensitivity, String strStartUTC,
+            String strEndUTC, String strAllDayEvent, Boolean bolIsReurring, String strLocation, String strRequiredAttendees,
+            String strOptionalAttendees, String strReminderMinutesBeforeStart) {
+        this.strEntryID = strEntryID;
+        this.strSubject = strSubject;
+        this.strBody = strBody;
+        this.senSensitivity = senSensitivity;
+        this.strStartUTC = strStartUTC;
+        this.strEndUTC = strEndUTC;
+        this.strAllDayEvent = strAllDayEvent;
+        this.bolIsRecurring = bolIsReurring;
+        this.strLocation = strLocation;
+        this.strRequiredAttendees = strReminderMinutesBeforeStart;
+        this.strOptionalAttendees = strOptionalAttendees;
+        this.strReminderMinutesBeforeStart = strReminderMinutesBeforeStart;
+    }
 
-	public String getStartUTC() {
-		return strStartUTC;
-	}
+    /**
+     * Getter/Setter Section
+     */
+    public String getSubject() {
+        return strSubject;
+    }
 
-	public void setStartUTC(String strStartUTC) {
-		this.strStartUTC = strStartUTC;
-	}
+    public void setSubject(String strSubject) {
+        this.strSubject = strSubject;
+    }
 
-	public String getEndUTC() {
-		return strEndUTC;
-	}
+    public String getBody() {
+        return strBody;
+    }
 
-	public void setEndUTC(String strEndUTC) {
-		this.strEndUTC = strEndUTC;
-	}
+    public void setBody(String strBody) {
+        this.strBody = strBody;
+    }
 
-	public String getAllDayEvent() {
-		return strAllDayEvent;
-	}
+    public Sensitivity getSensitivity() {
+        return senSensitivity;
+    }
 
-	public void setAllDayEvent(String allDayEvent) {
-		strAllDayEvent = allDayEvent;
-	}
+    public void setSensitivity(Sensitivity senSensitivity) {
+        this.senSensitivity = senSensitivity;
+    }
 
-	public Boolean getIsRecurring() {
-		return bolIsRecurring;
-	}
+    public String getEntryID() {
+        return strEntryID;
+    }
 
-	public void setIsRecurring(Boolean bolIsRecurring) {
-		this.bolIsRecurring = bolIsRecurring;
-	}
+    public void setEntryID(String strEntryID) {
+        this.strEntryID = strEntryID;
+    }
 
-	public String getLocation() {
-		return strLocation;
-	}
+    public String getStartUTC() {
+        return strStartUTC;
+    }
 
-	public void setLocation(String strLocation) {
-		this.strLocation = strLocation;
-	}
+    public void setStartUTC(String strStartUTC) {
+        this.strStartUTC = strStartUTC;
+    }
 
-	public String getRequiredAttendees() {
-		return strRequiredAttendees;
-	}
+    public String getEndUTC() {
+        return strEndUTC;
+    }
 
-	public void setRequiredAttendees(String strRequiredAttendees) {
-		this.strRequiredAttendees = strRequiredAttendees;
-	}
+    public void setEndUTC(String strEndUTC) {
+        this.strEndUTC = strEndUTC;
+    }
 
-	public String getOptionalAttendees() {
-		return strOptionalAttendees;
-	}
+    public String getAllDayEvent() {
+        return strAllDayEvent;
+    }
 
-	public void setOptionalAttendees(String strOptionalAttendees) {
-		this.strOptionalAttendees = strOptionalAttendees;
-	}
+    public void setAllDayEvent(String allDayEvent) {
+        strAllDayEvent = allDayEvent;
+    }
 
-	public String getReminderMinutesBeforeStart() {
-		return strReminderMinutesBeforeStart;
-	}
+    public Boolean getIsRecurring() {
+        return bolIsRecurring;
+    }
 
-	public void setReminderMinutesBeforeStart(String strReminderMinutesBeforeStart) {
-		this.strReminderMinutesBeforeStart = strReminderMinutesBeforeStart;
-	}
+    public void setIsRecurring(Boolean bolIsRecurring) {
+        this.bolIsRecurring = bolIsRecurring;
+    }
+
+    public String getLocation() {
+        return strLocation;
+    }
+
+    public void setLocation(String strLocation) {
+        this.strLocation = strLocation;
+    }
+
+    public String getRequiredAttendees() {
+        return strRequiredAttendees;
+    }
+
+    public void setRequiredAttendees(String strRequiredAttendees) {
+        this.strRequiredAttendees = strRequiredAttendees;
+    }
+
+    public String getOptionalAttendees() {
+        return strOptionalAttendees;
+    }
+
+    public void setOptionalAttendees(String strOptionalAttendees) {
+        this.strOptionalAttendees = strOptionalAttendees;
+    }
+
+    public String getReminderMinutesBeforeStart() {
+        return strReminderMinutesBeforeStart;
+    }
+
+    public void setReminderMinutesBeforeStart(String strReminderMinutesBeforeStart) {
+        this.strReminderMinutesBeforeStart = strReminderMinutesBeforeStart;
+    }
 }

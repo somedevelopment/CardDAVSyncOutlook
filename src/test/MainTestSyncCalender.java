@@ -17,7 +17,6 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 package test;
 
 import java.io.File;
@@ -25,45 +24,45 @@ import java.io.File;
 import webdav.ManageWebDAV;
 
 public class MainTestSyncCalender {
-	static String strCalDAVUrl = "";
-	static String strHost = "";
-	static String strUser = "";
-	static String strPass = "";
 
-	public static void main(String[] args) {
-		
-		ManageWebDAV tmp = new ManageWebDAV();
-		
-		String strPathToXMLRequest = System.getProperty("user.dir");
-		strPathToXMLRequest = strPathToXMLRequest+File.separator+"conf"+File.separator+"CalDavRequest.xml";
-		
-		tmp.connectWebDAVServer(strHost, 20, strUser, strPass);
+    static String strCalDAVUrl = "";
+    static String strHost = "";
+    static String strUser = "";
+    static String strPass = "";
+
+    public static void main(String[] args) {
+
+        ManageWebDAV tmp = new ManageWebDAV();
+
+        String strPathToXMLRequest = System.getProperty("user.dir");
+        strPathToXMLRequest = strPathToXMLRequest + File.separator + "conf" + File.separator + "CalDavRequest.xml";
+
+        tmp.connectWebDAVServer(strHost, 20, strUser, strPass);
 		//tmp.test(strHost+strCalDAVUrl, strPathToXMLRequest);
-		
+
 //		int intOutlookFolder = 9;
 //
 //		String strWorkingdir = System.getProperty("user.dir");
 //		strWorkingdir = strWorkingdir+File.separator+"workingdir"+File.separator;
-//		
+//
 //		//Build Addressbooks
 //		Appointments allAppointments = new Appointments();
-//		
-//		
+//
+//
 //		//Get CalDav instance
-//		
+//
 //		ManageCalendersWebDAV test = new ManageCalendersWebDAV();
-//		
+//
 //		test.connectHTTP(strUser, strPass, strHost, strCalDAVUrl);
-		
-		//Get Outlook instance
+//              //Get Outlook instance
 //		ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
 //		if (outlookAppointments.openOutlook()) {
-//			
+//
 //			outlookAppointments.loadContantFromOutlook(allAppointments);
-//			
+//
 //			//allAppointments.printAppointments();
-//			
+//
 //			outlookAppointments.closeOutlook();
 //		}
-	}
+    }
 }
