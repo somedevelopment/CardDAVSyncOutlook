@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package mainPackage;
+package main;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

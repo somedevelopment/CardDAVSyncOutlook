@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package outlookStuff;
+package outlook;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,13 +30,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
-import mainPackage.Status;
+import main.Status;
 
 import com.jacob.com.Dispatch;
 
-import contactStuff.Contact;
-import contactStuff.Contacts;
-import contactStuff.Contacts.Addressbook;
+import contact.Contact;
+import contact.Contacts;
+import contact.Contacts.Addressbook;
 
 public class ManageOutlookContacts extends ManageOutlook {
 	

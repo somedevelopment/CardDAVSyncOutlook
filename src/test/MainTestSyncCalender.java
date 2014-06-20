@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package mainTestRuns;
+package test;
 
 import java.io.File;
 
-import webDAVStuff.ManageWebDAV;
+import webdav.ManageWebDAV;
 
 public class MainTestSyncCalender {
 	static String strCalDAVUrl = "";

@@ -18,12 +18,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package outlookStuff;
+package outlook;
 
-import mainPackage.Status;
-import appointmentStuff.Appointment;
-import appointmentStuff.Appointment.Sensitivity;
-import appointmentStuff.Appointments;
+import main.Status;
+import appointment.Appointment;
+import appointment.Appointment.Sensitivity;
+import appointment.Appointments;
 
 import com.jacob.com.Dispatch;
 

@@ -37,7 +37,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import mainPackage.Status;
+import main.Status;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

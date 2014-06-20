@@ -18,13 +18,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package appointmentStuff;
+package appointment;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import mainPackage.Status;
+import main.Status;
 
 
 public class Appointments {

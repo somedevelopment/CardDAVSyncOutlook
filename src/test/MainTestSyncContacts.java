@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package mainTestRuns;
+package test;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import mainPackage.Status;
-import outlookStuff.ManageOutlookContacts;
-import contactStuff.Contacts;
+import main.Status;
+import outlook.ManageOutlookContacts;
+import contact.Contacts;
 
 public class MainTestSyncContacts {
 

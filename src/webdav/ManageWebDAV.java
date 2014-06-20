@@ -20,7 +20,7 @@
 
 /* Currently test class for Calender Entries */
 
-package webDAVStuff;
+package webdav;
 
 
 import java.io.IOException;

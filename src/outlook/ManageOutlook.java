@@ -18,13 +18,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package outlookStuff;
+package outlook;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.concurrent.TimeUnit;
 
-import mainPackage.Status;
+import main.Status;
 
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
