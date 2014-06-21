@@ -19,22 +19,29 @@
  */
 package outlook;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.util.concurrent.TimeUnit;
-
-import main.Status;
-
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.ComThread;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+import main.Status;
 
 public abstract class ManageOutlook {
 
     static {
+        String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
+        String libDir = workingDir + File.separator + "lib";
+        String bitness = System.getProperty("sun.arch.data.model");
+        String libName;
+        if (bitness.equals("64"))
+            libName = "jacob-1.17-x64.dll";
+        else
+            libName = "jacob-1.17-x86.dll";
         try {
-            System.loadLibrary("jacob-1.17-x86");
+            System.load(libDir + File.separator + libName);
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Native code library failed to load.\n" + e);
             System.exit(1);
