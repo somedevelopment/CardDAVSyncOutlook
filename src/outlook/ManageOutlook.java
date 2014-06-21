@@ -32,13 +32,6 @@ import main.Utils;
 
 public abstract class ManageOutlook {
 
-    static {
-        // add directory with jacob library (loaded later) to library path
-        String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
-        String libDir = workingDir + File.separator + "lib";
-        Utils.addLibraryPath(libDir);
-    }
-
     static private ActiveXComponent axc;
 
     static protected Dispatch dipNamespace;
@@ -57,6 +50,11 @@ public abstract class ManageOutlook {
 
         ManageOutlook.strWorkingDir = strWorkingDir;
         this.intOutlookFolder = intOutlookFolder;
+
+        // add directory with jacob library (loaded later) to library path
+        String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
+        String libDir = workingDir + File.separator + "lib";
+        Utils.addLibraryPath(libDir);
     }
 
     /**
