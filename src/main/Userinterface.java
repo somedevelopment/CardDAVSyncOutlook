@@ -178,37 +178,6 @@ public class Userinterface {
 
         WebLookAndFeel.install();
 
-        initialize();
-    }
-
-    private void saveConfig() {
-        String confDir = "conf";
-        new File(confDir).mkdir();
-        File file = new File(confDir + File.separator + "config.txt");
-        try {
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.write(textUsername.getText());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(passwordField.getPassword());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(textHostURL.getText());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(Boolean.toString(insecureSSLBox.isSelected()));
-                writer.write(System.getProperty("line.separator"));
-
-                writer.flush();
-            }
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        Status.printStatusToConsole("Config Saved");
-
-    }
-
-    /**
-     * Initialize the contents of the frame.
-     */
-    private void initialize() {
         textPane = new WebTextPane();
         textPane.setEditable(false);
 
@@ -296,6 +265,31 @@ public class Userinterface {
 
         frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, scrollPane, lblStatus, lblHost, lblPassword, lblUsername}));
         frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, lblStatus, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
+
+    }
+
+    private void saveConfig() {
+        String confDir = "conf";
+        new File(confDir).mkdir();
+        File file = new File(confDir + File.separator + "config.txt");
+        try {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(textUsername.getText());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(passwordField.getPassword());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(textHostURL.getText());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(Boolean.toString(insecureSSLBox.isSelected()));
+                writer.write(System.getProperty("line.separator"));
+
+                writer.flush();
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        Status.printStatusToConsole("Config Saved");
+
     }
 
     static public void setTextinTextPane(String strText) {
