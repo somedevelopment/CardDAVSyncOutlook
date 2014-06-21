@@ -247,6 +247,9 @@ public class Userinterface {
 
         WebLabel lblStatus = new WebLabel("Status:");
 
+        lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
+        lblContactNumbers = new WebLabel("");
+
         WebPanel northPanel = new WebPanel();
         northPanel.setLayout(new GridLayout(0, 1, 0, 0));
         northPanel.add(lblHost);
@@ -259,6 +262,11 @@ public class Userinterface {
         accountPanel.add(passwordField);
         accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
+        WebPanel numberPanel = new WebPanel();
+        numberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        numberPanel.add(lblNumbersOfContacts);
+        numberPanel.add(lblContactNumbers);
+        northPanel.add(numberPanel);
         northPanel.add(btnSync);
         frame.add(northPanel, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
