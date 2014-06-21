@@ -28,7 +28,7 @@ import com.jacob.com.Dispatch;
 
 public class ManageOutlookAppointments extends ManageOutlook {
 
-    private Sensitivity senSensitivity;
+    private final Sensitivity senSensitivity;
 
     public ManageOutlookAppointments(String strWorkingDir, int intOutlookFolder) {
         super(strWorkingDir, intOutlookFolder);
@@ -42,32 +42,35 @@ public class ManageOutlookAppointments extends ManageOutlook {
         this.senSensitivity = senSensitivity;
     }
 
+    @Override
     public Dispatch generatePutDispatchContent(Object dataItem) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void writeOutlookObjects(Object allContant) {
 		// TODO Auto-generated method stub
 
     }
 
+    @Override
     public void loadContantFromOutlook(Object allContant) {
         Appointments allAppointments = (Appointments) allContant;
 
-        Dispatch dipAppointmentsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) new Integer(super.intOutlookFolder)).toDispatch();
+        Dispatch dipAppointmentsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipAppointmentsItems = Dispatch.get(dipAppointmentsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
         int count = Dispatch.call(dipAppointmentsItems, "Count").toInt();
 
         for (int i = 1; i <= count; i++) {
-            Dispatch dipAppointment = null;
-            dipAppointment = Dispatch.call(dipAppointmentsItems, "Item", new Integer(i)).toDispatch();
+            Dispatch dipAppointment;
+            dipAppointment = Dispatch.call(dipAppointmentsItems, "Item", i).toDispatch();
 
-            Sensitivity senSensitivity = Sensitivity.fromString(Dispatch.get(dipAppointment, "Sensitivity").toString().trim());
+            Sensitivity sensitivity = Sensitivity.fromString(Dispatch.get(dipAppointment, "Sensitivity").toString().trim());
 
-            if ((this.senSensitivity != null) && (this.senSensitivity != senSensitivity)) {
+            if ((this.senSensitivity != null) && (this.senSensitivity != sensitivity)) {
                 dipAppointment.safeRelease();
             } else {
                 String strEntryID = Dispatch.get(dipAppointment, "EntryID").toString().trim();
@@ -83,7 +86,7 @@ public class ManageOutlookAppointments extends ManageOutlook {
                 String strReminderMinutesBeforeStart = Dispatch.get(dipAppointment, "ReminderMinutesBeforeStart").toString().trim();
 
                 allAppointments.addAppointment(Appointments.Calenders.OUTLOOKCALENDER, new Appointment(
-                        strEntryID, strSubject, strBody, senSensitivity, strStartUTC, strEndUTC, strAllDayEvent,
+                        strEntryID, strSubject, strBody, sensitivity, strStartUTC, strEndUTC, strAllDayEvent,
                         bolIsRecurring, strLocation, strRequiredAttendees, strOptionalAttendees, strReminderMinutesBeforeStart));
 
                 Status.printStatusToConsole("Load appointment from Outlook " + strSubject);

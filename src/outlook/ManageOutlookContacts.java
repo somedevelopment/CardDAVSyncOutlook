@@ -59,7 +59,7 @@ public class ManageOutlookContacts extends ManageOutlook {
         int countAttachements = Dispatch.call((Dispatch) dipAttachments, "Count").toInt();
         for (int j = 1; j <= countAttachements; j++) {
             Dispatch currentAttachement;
-            currentAttachement = Dispatch.call(dipAttachments, "Item", new Integer(j)).toDispatch();
+            currentAttachement = Dispatch.call(dipAttachments, "Item", j).toDispatch();
 
             if (Dispatch.get(currentAttachement, "FileName").toString().equals("ContactPicture.jpg")) {
                 strPathToTmpPicture = strWorkingDir + Math.random() + ".jpg";
@@ -68,10 +68,8 @@ public class ManageOutlookContacts extends ManageOutlook {
                 Dispatch.call(currentAttachement, "SaveAsFile", strPathToTmpPicture);
             }
             currentAttachement.safeRelease();
-            currentAttachement = null;
         }
         dipAttachments.safeRelease();
-        dipAttachments = null;
 
         return strPathToTmpPicture;
     }
@@ -81,18 +79,19 @@ public class ManageOutlookContacts extends ManageOutlook {
      * Interface Implementation Section
      *
      */
+    @Override
     public void loadContantFromOutlook(Object allContant) {
         Contacts allContacts = (Contacts) allContant;
 
-        Dispatch dipContactsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) new Integer(super.intOutlookFolder)).toDispatch();
+        Dispatch dipContactsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
         int count = Dispatch.call(dipContactItems, "Count").toInt();
 
         for (int i = 1; i <= count; i++) {
-            Dispatch dipContact = null;
-            dipContact = Dispatch.call(dipContactItems, "Item", new Integer(i)).toDispatch();
+            Dispatch dipContact;
+            dipContact = Dispatch.call(dipContactItems, "Item", i).toDispatch();
 
             String strEntryID = Dispatch.get(dipContact, "EntryID").toString().trim();
 
@@ -197,9 +196,10 @@ public class ManageOutlookContacts extends ManageOutlook {
         dipContactItems.safeRelease();
     }
 
+    @Override
     public void writeOutlookObjects(Object allContant) {
         Contacts allContacts = (Contacts) allContant;
-        List<Contact> listDelOutlookContacts = new ArrayList<Contact>();
+        List<Contact> listDelOutlookContacts = new ArrayList();
 
         Iterator<Entry<String, Contact>> iterOutlookContacts = allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet().iterator();
 
@@ -246,6 +246,7 @@ public class ManageOutlookContacts extends ManageOutlook {
 
     }
 
+    @Override
     protected Dispatch generatePutDispatchContent(Object dataItem) {
         Contact dataContact = (Contact) dataItem;
         Dispatch dipContact = super.getOutlookItem(dataContact.getEntryID());

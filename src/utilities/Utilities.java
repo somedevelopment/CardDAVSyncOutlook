@@ -37,19 +37,13 @@ public class Utilities {
             File file = new File(strFileToLoad);
 
             if (file.exists()) {
-                BufferedReader in = new BufferedReader(new FileReader(strFileToLoad));
-
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    strFile = strFile + line;
+                try (BufferedReader in = new BufferedReader(new FileReader(strFileToLoad))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        strFile = strFile + line;
+                    }
                 }
-                line = null;
-
-                in.close();
-                in = null;
             }
-
-            file = null;
 
             return strFile;
         } catch (IOException e) {
@@ -72,8 +66,6 @@ public class Utilities {
             writer.flush();
             writer.close();
 
-            writer = null;
-            file = null;
         } catch (IOException e) {
             e.printStackTrace();
         }

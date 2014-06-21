@@ -68,7 +68,7 @@ public class Userinterface {
 
     //Start Worker Thread for Update Text Area
     Runnable syncWorker = new Runnable() {
-        @SuppressWarnings("deprecation")
+        @Override
         public void run() {
             boolean run = true;
 
@@ -91,7 +91,7 @@ public class Userinterface {
 
                     //Connect WebDAV
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(textUsername.getText().trim(), passwordField.getText().trim(), textHostURL.getText().trim());
+                    webDAVConnection.connectHTTP(textUsername.getText().trim(), String.valueOf(passwordField.getPassword()).trim(), textHostURL.getText().trim());
 
                     //Load WebDAV Contacts, if connection true proceed
                     if (webDAVConnection.loadContactsFromWebDav(textHostURL.getText().trim() + textOwncloudURL.getText().trim(), allContacts, strWorkingdir)) {
@@ -142,6 +142,7 @@ public class Userinterface {
      */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     Userinterface window = new Userinterface();
@@ -178,23 +179,24 @@ public class Userinterface {
 
         btnSaveConfig = new JButton("Save Configuration");
         btnSaveConfig.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 //Write Config File
                 String confDir = "conf";
                 new File(confDir).mkdir();
                 File file = new File(confDir + File.separator + "config.txt");
                 try {
-                    FileWriter writer = new FileWriter(file);
-                    writer.write(textUsername.getText());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(passwordField.getPassword());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(textHostURL.getText());
-                    writer.write(System.getProperty("line.separator"));
-                    writer.write(textOwncloudURL.getText());
+                    try (FileWriter writer = new FileWriter(file)) {
+                        writer.write(textUsername.getText());
+                        writer.write(System.getProperty("line.separator"));
+                        writer.write(passwordField.getPassword());
+                        writer.write(System.getProperty("line.separator"));
+                        writer.write(textHostURL.getText());
+                        writer.write(System.getProperty("line.separator"));
+                        writer.write(textOwncloudURL.getText());
 
-                    writer.flush();
-                    writer.close();
+                        writer.flush();
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -242,14 +244,12 @@ public class Userinterface {
             File file = new File("conf\\config.txt");
 
             if (file.exists()) {
-                BufferedReader in = new BufferedReader(new FileReader(file));
-
-                textUsername.setText(in.readLine());
-                passwordField.setText(in.readLine());
-                textHostURL.setText(in.readLine());
-                textOwncloudURL.setText(in.readLine());
-
-                in.close();
+                try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+                    textUsername.setText(in.readLine());
+                    passwordField.setText(in.readLine());
+                    textHostURL.setText(in.readLine());
+                    textOwncloudURL.setText(in.readLine());
+                }
             }
         } catch (IOException e1) {
             e1.printStackTrace();
@@ -258,6 +258,7 @@ public class Userinterface {
         JButton btnSync = new JButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.PLAIN, 12));
         btnSync.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 new Thread(syncWorker).start();
             }

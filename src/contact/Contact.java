@@ -358,37 +358,36 @@ public class Contact {
      * Private Section
      */
     private Boolean comparePictures(String strPathToComparePicture) {
-        BufferedImage imageA = null;
-        BufferedImage imageB = null;
+        BufferedImage imageA;
+        BufferedImage imageB;
 
         File fileImageA = new File(this.strPathToContactPicture);
         File fileImageB = new File(strPathToComparePicture);
 
-        if (fileImageA.exists()) {
-            if (fileImageB.exists()) {
-                try {
-                    imageA = ImageIO.read(new File(this.strPathToContactPicture));
-                    imageB = ImageIO.read(new File(strPathToComparePicture));
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                int[] pixelOfA = new int[imageA.getWidth() * imageA.getHeight()];
-                imageA.getData().getPixel(0, 0, pixelOfA);
-
-                int[] pixelOfB = new int[imageB.getWidth() * imageB.getHeight()];
-                imageB.getData().getPixel(0, 0, pixelOfB);
-
-                return Arrays.equals(pixelOfA, pixelOfB);
-            } else {
-                return false;
-            }
-        } else if (fileImageB.exists()) {
+        if (!fileImageA.exists()) {
+            return false;
+        }
+        if (!fileImageB.exists()) {
             return false;
         }
 
-        return false;
+        try {
+            imageA = ImageIO.read(new File(this.strPathToContactPicture));
+            imageB = ImageIO.read(new File(strPathToComparePicture));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        int[] pixelOfA = new int[imageA.getWidth() * imageA.getHeight()];
+        imageA.getData().getPixel(0, 0, pixelOfA);
+
+        int[] pixelOfB = new int[imageB.getWidth() * imageB.getHeight()];
+        imageB.getData().getPixel(0, 0, pixelOfB);
+
+        return Arrays.equals(pixelOfA, pixelOfB);
+
     }
 
     private Uid findUID(String strBody) {
@@ -414,8 +413,6 @@ public class Contact {
             if (tmpFile.exists()) {
                 tmpFile.delete();
             }
-
-            tmpFile = null;
         }
     }
 
@@ -1066,7 +1063,7 @@ public class Contact {
         this.strFileOnDavServer = strFileOnDavServer;
     }
 
-    public String getContactAsString() {
+    public final String getContactAsString() {
         return this.vcard.write();
     }
 
