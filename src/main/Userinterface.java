@@ -19,53 +19,51 @@
  */
 package main;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
-import java.awt.Font;
-
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.StyledDocument;
-
-import outlook.ManageOutlookContacts;
-import webdav.ManageContactsWebDAV;
+import com.alee.laf.WebLookAndFeel;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.panel.WebPanel;
+import com.alee.laf.rootpane.WebFrame;
+import com.alee.laf.scroll.WebScrollPane;
+import com.alee.laf.text.WebPasswordField;
+import com.alee.laf.text.WebTextField;
+import com.alee.laf.text.WebTextPane;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
-
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.awt.Component;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.SwingConstants;
+import javax.swing.JFrame;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.StyledDocument;
+import outlook.ManageOutlookContacts;
+import webdav.ManageContactsWebDAV;
 
 public class Userinterface {
 
-    private JFrame frame;
-    private JPasswordField passwordField;
-    private JTextField textUsername;
-    private JTextField textHostURL;
+    private WebFrame frame;
+    private WebPasswordField passwordField;
+    private WebTextField textUsername;
+    private WebTextField textHostURL;
 
-    private JLabel lblContactNumbers;
+    private WebLabel lblContactNumbers;
 
-    static private JTextPane textPane;
-    static private JScrollPane scrollPane;
+    static private WebTextPane textPane;
+    static private WebScrollPane scrollPane;
     static private StyledDocument docTextPane;
 
     //Start Worker Thread for Update Text Area
@@ -149,7 +147,7 @@ public class Userinterface {
             }
         }
     };
-    private JLabel lblNumbersOfContacts;
+    private WebLabel lblNumbersOfContacts;
 
     /**
      * Launch the application.
@@ -172,6 +170,9 @@ public class Userinterface {
      * Create the application.
      */
     public Userinterface() {
+
+        WebLookAndFeel.install();
+
         initialize();
     }
 
@@ -201,11 +202,10 @@ public class Userinterface {
      * Initialize the contents of the frame.
      */
     private void initialize() {
-        textPane = new JTextPane();
+        textPane = new WebTextPane();
         textPane.setEditable(false);
-        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 
-        scrollPane = new JScrollPane(textPane);
+        scrollPane = new WebScrollPane(textPane);
 
         docTextPane = textPane.getStyledDocument();
 
@@ -213,7 +213,7 @@ public class Userinterface {
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-        frame = new JFrame();
+        frame = new WebFrame();
         frame.setBounds(100, 100, 630, 430);
         frame.setResizable(false);
         frame.setTitle("CardDAVSyncOutlook");
@@ -227,26 +227,20 @@ public class Userinterface {
             }
         });
 
-        JLabel lblUsername = new JLabel("Username:");
-        lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
+        WebLabel lblUsername = new WebLabel("Username:");
 
-        JLabel lblPassword = new JLabel("Password:");
-        lblPassword.setFont(new Font("Calibri", Font.BOLD, 12));
+        WebLabel lblPassword = new WebLabel("Password:");
 
-        passwordField = new JPasswordField();
+        passwordField = new WebPasswordField();
         passwordField.setEchoChar('*');
-        passwordField.setFont(new Font("Calibri", Font.PLAIN, 12));
 
-        textUsername = new JTextField();
-        textUsername.setFont(new Font("Calibri", Font.PLAIN, 12));
+        textUsername = new WebTextField();
         textUsername.setColumns(10);
 
-        textHostURL = new JTextField();
-        textHostURL.setFont(new Font("Calibri", Font.PLAIN, 12));
+        textHostURL = new WebTextField();
         textHostURL.setColumns(10);
 
-        JLabel lblHost = new JLabel("Host URL:");
-        lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
+        WebLabel lblHost = new WebLabel("Host URL:");
 
         //Load config
         Status.printStatusToConsole("Load Config");
@@ -264,8 +258,7 @@ public class Userinterface {
             e1.printStackTrace();
         }
 
-        JButton btnSync = new JButton("Start Synchronization");
-        btnSync.setFont(new Font("Calibri", Font.PLAIN, 12));
+        WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -273,28 +266,23 @@ public class Userinterface {
             }
         });
 
-        JLabel lblStatus = new JLabel("Status:");
-        lblStatus.setVerticalAlignment(SwingConstants.BOTTOM);
-        lblStatus.setHorizontalAlignment(SwingConstants.LEFT);
-        lblStatus.setFont(new Font("Calibri", Font.BOLD, 12));
-        frame.getContentPane().setLayout(new MigLayout("", "[96px][250px][250px][250px]", "[22px][22px][22px][22px][22px][22px][222px]"));
-        frame.getContentPane().add(lblHost, "cell 0 2,alignx left,aligny center");
-        frame.getContentPane().add(textHostURL, "cell 1 2 3 1,growx,aligny top");
+        WebLabel lblStatus = new WebLabel("Status:");
 
-        lblNumbersOfContacts = new JLabel("# of loaded Contacts:");
-        lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
-        frame.getContentPane().add(lblNumbersOfContacts, "cell 0 4");
-
-        lblContactNumbers = new JLabel("");
-        lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
-        frame.getContentPane().add(lblContactNumbers, "cell 1 4 2 1,grow");
-        frame.getContentPane().add(scrollPane, "cell 0 6 4 1,grow");
-        frame.getContentPane().add(lblUsername, "cell 0 0,alignx left,aligny center");
-        frame.getContentPane().add(lblPassword, "cell 0 1,alignx left,aligny center");
-        frame.getContentPane().add(lblStatus, "cell 0 5,growx,aligny top");
-        frame.getContentPane().add(textUsername, "cell 1 0 2 1,growx,aligny top");
-        frame.getContentPane().add(passwordField, "cell 1 1 2 1,growx,aligny top");
-        frame.getContentPane().add(btnSync, "cell 3 0 1 2,grow");
+        WebPanel northPanel = new WebPanel();
+        northPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        northPanel.add(lblHost);
+        northPanel.add(textHostURL);
+        WebPanel accountPanel = new WebPanel();
+        accountPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        accountPanel.add(lblUsername);
+        accountPanel.add(textUsername);
+        accountPanel.add(lblPassword);
+        accountPanel.add(passwordField);
+        //accountPanel.add(insecureSSLBox);
+        northPanel.add(accountPanel);
+        northPanel.add(btnSync);
+        frame.add(northPanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
 
         frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, scrollPane, lblStatus, lblHost, lblPassword, lblUsername}));
         frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, lblStatus, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
