@@ -50,6 +50,8 @@ import java.io.IOException;
 import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
 
@@ -59,7 +61,6 @@ public class Userinterface {
     private JPasswordField passwordField;
     private JTextField textUsername;
     private JTextField textHostURL;
-    private JTextField textOwncloudURL;
 
     private JLabel lblContactNumbers;
 
@@ -81,6 +82,17 @@ public class Userinterface {
             while (run) {
                 textPane.setText("");
 
+                URL host;
+                try {
+                    host = new URL(textHostURL.getText().trim());
+                } catch (MalformedURLException e) {
+                    Status.printStatusToConsole("Invalid host URL");
+                    e.printStackTrace();
+                    return;
+                }
+                String server = host.getProtocol() + "://" + host.getAuthority();
+                String fullPath = server + "/" + host.getPath();
+
                 Status.printStatusToConsole("Start");
 
                 //Build Addressbooks
@@ -92,10 +104,10 @@ public class Userinterface {
 
                     //Connect WebDAV
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(textUsername.getText().trim(), String.valueOf(passwordField.getPassword()).trim(), textHostURL.getText().trim());
+                    webDAVConnection.connectHTTP(textUsername.getText().trim(), String.valueOf(passwordField.getPassword()).trim(), server);
 
                     //Load WebDAV Contacts, if connection true proceed
-                    if (webDAVConnection.loadContactsFromWebDav(textHostURL.getText().trim() + textOwncloudURL.getText().trim(), allContacts, strWorkingdir)) {
+                    if (webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir)) {
 
                         lblContactNumbers.setText(allContacts.numberOfContacts(Addressbook.WEBDAVADDRESSBOOK).toString() + " WebDAV");
 
@@ -111,7 +123,7 @@ public class Userinterface {
 
                         //Write Data
                         outlookContacts.writeOutlookObjects(allContacts);
-                        webDAVConnection.writeContacts(textHostURL.getText().trim() + textOwncloudURL.getText().trim(), allContacts);
+                        webDAVConnection.writeContacts(fullPath, allContacts);
 
                         //Save last Sync Uids
                         Status.printStatusToConsole("Save last Sync UIDs");
@@ -174,7 +186,6 @@ public class Userinterface {
                 writer.write(System.getProperty("line.separator"));
                 writer.write(textHostURL.getText());
                 writer.write(System.getProperty("line.separator"));
-                writer.write(textOwncloudURL.getText());
 
                 writer.flush();
             }
@@ -236,13 +247,6 @@ public class Userinterface {
         JLabel lblHost = new JLabel("Host URL:");
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        textOwncloudURL = new JTextField();
-        textOwncloudURL.setFont(new Font("Calibri", Font.PLAIN, 12));
-        textOwncloudURL.setColumns(10);
-
-        JLabel lblOwncloudUrl = new JLabel("Owncloud URL:");
-        lblOwncloudUrl.setFont(new Font("Calibri", Font.BOLD, 12));
-
         //Load config
         Status.printStatusToConsole("Load Config");
         try {
@@ -253,7 +257,6 @@ public class Userinterface {
                     textUsername.setText(in.readLine());
                     passwordField.setText(in.readLine());
                     textHostURL.setText(in.readLine());
-                    textOwncloudURL.setText(in.readLine());
                 }
             }
         } catch (IOException e1) {
@@ -274,10 +277,8 @@ public class Userinterface {
         lblStatus.setHorizontalAlignment(SwingConstants.LEFT);
         lblStatus.setFont(new Font("Calibri", Font.BOLD, 12));
         frame.getContentPane().setLayout(new MigLayout("", "[96px][250px][250px][250px]", "[22px][22px][22px][22px][22px][22px][222px]"));
-        frame.getContentPane().add(lblOwncloudUrl, "cell 0 3,growx,aligny center");
         frame.getContentPane().add(lblHost, "cell 0 2,alignx left,aligny center");
         frame.getContentPane().add(textHostURL, "cell 1 2 3 1,growx,aligny top");
-        frame.getContentPane().add(textOwncloudURL, "cell 1 3 3 1,growx,aligny top");
 
         lblNumbersOfContacts = new JLabel("# of loaded Contacts:");
         lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -294,8 +295,8 @@ public class Userinterface {
         frame.getContentPane().add(passwordField, "cell 1 1 2 1,growx,aligny top");
         frame.getContentPane().add(btnSync, "cell 3 0 1 2,grow");
 
-        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, textPane, scrollPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, lblUsername}));
-        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, textPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
+        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, scrollPane, lblStatus, lblHost, lblPassword, lblUsername}));
+        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, lblStatus, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
     }
 
     static public void setTextinTextPane(String strText) {
