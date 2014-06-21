@@ -21,6 +21,7 @@ package main;
 
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
+import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
@@ -59,6 +60,7 @@ public class Userinterface {
     private WebPasswordField passwordField;
     private WebTextField textUsername;
     private WebTextField textHostURL;
+    private WebCheckBox insecureSSLBox;
 
     private WebLabel lblContactNumbers;
 
@@ -103,7 +105,10 @@ public class Userinterface {
 
                     //Connect WebDAV
                     ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(textUsername.getText().trim(), String.valueOf(passwordField.getPassword()).trim(), server);
+                    webDAVConnection.connectHTTP(textUsername.getText().trim(),
+                            String.valueOf(passwordField.getPassword()).trim(),
+                            server,
+                            insecureSSLBox.isSelected());
 
                     //Load WebDAV Contacts, if connection true proceed
                     if (webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir)) {
@@ -188,6 +193,8 @@ public class Userinterface {
                 writer.write(System.getProperty("line.separator"));
                 writer.write(textHostURL.getText());
                 writer.write(System.getProperty("line.separator"));
+                writer.write(Boolean.toString(insecureSSLBox.isSelected()));
+                writer.write(System.getProperty("line.separator"));
 
                 writer.flush();
             }
@@ -229,13 +236,15 @@ public class Userinterface {
 
         WebLabel lblUsername = new WebLabel("Username:");
 
+        textUsername = new WebTextField();
+        textUsername.setColumns(10);
+
         WebLabel lblPassword = new WebLabel("Password:");
 
         passwordField = new WebPasswordField();
         passwordField.setEchoChar('*');
 
-        textUsername = new WebTextField();
-        textUsername.setColumns(10);
+        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
 
         textHostURL = new WebTextField();
         textHostURL.setColumns(10);
@@ -252,6 +261,7 @@ public class Userinterface {
                     textUsername.setText(in.readLine());
                     passwordField.setText(in.readLine());
                     textHostURL.setText(in.readLine());
+                    insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
                 }
             }
         } catch (IOException e1) {
@@ -278,7 +288,7 @@ public class Userinterface {
         accountPanel.add(textUsername);
         accountPanel.add(lblPassword);
         accountPanel.add(passwordField);
-        //accountPanel.add(insecureSSLBox);
+        accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
         northPanel.add(btnSync);
         frame.add(northPanel, BorderLayout.NORTH);

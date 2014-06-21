@@ -143,7 +143,7 @@ public class ManageContactsWebDAV {
      * Public Section
      *
      */
-    public void connectHTTP(String strUser, String strPass, String strHost) {
+    public void connectHTTP(String strUser, String strPass, String strHost, boolean insecure) {
         //Connect WebDAV with credentials
         hostConfig = new HostConfiguration();
         hostConfig.setHost(strHost);
@@ -156,9 +156,11 @@ public class ManageContactsWebDAV {
         client.getState().setCredentials(AuthScope.ANY, creds);
         client.setHostConfiguration(hostConfig);
 
-        Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
-        Protocol.registerProtocol("https", easyhttps);
-
+        if (insecure) {
+            Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+            Protocol.registerProtocol("https", easyhttps);
+        }
+        
         Status.printStatusToConsole("WebDav Connection generated");
     }
 
