@@ -297,22 +297,18 @@ public class Contacts {
     }
 
     public void printStatus() {
-        Iterator<Entry<String, Contact>> iterContacts = davContacts.entrySet().iterator();
+        Status.printStatusToConsole("Outlook Contacts: ");
+        this.print(outlookContacts);
+        Status.printStatusToConsole("DAV Contacs: ");
+        this.print(davContacts);;
+    }
 
-        while (iterContacts.hasNext()) {
-            Entry<String, Contact> entry = iterContacts.next();
-            Contact currentContact = entry.getValue();
-
-            Status.printStatusToConsole("DAV Contact: " + currentContact.getFirstName() + "," + currentContact.getLastName() + ": " + currentContact.getStatus());
-        }
-
-        iterContacts = outlookContacts.entrySet().iterator();
-
-        while (iterContacts.hasNext()) {
-            Entry<String, Contact> entry = iterContacts.next();
-            Contact currentContact = entry.getValue();
-
-            Status.printStatusToConsole("Outlook Contact: " + currentContact.getFirstName() + "," + currentContact.getLastName() + ": " + currentContact.getStatus());
-        }
+    private void print(HashMap<String, Contact> addressBook) {
+       for (Contact contact : addressBook.values()) {
+           String s = contact.getFirstName() + "," +
+                   contact.getLastName() + ": " +
+                   contact.getStatus();
+           Status.printStatusToConsole(s);
+       }
     }
 }
