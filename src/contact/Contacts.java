@@ -35,20 +35,16 @@ import main.Status;
 public class Contacts {
 
     public enum Addressbook {
-
         WEBDAVADDRESSBOOK,
         OUTLOOKADDRESSBOOK
     }
 
-    static private HashMap<String, Contact> davContacts = null;
-    static private HashMap<String, Contact> outlookContacts = null;
-
-    private List<String> listSyncContacts = null;
+    private final HashMap<String, Contact> davContacts;
+    private final HashMap<String, Contact> outlookContacts;
+    private final List<String> listSyncContacts;
 
     /**
-     *
-     * Construction Section
-     *
+     * Constructor
      */
     public Contacts(String strWorkingDir) {
         davContacts = new HashMap();
@@ -60,30 +56,26 @@ public class Contacts {
 
     /**
      * Private
-     *
      */
     private void loadUidsFromFile(String strWorkingDir) {
-        try {
-            Status.printStatusToConsole("Load last Sync UIDs");
-            File file = new File((strWorkingDir + "lastSync.txt"));
+        Status.printStatusToConsole("Load last Sync UIDs");
+        File file = new File((strWorkingDir + "lastSync.txt"));
 
-            if (file.exists()) {
-                try (BufferedReader in = new BufferedReader(new FileReader(strWorkingDir + "lastSync.txt"))) {
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        this.listSyncContacts.add(line);
-                    }
+        if (file.exists()) {
+            try (BufferedReader in = new BufferedReader(
+                    new FileReader(strWorkingDir + "lastSync.txt"))) {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    this.listSyncContacts.add(line);
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     /**
      * Public
-     *
      */
     public Integer numberOfContacts(Addressbook whichAdressbook) {
         int size = 0;
@@ -151,17 +143,13 @@ public class Contacts {
         try {
             writer = new FileWriter(file);
 
-            Iterator<Entry<String, Contact>> iter = davContacts.entrySet().iterator();
-
-            while (iter.hasNext()) {
-                Entry<String, Contact> entry = iter.next();
+            for (Entry<String, Contact> entry : davContacts.entrySet()) {
                 writer.write(entry.getValue().getUid());
                 writer.write(System.getProperty("line.separator"));
             }
 
             writer.flush();
             writer.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -181,7 +169,6 @@ public class Contacts {
             entry.getValue().deleteTmpContactPictureFile();
 
         }
-
     }
 
     public void compareAdressbooks() {
