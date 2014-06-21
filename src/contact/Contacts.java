@@ -51,9 +51,9 @@ public class Contacts {
      *
      */
     public Contacts(String strWorkingDir) {
-        hasTabDAVContacts = new Hashtable<String, Contact>();
-        hasTabOutlookContacts = new Hashtable<String, Contact>();
-        listSyncContacts = new ArrayList<String>();
+        hasTabDAVContacts = new Hashtable();
+        hasTabOutlookContacts = new Hashtable();
+        listSyncContacts = new ArrayList();
 
         this.loadUidsFromFile(strWorkingDir);
     }
@@ -68,19 +68,14 @@ public class Contacts {
             File file = new File((strWorkingDir + "lastSync.txt"));
 
             if (file.exists()) {
-                BufferedReader in = new BufferedReader(new FileReader(strWorkingDir + "lastSync.txt"));
-
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    this.listSyncContacts.add(line);
+                try (BufferedReader in = new BufferedReader(new FileReader(strWorkingDir + "lastSync.txt"))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        this.listSyncContacts.add(line);
+                    }
                 }
-                line = null;
-
-                in.close();
-                in = null;
             }
 
-            file = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +96,7 @@ public class Contacts {
                 break;
         }
 
-        return new Integer(size);
+        return size;
     }
 
     public void addContact(Addressbook whichAdressbook, Contact conContact) {
@@ -167,8 +162,6 @@ public class Contacts {
             writer.flush();
             writer.close();
 
-            iter = null;
-            writer = null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +173,6 @@ public class Contacts {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
 
-            entry = null;
         }
 
         iter = hasTabOutlookContacts.entrySet().iterator();
@@ -188,17 +180,15 @@ public class Contacts {
             Entry<String, Contact> entry = iter.next();
             entry.getValue().deleteTmpContactPictureFile();
 
-            entry = null;
         }
 
-        iter = null;
     }
 
     public void compareAdressbooks() {
-        List<Contact> listNewOutlookContacts = new ArrayList<Contact>();
-        List<Contact> listNewDAVContacts = new ArrayList<Contact>();
-        List<Contact> listDelOutlookContacts = new ArrayList<Contact>();
-        List<Contact> listDelDAVContacts = new ArrayList<Contact>();
+        List<Contact> listNewOutlookContacts = new ArrayList();
+        List<Contact> listNewDAVContacts = new ArrayList();
+        List<Contact> listDelOutlookContacts = new ArrayList();
+        List<Contact> listDelDAVContacts = new ArrayList();
 
         //Pr�fen ob ein Kontakt zu l�schen ist im Vergleich zum letzten mal
         if (!listSyncContacts.isEmpty()) {

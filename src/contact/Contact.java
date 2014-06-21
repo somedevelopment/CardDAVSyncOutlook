@@ -55,7 +55,6 @@ import ezvcard.property.Url;
 public class Contact {
 
     public enum Status {
-
         CHANGED,
         UNCHANGED,
         DELETE,
@@ -387,7 +386,6 @@ public class Contact {
         imageB.getData().getPixel(0, 0, pixelOfB);
 
         return Arrays.equals(pixelOfA, pixelOfB);
-
     }
 
     private Uid findUID(String strBody) {
