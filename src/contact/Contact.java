@@ -66,15 +66,17 @@ public class Contact {
     private VCard vcard = null;
     private String strPathToContactPicture = null;
     private String strUid = null;
+    // unique ID of an item in outlook. Changes when item is moved or recreated
+    // from backup
     private String strEntryID = null;
     private String strFileOnDavServer = null;
     private Status statusConntact = null;
     private Date dateLastModificationTme = null;
 
+    /** Constructor Section **/
+
     /**
-     *
-     * Construction Section
-     *
+     * Create a copy of an existing contact.
      */
     public Contact(Contact toCopyContact, Contact.Status state) {
         this.statusConntact = state;
@@ -87,6 +89,9 @@ public class Contact {
         this.dateLastModificationTme = toCopyContact.getLastModificationTime();
     }
 
+    /**
+     * Create contact from WebDAV.
+     */
     public Contact(String strVCardData, String strFileOnDavServer, String strWorkingDir) {
         this.statusConntact = Status.READIN;
 
@@ -363,10 +368,7 @@ public class Contact {
         File fileImageA = new File(this.strPathToContactPicture);
         File fileImageB = new File(strPathToComparePicture);
 
-        if (!fileImageA.exists()) {
-            return false;
-        }
-        if (!fileImageB.exists()) {
+        if (!fileImageA.exists() || !fileImageB.exists()) {
             return false;
         }
 
@@ -414,7 +416,7 @@ public class Contact {
         }
     }
 
-    public Boolean equalTo(Contact toCompareContact) {
+    public boolean equalTo(Contact toCompareContact) {
         main.Status.printStatusToConsole("Compare: " + this.getLastName() + ", " + this.getFirstName());
 
         if (this.getAnniversary() != null) {
@@ -1488,7 +1490,6 @@ public class Contact {
                 }
             }
         }
-
         return null;
     }
 
@@ -1500,7 +1501,6 @@ public class Contact {
                 }
             }
         }
-
         return null;
     }
 
@@ -1508,7 +1508,6 @@ public class Contact {
         if (!this.vcard.getBirthdays().isEmpty()) {
             return this.vcard.getBirthday().getDate();
         }
-
         return null;
     }
 
