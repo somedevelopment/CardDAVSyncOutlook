@@ -28,24 +28,15 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import main.Status;
+import main.Utils;
 
 public abstract class ManageOutlook {
 
     static {
+        // add directory with jacob library (loaded later) to library path
         String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
         String libDir = workingDir + File.separator + "lib";
-        String bitness = System.getProperty("sun.arch.data.model");
-        String libName;
-        if (bitness.equals("64"))
-            libName = "jacob-1.17-x64.dll";
-        else
-            libName = "jacob-1.17-x86.dll";
-        try {
-            System.load(libDir + File.separator + libName);
-        } catch (UnsatisfiedLinkError e) {
-            System.err.println("Native code library failed to load.\n" + e);
-            System.exit(1);
-        }
+        Utils.addLibraryPath(libDir);
     }
 
     static private ActiveXComponent axc;
@@ -74,7 +65,12 @@ public abstract class ManageOutlook {
      *
      */
     public Boolean openOutlook() {
-        ComThread.InitMTA(true);
+        try {
+            ComThread.InitMTA(true);
+        } catch (UnsatisfiedLinkError e) {
+            Status.printStatusToConsole("Cannot open com library");
+            e.printStackTrace();
+        }
 
         Boolean bolOutlookOpen = false;
 
