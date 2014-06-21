@@ -48,6 +48,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.SwingConstants;
 
@@ -64,7 +66,6 @@ public class Userinterface {
     static private JTextPane textPane;
     static private JScrollPane scrollPane;
     static private StyledDocument docTextPane;
-    private JButton btnSaveConfig;
 
     //Start Worker Thread for Update Text Area
     Runnable syncWorker = new Runnable() {
@@ -161,6 +162,29 @@ public class Userinterface {
         initialize();
     }
 
+    private void saveConfig() {
+        String confDir = "conf";
+        new File(confDir).mkdir();
+        File file = new File(confDir + File.separator + "config.txt");
+        try {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(textUsername.getText());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(passwordField.getPassword());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(textHostURL.getText());
+                writer.write(System.getProperty("line.separator"));
+                writer.write(textOwncloudURL.getText());
+
+                writer.flush();
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        Status.printStatusToConsole("Config Saved");
+
+    }
+
     /**
      * Initialize the contents of the frame.
      */
@@ -177,38 +201,19 @@ public class Userinterface {
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-        btnSaveConfig = new JButton("Save Configuration");
-        btnSaveConfig.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //Write Config File
-                String confDir = "conf";
-                new File(confDir).mkdir();
-                File file = new File(confDir + File.separator + "config.txt");
-                try {
-                    try (FileWriter writer = new FileWriter(file)) {
-                        writer.write(textUsername.getText());
-                        writer.write(System.getProperty("line.separator"));
-                        writer.write(passwordField.getPassword());
-                        writer.write(System.getProperty("line.separator"));
-                        writer.write(textHostURL.getText());
-                        writer.write(System.getProperty("line.separator"));
-                        writer.write(textOwncloudURL.getText());
-
-                        writer.flush();
-                    }
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                Status.printStatusToConsole("Config Saved");
-
-            }
-        });
-        btnSaveConfig.setFont(new Font("Calibri", Font.PLAIN, 12));
-
         frame = new JFrame();
         frame.setBounds(100, 100, 630, 430);
+        frame.setResizable(false);
+        frame.setTitle("CardDAVSyncOutlook");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                Userinterface.this.saveConfig();
+                frame.setVisible(false);
+                frame.dispose();
+            }
+        });
 
         JLabel lblUsername = new JLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -281,7 +286,6 @@ public class Userinterface {
         lblContactNumbers = new JLabel("");
         lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
         frame.getContentPane().add(lblContactNumbers, "cell 1 4 2 1,grow");
-        frame.getContentPane().add(btnSaveConfig, "cell 3 4,alignx right,growy");
         frame.getContentPane().add(scrollPane, "cell 0 6 4 1,grow");
         frame.getContentPane().add(lblUsername, "cell 0 0,alignx left,aligny center");
         frame.getContentPane().add(lblPassword, "cell 0 1,alignx left,aligny center");
@@ -290,8 +294,8 @@ public class Userinterface {
         frame.getContentPane().add(passwordField, "cell 1 1 2 1,growx,aligny top");
         frame.getContentPane().add(btnSync, "cell 3 0 1 2,grow");
 
-        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, btnSaveConfig, textPane, scrollPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, lblUsername}));
-        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, btnSaveConfig, textPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
+        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, textPane, scrollPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, lblUsername}));
+        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, textOwncloudURL, btnSync, textPane, lblStatus, lblOwncloudUrl, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
     }
 
     static public void setTextinTextPane(String strText) {
