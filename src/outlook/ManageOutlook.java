@@ -128,6 +128,10 @@ public abstract class ManageOutlook {
     protected String getNewOutlookItem() {
         Dispatch dipItem = Dispatch.call(ManageOutlook.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
 
+        // need to save the item. Before, the entry ID is null
+        // TODO is saving twice a good idea?
+        Dispatch.call(dipItem, "Save");
+
         String strNewItemEntryID = Dispatch.get(dipItem, "EntryID").toString().trim();
 
         dipItem.safeRelease();
