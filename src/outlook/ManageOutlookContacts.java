@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -201,10 +200,7 @@ public class ManageOutlookContacts extends ManageOutlook {
         Contacts allContacts = (Contacts) allContant;
         List<Contact> listDelOutlookContacts = new ArrayList();
 
-        Iterator<Entry<String, Contact>> iterOutlookContacts = allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet().iterator();
-
-        while (iterOutlookContacts.hasNext()) {
-            Entry<String, Contact> currentOutlookEntry = iterOutlookContacts.next();
+        for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
@@ -235,13 +231,8 @@ public class ManageOutlookContacts extends ManageOutlook {
         }
 
         //Delete deleted Contacts
-        if (!listDelOutlookContacts.isEmpty()) {
-            Iterator<Contact> iter = listDelOutlookContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                allContacts.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
-            }
+        for (Contact currentContact: listDelOutlookContacts) {
+            allContacts.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
         }
 
     }

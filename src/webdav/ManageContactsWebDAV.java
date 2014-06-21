@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import main.Status;
@@ -160,7 +159,7 @@ public class ManageContactsWebDAV {
             Protocol easyhttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
             Protocol.registerProtocol("https", easyhttps);
         }
-        
+
         Status.printStatusToConsole("WebDav Connection generated");
     }
 
@@ -196,10 +195,7 @@ public class ManageContactsWebDAV {
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {
         List<Contact> listDelDAVContacts = new ArrayList();
 
-        Iterator<Entry<String, Contact>> iterDavContacts = allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet().iterator();
-
-        while (iterDavContacts.hasNext()) {
-            Entry<String, Contact> currentOutlookEntry = iterDavContacts.next();
+        for (Entry<String, Contact> currentOutlookEntry: allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:
@@ -229,14 +225,10 @@ public class ManageContactsWebDAV {
         }
 
         //Delete deleted Contacts
-        if (!listDelDAVContacts.isEmpty()) {
-            Iterator<Contact> iter = listDelDAVContacts.iterator();
-            while (iter.hasNext()) {
-                Contact currentContact = iter.next();
-
-                allContacts.removeContact(Addressbook.WEBDAVADDRESSBOOK, currentContact.getUid());
-            }
+        for (Contact currentContact: listDelDAVContacts) {
+            allContacts.removeContact(Addressbook.WEBDAVADDRESSBOOK, currentContact.getUid());
         }
+
     }
 
 }

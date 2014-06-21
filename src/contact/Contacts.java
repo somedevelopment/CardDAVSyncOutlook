@@ -25,7 +25,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -40,8 +40,8 @@ public class Contacts {
         OUTLOOKADDRESSBOOK
     }
 
-    static private Hashtable<String, Contact> hasTabDAVContacts = null;
-    static private Hashtable<String, Contact> hasTabOutlookContacts = null;
+    static private HashMap<String, Contact> hasTabDAVContacts = null;
+    static private HashMap<String, Contact> hasTabOutlookContacts = null;
 
     private List<String> listSyncContacts = null;
 
@@ -51,8 +51,8 @@ public class Contacts {
      *
      */
     public Contacts(String strWorkingDir) {
-        hasTabDAVContacts = new Hashtable();
-        hasTabOutlookContacts = new Hashtable();
+        hasTabDAVContacts = new HashMap();
+        hasTabOutlookContacts = new HashMap();
         listSyncContacts = new ArrayList();
 
         this.loadUidsFromFile(strWorkingDir);
@@ -123,7 +123,7 @@ public class Contacts {
         }
     }
 
-    public Hashtable<String, Contact> getAddressbook(Addressbook whichAdressbook) {
+    public HashMap<String, Contact> getAddressbook(Addressbook whichAdressbook) {
         switch (whichAdressbook) {
             case WEBDAVADDRESSBOOK:
                 return hasTabDAVContacts;
