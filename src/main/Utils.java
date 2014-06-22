@@ -32,7 +32,8 @@ public class Utils {
             final String[] newPaths = Arrays.copyOf(paths, paths.length + 1);
             newPaths[newPaths.length-1] = pathToAdd;
             usrPathsField.set(null, newPaths);
-        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
+            e.printStackTrace();
             Status.printStatusToConsole("Cannot add library path");
         }
     }

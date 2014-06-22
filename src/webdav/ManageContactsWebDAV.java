@@ -170,17 +170,17 @@ public class ManageContactsWebDAV {
 
         try {
             for (MultiStatusResponse response : responses) {
-            String strFileToDownload = hostConfig.getHost() + response.getHref();
-            //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
-            if (strFileToDownload.contains(".vcf")) {
+                String strFileToDownload = hostConfig.getHost() + response.getHref();
+                //Pruefen ob es sich wirklich um ein Kontakt handelt - nicht wirklich schoen
+                if (strFileToDownload.contains(".vcf")) {
                     String strNewContact = readVCardsFromWebDAV(strFileToDownload);
                     if (strNewContact != null) {
-                    Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
-                    allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
+                        Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
+                        allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
 
-                    Status.printStatusToConsole("Load WebDav Contact " +
-                            tmpContact.getFirstName() + ", " +
-                            tmpContact.getLastName());
+                        Status.printStatusToConsole("Load WebDav Contact " +
+                                tmpContact.getFirstName() + ", " +
+                                tmpContact.getLastName());
                     }
                 }
             }
@@ -198,24 +198,43 @@ public class ManageContactsWebDAV {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to WebDAV " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    uploadVCardsToWebDAV(generateWebDavUriFilename(currentOutlookEntry.getValue(), strCardDAVUrl), currentOutlookEntry.getValue().getContactAsString());
+                    Status.printStatusToConsole("Write Changed Contact to WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    uploadVCardsToWebDAV(
+                            generateWebDavUriFilename(
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl),
+                            currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to WebDAV " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    uploadVCardsToWebDAV(generateWebDavUriFilename(currentOutlookEntry.getValue(), strCardDAVUrl), currentOutlookEntry.getValue().getContactAsString());
+                    Status.printStatusToConsole("Write New Contact to WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    uploadVCardsToWebDAV(
+                            generateWebDavUriFilename(
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl),
+                            currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact from WebDAV " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    deleteVCardsFromWebDAV(generateWebDavUriFilename(currentOutlookEntry.getValue(), strCardDAVUrl));
+                    Status.printStatusToConsole("Delete Contact from WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    deleteVCardsFromWebDAV(
+                            generateWebDavUriFilename(
+                                    currentOutlookEntry.getValue(),
+                                    strCardDAVUrl));
                     listDelDAVContacts.add(currentOutlookEntry.getValue());
                     break;
                 case READIN:
                     //Do nothing
                     break;
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Changed Contact to WebDAV  " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
-                    uploadVCardsToWebDAV(generateWebDavUriFilename(currentOutlookEntry.getValue(), strCardDAVUrl), currentOutlookEntry.getValue().getContactAsString());
+                    Status.printStatusToConsole("Write Contact with new UID to WebDAV " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    Status.printStatusToConsole("WARNING: this should not happen!");
                     break;
                 case UNCHANGED:
                     //Do nothing

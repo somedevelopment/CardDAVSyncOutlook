@@ -220,19 +220,18 @@ public class Userinterface {
 
         //Load config
         Status.printStatusToConsole("Load Config");
-        try {
-            File file = new File("conf\\config.txt");
 
-            if (file.exists()) {
-                try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-                    textUsername.setText(in.readLine());
-                    passwordField.setText(in.readLine());
-                    textHostURL.setText(in.readLine());
-                    insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
-                }
+        File file = new File("conf\\config.txt");
+
+        if (file.exists()) {
+            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+                textUsername.setText(in.readLine());
+                passwordField.setText(in.readLine());
+                textHostURL.setText(in.readLine());
+                insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
-        } catch (IOException e1) {
-            e1.printStackTrace();
         }
 
         WebButton btnSync = new WebButton("Start Synchronization");
@@ -274,8 +273,39 @@ public class Userinterface {
         frame.add(northPanel, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        frame.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, scrollPane, lblStatus, lblHost, lblPassword, lblUsername}));
-        frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{textUsername, passwordField, textHostURL, btnSync, textPane, lblStatus, lblHost, lblPassword, frame.getContentPane(), scrollPane, lblUsername}));
+        frame.getContentPane().setFocusTraversalPolicy(
+                new FocusTraversalOnArray(
+                        new Component[]{
+                            textUsername,
+                            passwordField,
+                            textHostURL,
+                            btnSync,
+                            textPane,
+                            scrollPane,
+                            lblStatus,
+                            lblHost,
+                            lblPassword,
+                            lblUsername
+                        }
+                )
+        );
+        frame.setFocusTraversalPolicy(
+                new FocusTraversalOnArray(
+                        new Component[]{
+                            textUsername,
+                            passwordField,
+                            textHostURL,
+                            btnSync,
+                            textPane,
+                            lblStatus,
+                            lblHost,
+                            lblPassword,
+                            frame.getContentPane(),
+                            scrollPane,
+                            lblUsername
+                        }
+                )
+        );
 
     }
 
@@ -283,22 +313,20 @@ public class Userinterface {
         String confDir = "conf";
         new File(confDir).mkdir();
         File file = new File(confDir + File.separator + "config.txt");
-        try {
-            try (FileWriter writer = new FileWriter(file)) {
-                writer.write(textUsername.getText());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(passwordField.getPassword());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(textHostURL.getText());
-                writer.write(System.getProperty("line.separator"));
-                writer.write(Boolean.toString(insecureSSLBox.isSelected()));
-                writer.write(System.getProperty("line.separator"));
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(textUsername.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(passwordField.getPassword());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(textHostURL.getText());
+            writer.write(System.getProperty("line.separator"));
+            writer.write(Boolean.toString(insecureSSLBox.isSelected()));
+            writer.write(System.getProperty("line.separator"));
 
-                writer.flush();
-            }
+            writer.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
-        }
+        } 
         Status.printStatusToConsole("Config Saved");
 
     }
