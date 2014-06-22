@@ -39,14 +39,14 @@ public class MainTestSyncContacts {
     static int intOutlookFolder = 10;
 
     public static void main(String[] args) throws Exception {
-        Status.printStatusToConsole("Start");
+        Status.print("Start");
 
         //WorkingDir
         strWorkingDir = System.getProperty("user.dir");
         strWorkingDir = strWorkingDir + File.separator + "workingdir" + File.separator;
 
         //Load config
-        Status.printStatusToConsole("Load Config");
+        Status.print("Load Config");
         try {
             File file = new File("conf\\config.txt");
 
@@ -94,6 +94,6 @@ public class MainTestSyncContacts {
         //Close
         outlookContacts.closeOutlook();
 
-        Status.printStatusToConsole("End");
+        Status.print("End");
     }
 }

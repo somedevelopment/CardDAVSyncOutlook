@@ -85,14 +85,14 @@ public class Userinterface {
             try {
                 host = new URL(urlField.getText().trim());
             } catch (MalformedURLException e) {
-                Status.printStatusToConsole("Invalid host URL");
+                Status.print("Invalid host URL");
                 e.printStackTrace();
                 return;
             }
             String server = host.getProtocol() + "://" + host.getAuthority();
             String fullPath = server + "/" + host.getPath();
 
-            Status.printStatusToConsole("Start");
+            Status.print("Start");
 
             //Build Addressbooks
             Contacts allContacts = new Contacts(strWorkingdir);
@@ -101,7 +101,7 @@ public class Userinterface {
             ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
             boolean opened = outlookContacts.openOutlook();
             if (!opened) {
-                Status.printStatusToConsole("Can't open Outlook");
+                Status.print("Can't open Outlook");
                 return;
             }
 
@@ -115,7 +115,7 @@ public class Userinterface {
             //Load WebDAV Contacts, if connection true proceed
             boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
             if (!loaded) {
-                Status.printStatusToConsole("Could not load WebDAV contacts");
+                Status.print("Could not load WebDAV contacts");
                 outlookContacts.closeOutlook();
                 return;
             }
@@ -128,7 +128,7 @@ public class Userinterface {
             lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
 
             //Compare and modify Contacts
-            Status.printStatusToConsole("Compare Adressbooks");
+            Status.print("Compare Adressbooks");
             allContacts.compareAdressbooks();
             //allContacts.printStatus();
 
@@ -137,17 +137,17 @@ public class Userinterface {
             webDAVConnection.writeContacts(fullPath, allContacts);
 
             //Save last Sync Uids
-            Status.printStatusToConsole("Save last Sync UIDs");
+            Status.print("Save last Sync UIDs");
             allContacts.saveUidsToFile(strWorkingdir);
 
             //Delete Tmp Contact Pictures
             allContacts.deleteTmpContactPictures();
-            Status.printStatusToConsole("Temporary Contact Pictures Files deleted");
+            Status.print("Temporary Contact Pictures Files deleted");
 
             //Close
             outlookContacts.closeOutlook();
 
-            Status.printStatusToConsole("End");
+            Status.print("End");
         }
     };
     private WebLabel lblNumbersOfContacts;
@@ -222,7 +222,7 @@ public class Userinterface {
         urlField.setHideInputPromptOnFocus(false);
 
         //Load config
-        Status.printStatusToConsole("Load Config");
+        Status.print("Load Config");
 
         File file = new File("conf\\config.txt");
 
@@ -330,7 +330,7 @@ public class Userinterface {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        Status.printStatusToConsole("Config Saved");
+        Status.print("Config Saved");
 
     }
 

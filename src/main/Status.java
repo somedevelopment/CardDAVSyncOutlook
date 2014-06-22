@@ -24,7 +24,7 @@ import java.util.Date;
 
 public class Status {
 
-    static public void printStatusToConsole(String strWhereIam) {
+    static public void print(String strWhereIam) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         //System.out.println(strWhereIam + ": " + sdf.format(new Date()));
         Userinterface.setTextinTextPane(sdf.format(new Date()) + " - " + strWhereIam);

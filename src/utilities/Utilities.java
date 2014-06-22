@@ -33,7 +33,7 @@ public class Utilities {
         try {
             String strFile = null;
 
-            Status.printStatusToConsole("Load: " + strDescriptionFile);
+            Status.print("Load: " + strDescriptionFile);
             File file = new File(strFileToLoad);
 
             if (file.exists()) {
@@ -55,7 +55,7 @@ public class Utilities {
 
     static public void saveStringToFile(String strDescriptionFile, String strFileToSave, String strDestinationFile) {
         try {
-            Status.printStatusToConsole("Save: " + strDescriptionFile);
+            Status.print("Save: " + strDescriptionFile);
 
             File file = new File(strDestinationFile);
             FileWriter writer;

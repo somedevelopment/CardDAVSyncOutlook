@@ -160,7 +160,7 @@ public class ManageContactsWebDAV {
             Protocol.registerProtocol("https", easyhttps);
         }
 
-        Status.printStatusToConsole("WebDav Connection generated");
+        Status.print("WebDav Connection generated");
     }
 
     public boolean loadContactsFromWebDav(String strCardDAVUrl, Contacts allContacts, String strWorkingDir) {
@@ -178,7 +178,7 @@ public class ManageContactsWebDAV {
                         Contact tmpContact = new Contact(strNewContact, strFileToDownload, strWorkingDir);
                         allContacts.addContact(Addressbook.WEBDAVADDRESSBOOK, tmpContact);
 
-                        Status.printStatusToConsole("Load WebDav Contact " +
+                        Status.print("Load WebDav Contact " +
                                 tmpContact.getFirstName() + ", " +
                                 tmpContact.getLastName());
                     }
@@ -198,7 +198,7 @@ public class ManageContactsWebDAV {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:
-                    Status.printStatusToConsole("Write Changed Contact to WebDAV " +
+                    Status.print("Write Changed Contact to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     uploadVCardsToWebDAV(
@@ -208,7 +208,7 @@ public class ManageContactsWebDAV {
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case NEW:
-                    Status.printStatusToConsole("Write New Contact to WebDAV " +
+                    Status.print("Write New Contact to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     uploadVCardsToWebDAV(
@@ -218,7 +218,7 @@ public class ManageContactsWebDAV {
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case DELETE:
-                    Status.printStatusToConsole("Delete Contact from WebDAV " +
+                    Status.print("Delete Contact from WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     deleteVCardsFromWebDAV(
@@ -231,10 +231,10 @@ public class ManageContactsWebDAV {
                     //Do nothing
                     break;
                 case UIDADDED:
-                    Status.printStatusToConsole("Write Contact with new UID to WebDAV " +
+                    Status.print("Write Contact with new UID to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
-                    Status.printStatusToConsole("WARNING: this should not happen!");
+                    Status.print("WARNING: this should not happen!");
                     break;
                 case UNCHANGED:
                     //Do nothing

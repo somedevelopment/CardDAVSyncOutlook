@@ -34,7 +34,7 @@ public class Utils {
             usrPathsField.set(null, newPaths);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException e) {
             e.printStackTrace();
-            Status.printStatusToConsole("Cannot add library path");
+            Status.print("Cannot add library path");
         }
     }
 }

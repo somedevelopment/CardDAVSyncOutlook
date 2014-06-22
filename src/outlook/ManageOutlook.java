@@ -66,7 +66,7 @@ public abstract class ManageOutlook {
         try {
             ComThread.InitMTA(true);
         } catch (UnsatisfiedLinkError e) {
-            Status.printStatusToConsole("Cannot open com library");
+            Status.print("Cannot open com library");
             e.printStackTrace();
         }
 
@@ -87,7 +87,7 @@ public abstract class ManageOutlook {
                 bolOutlookOpen = true;
                 ManageOutlook.dipNamespace = axc.getProperty("Session").toDispatch();
 
-                Status.printStatusToConsole("Outlook opened");
+                Status.print("Outlook opened");
             }
         } else {
             bolOutlookOpen = true;
@@ -113,7 +113,7 @@ public abstract class ManageOutlook {
         ManageOutlook.dipNamespace = null;
         ManageOutlook.axc = null;
 
-        Status.printStatusToConsole("Outlook closed");
+        Status.print("Outlook closed");
     }
 
     /**

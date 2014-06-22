@@ -45,7 +45,7 @@ public class XMLUtilities {
 
     static public Document loadXMLFile(String strXMLFile) {
         try {
-            Status.printStatusToConsole("Load: " + strXMLFile);
+            Status.print("Load: " + strXMLFile);
 
             File fileXMLFile = new File(strXMLFile);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -70,7 +70,7 @@ public class XMLUtilities {
 
     static public void printDocumentToSTDOUT(Document docXMLFile, OutputStream outStream) {
         try {
-            Status.printStatusToConsole("Print XML File");
+            Status.print("Print XML File");
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer;
@@ -94,7 +94,7 @@ public class XMLUtilities {
      */
     static public String convertDocumentToString(Document docXMLFile) {
         try {
-            Status.printStatusToConsole("Save XML File");
+            Status.print("Save XML File");
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer;

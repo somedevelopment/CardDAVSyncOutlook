@@ -384,7 +384,7 @@ public class Contact {
     }
 
     public boolean equalTo(Contact toCompareContact) {
-        main.Status.printStatusToConsole("Compare: " + this.getLastName() + ", " + this.getFirstName());
+        main.Status.print("Compare: " + this.getLastName() + ", " + this.getFirstName());
 
         if (this.getAnniversary() != null) {
             if (toCompareContact.getAnniversary() != null) {

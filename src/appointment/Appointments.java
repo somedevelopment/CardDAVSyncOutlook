@@ -79,7 +79,7 @@ public class Appointments {
             Entry<String, Appointment> entry = iterAppointment.next();
             Appointment currentAppointment = entry.getValue();
 
-            Status.printStatusToConsole("DAV Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
+            Status.print("DAV Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
         }
 
         iterAppointment = hasTabOutlookAppointments.entrySet().iterator();
@@ -88,7 +88,7 @@ public class Appointments {
             Entry<String, Appointment> entry = iterAppointment.next();
             Appointment currentAppointment = entry.getValue();
 
-            Status.printStatusToConsole("Outlook Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
+            Status.print("Outlook Appointment: " + currentAppointment.getSensitivity() + " " + currentAppointment.getSubject());
         }
     }
 

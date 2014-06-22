@@ -89,7 +89,7 @@ public class ManageOutlookAppointments extends ManageOutlook {
                         strEntryID, strSubject, strBody, sensitivity, strStartUTC, strEndUTC, strAllDayEvent,
                         bolIsRecurring, strLocation, strRequiredAttendees, strOptionalAttendees, strReminderMinutesBeforeStart));
 
-                Status.printStatusToConsole("Load appointment from Outlook " + strSubject);
+                Status.print("Load appointment from Outlook " + strSubject);
             }
 
             dipAppointment.safeRelease();

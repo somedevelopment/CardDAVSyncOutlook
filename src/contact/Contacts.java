@@ -58,7 +58,7 @@ public class Contacts {
      * Private
      */
     private void loadUidsFromFile(String strWorkingDir) {
-        Status.printStatusToConsole("Load last Sync UIDs");
+        Status.print("Load last Sync UIDs");
         File file = new File((strWorkingDir + "lastSync.txt"));
 
         if (file.exists()) {
@@ -284,9 +284,9 @@ public class Contacts {
     }
 
     public void printStatus() {
-        Status.printStatusToConsole("Outlook Contacts: ");
+        Status.print("Outlook Contacts: ");
         this.print(outlookContacts);
-        Status.printStatusToConsole("DAV Contacs: ");
+        Status.print("DAV Contacs: ");
         this.print(davContacts);;
     }
 
@@ -295,7 +295,7 @@ public class Contacts {
            String s = contact.getFirstName() + "," +
                    contact.getLastName() + ": " +
                    contact.getStatus();
-           Status.printStatusToConsole(s);
+           Status.print(s);
        }
     }
 }
