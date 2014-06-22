@@ -72,84 +72,81 @@ public class Userinterface {
     Runnable syncWorker = new Runnable() {
         @Override
         public void run() {
-            boolean run = true;
-
             int intOutlookFolder = 10;
 
             String strWorkingdir = System.getProperty("user.dir");
             strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
             new File(strWorkingdir).mkdir();
 
-            while (run) {
-                textPane.setText("");
+            textPane.setText("");
 
-                URL host;
-                try {
-                    host = new URL(textHostURL.getText().trim());
-                } catch (MalformedURLException e) {
-                    Status.printStatusToConsole("Invalid host URL");
-                    e.printStackTrace();
-                    return;
-                }
-                String server = host.getProtocol() + "://" + host.getAuthority();
-                String fullPath = server + "/" + host.getPath();
-
-                Status.printStatusToConsole("Start");
-
-                //Build Addressbooks
-                Contacts allContacts = new Contacts(strWorkingdir);
-
-                //Get Outlook instance
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
-                if (outlookContacts.openOutlook()) {
-
-                    //Connect WebDAV
-                    ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
-                    webDAVConnection.connectHTTP(textUsername.getText().trim(),
-                            String.valueOf(passwordField.getPassword()).trim(),
-                            server,
-                            insecureSSLBox.isSelected());
-
-                    //Load WebDAV Contacts, if connection true proceed
-                    if (webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir)) {
-
-                        lblContactNumbers.setText(allContacts.numberOfContacts(Addressbook.WEBDAVADDRESSBOOK).toString() + " WebDAV");
-
-                        //Load Outlook Contacts
-                        outlookContacts.loadContantFromOutlook(allContacts);
-
-                        lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
-
-                        //Compare and modify Contacts
-                        Status.printStatusToConsole("Compare Adressbooks");
-                        allContacts.compareAdressbooks();
-						//allContacts.printStatus();
-
-                        //Write Data
-                        outlookContacts.writeOutlookObjects(allContacts);
-                        webDAVConnection.writeContacts(fullPath, allContacts);
-
-                        //Save last Sync Uids
-                        Status.printStatusToConsole("Save last Sync UIDs");
-                        allContacts.saveUidsToFile(strWorkingdir);
-
-                        //Delete Tmp Contact Pictures
-                        allContacts.deleteTmpContactPictures();
-                        Status.printStatusToConsole("Temporary Contact Pictures Files deleted");
-                    } else {
-                        Status.printStatusToConsole("WebDAV Connection not established");
-                    }
-
-                    //Close
-                    outlookContacts.closeOutlook();
-                } else {
-                    Status.printStatusToConsole("Can't open Outlook");
-                }
-
-                Status.printStatusToConsole("End");
-
-                run = false;
+            URL host;
+            try {
+                host = new URL(textHostURL.getText().trim());
+            } catch (MalformedURLException e) {
+                Status.printStatusToConsole("Invalid host URL");
+                e.printStackTrace();
+                return;
             }
+            String server = host.getProtocol() + "://" + host.getAuthority();
+            String fullPath = server + "/" + host.getPath();
+
+            Status.printStatusToConsole("Start");
+
+            //Build Addressbooks
+            Contacts allContacts = new Contacts(strWorkingdir);
+
+            //Get Outlook instance
+            ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
+            boolean opened = outlookContacts.openOutlook();
+            if (!opened) {
+                Status.printStatusToConsole("Can't open Outlook");
+                return;
+            }
+
+            //Connect WebDAV
+            ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
+            webDAVConnection.connectHTTP(textUsername.getText().trim(),
+                    String.valueOf(passwordField.getPassword()).trim(),
+                    server,
+                    insecureSSLBox.isSelected());
+
+            //Load WebDAV Contacts, if connection true proceed
+            boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
+            if (!loaded) {
+                Status.printStatusToConsole("Could not load WebDAV contacts");
+                outlookContacts.closeOutlook();
+                return;
+            }
+
+            lblContactNumbers.setText(allContacts.numberOfContacts(Addressbook.WEBDAVADDRESSBOOK).toString() + " WebDAV");
+
+            //Load Outlook Contacts
+            outlookContacts.loadContantFromOutlook(allContacts);
+
+            lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
+
+            //Compare and modify Contacts
+            Status.printStatusToConsole("Compare Adressbooks");
+            allContacts.compareAdressbooks();
+            //allContacts.printStatus();
+
+            //Write Data
+            outlookContacts.writeOutlookObjects(allContacts);
+            webDAVConnection.writeContacts(fullPath, allContacts);
+
+            //Save last Sync Uids
+            Status.printStatusToConsole("Save last Sync UIDs");
+            allContacts.saveUidsToFile(strWorkingdir);
+
+            //Delete Tmp Contact Pictures
+            allContacts.deleteTmpContactPictures();
+            Status.printStatusToConsole("Temporary Contact Pictures Files deleted");
+
+            //Close
+            outlookContacts.closeOutlook();
+
+            Status.printStatusToConsole("End");
         }
     };
     private WebLabel lblNumbersOfContacts;
