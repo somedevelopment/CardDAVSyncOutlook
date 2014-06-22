@@ -59,7 +59,7 @@ public class Userinterface {
     private WebFrame frame;
     private WebPasswordField passwordField;
     private WebTextField textUsername;
-    private WebTextField textHostURL;
+    private WebTextField urlField;
     private WebCheckBox insecureSSLBox;
     private WebLabel lblContactNumbers;
 
@@ -83,7 +83,7 @@ public class Userinterface {
 
             URL host;
             try {
-                host = new URL(textHostURL.getText().trim());
+                host = new URL(urlField.getText().trim());
             } catch (MalformedURLException e) {
                 Status.printStatusToConsole("Invalid host URL");
                 e.printStackTrace();
@@ -213,10 +213,13 @@ public class Userinterface {
 
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
 
-        textHostURL = new WebTextField();
-        textHostURL.setColumns(10);
 
-        WebLabel lblHost = new WebLabel("Host URL:");
+        WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
+
+        urlField = new WebTextField();
+        //textHostURL.setColumns(10)
+        urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
+        urlField.setHideInputPromptOnFocus(false);
 
         //Load config
         Status.printStatusToConsole("Load Config");
@@ -227,7 +230,7 @@ public class Userinterface {
             try (BufferedReader in = new BufferedReader(new FileReader(file))) {
                 textUsername.setText(in.readLine());
                 passwordField.setText(in.readLine());
-                textHostURL.setText(in.readLine());
+                urlField.setText(in.readLine());
                 insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -255,7 +258,7 @@ public class Userinterface {
         WebPanel northPanel = new WebPanel();
         northPanel.setLayout(new GridLayout(0, 1, 0, 0));
         northPanel.add(lblHost);
-        northPanel.add(textHostURL);
+        northPanel.add(urlField);
         WebPanel accountPanel = new WebPanel();
         accountPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         accountPanel.add(lblUsername);
@@ -278,7 +281,7 @@ public class Userinterface {
                         new Component[]{
                             textUsername,
                             passwordField,
-                            textHostURL,
+                            urlField,
                             btnSync,
                             textPane,
                             scrollPane,
@@ -294,7 +297,7 @@ public class Userinterface {
                         new Component[]{
                             textUsername,
                             passwordField,
-                            textHostURL,
+                            urlField,
                             btnSync,
                             textPane,
                             lblStatus,
@@ -318,7 +321,7 @@ public class Userinterface {
             writer.write(System.getProperty("line.separator"));
             writer.write(passwordField.getPassword());
             writer.write(System.getProperty("line.separator"));
-            writer.write(textHostURL.getText());
+            writer.write(urlField.getText());
             writer.write(System.getProperty("line.separator"));
             writer.write(Boolean.toString(insecureSSLBox.isSelected()));
             writer.write(System.getProperty("line.separator"));
@@ -326,7 +329,7 @@ public class Userinterface {
             writer.flush();
         } catch (IOException e1) {
             e1.printStackTrace();
-        } 
+        }
         Status.printStatusToConsole("Config Saved");
 
     }
