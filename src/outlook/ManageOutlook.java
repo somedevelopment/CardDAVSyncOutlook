@@ -100,6 +100,7 @@ public abstract class ManageOutlook {
         StringSelection stringSelection = new StringSelection("");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 
+        // TODO: why?
         ManageOutlook.axc.invoke("Quit", new Variant[]{});
 
         ManageOutlook.dipOutlook.safeRelease();
