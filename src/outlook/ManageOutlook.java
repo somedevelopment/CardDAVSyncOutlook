@@ -28,7 +28,7 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import main.Status;
-import main.Utils;
+import utilities.Utilities;
 
 public abstract class ManageOutlook {
 
@@ -54,7 +54,7 @@ public abstract class ManageOutlook {
         // add directory with jacob library (loaded later) to library path
         String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
         String libDir = workingDir + File.separator + "lib";
-        Utils.addLibraryPath(libDir);
+        Utilities.addLibraryPath(libDir);
     }
 
     /**
