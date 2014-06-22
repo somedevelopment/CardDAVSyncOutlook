@@ -92,6 +92,9 @@ public class ManageOutlookContacts extends ManageOutlook {
             Dispatch dipContact;
             dipContact = Dispatch.call(dipContactItems, "Item", i).toDispatch();
 
+            // user1 field is used for storing the CardDAV UID in Outlook
+            String strUid = Dispatch.get(dipContact, "User1").toString().trim();
+
             String strEntryID = Dispatch.get(dipContact, "EntryID").toString().trim();
 
             String strTitle = Dispatch.get(dipContact, "Title").toString().trim();
@@ -177,7 +180,7 @@ public class ManageOutlookContacts extends ManageOutlook {
             String strLastModificationTime = Dispatch.get(dipContact, "LastModificationTime").toString().trim();
 
             //Add Contact
-            allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
+            allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
                     strCompanyName, strJobTitle, strEmail1Address, strEmail2Address, strEmail3Address,
                     strWebPage, strMobileTelephoneNumber, strAssistantTelephoneNumber, strCallbackTelephoneNumber,
                     strCarTelephoneNumber, strCompanyMainTelephoneNumber, strOtherTelephoneNumber,
@@ -242,6 +245,8 @@ public class ManageOutlookContacts extends ManageOutlook {
         Contact dataContact = (Contact) dataItem;
         Dispatch dipContact = super.getOutlookItem(dataContact.getEntryID());
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
+
+        Dispatch.put(dipContact, "User1", dataContact.getUid());
 
         if (dataContact.getTitle() != null) {
             Dispatch.put(dipContact, "Title", dataContact.getTitle());
