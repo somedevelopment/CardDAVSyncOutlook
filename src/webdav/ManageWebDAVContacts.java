@@ -50,7 +50,7 @@ import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.client.methods.DavMethod;
 import org.apache.jackrabbit.webdav.client.methods.PropFindMethod;
 
-public class ManageContactsWebDAV {
+public class ManageWebDAVContacts {
 
     private HostConfiguration hostConfig = null;
     private HttpConnectionManager connectionManager = null;

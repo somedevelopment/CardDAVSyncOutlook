@@ -52,7 +52,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import outlook.ManageOutlookContacts;
-import webdav.ManageContactsWebDAV;
+import webdav.ManageWebDAVContacts;
 
 public class Userinterface {
 
@@ -106,7 +106,7 @@ public class Userinterface {
             }
 
             //Connect WebDAV
-            ManageContactsWebDAV webDAVConnection = new ManageContactsWebDAV();
+            ManageWebDAVContacts webDAVConnection = new ManageWebDAVContacts();
             webDAVConnection.connectHTTP(textUsername.getText().trim(),
                     String.valueOf(passwordField.getPassword()).trim(),
                     server,
