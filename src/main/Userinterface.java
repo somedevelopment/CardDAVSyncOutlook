@@ -61,8 +61,9 @@ public class Userinterface {
     private WebTextField textUsername;
     private WebTextField textHostURL;
     private WebCheckBox insecureSSLBox;
-
     private WebLabel lblContactNumbers;
+
+    private Thread worker = null;
 
     static private WebTextPane textPane;
     static private WebScrollPane scrollPane;
@@ -238,7 +239,12 @@ public class Userinterface {
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new Thread(syncWorker).start();
+                if (worker != null && worker.isAlive()) {
+                    // already running
+                    return;
+                }
+                worker = new Thread(syncWorker);
+                worker.start();
             }
         });
 
