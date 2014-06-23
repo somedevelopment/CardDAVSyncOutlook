@@ -53,6 +53,11 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import outlook.ManageOutlookContacts;
 import webdav.ManageWebDAVContacts;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JSeparator;
+import java.awt.Insets;
+import java.awt.Color;
 
 public class Userinterface {
 
@@ -151,6 +156,7 @@ public class Userinterface {
         }
     };
     private WebLabel lblNumbersOfContacts;
+    private JSeparator separator;
 
     /**
      * Launch the application.
@@ -177,9 +183,12 @@ public class Userinterface {
         WebLookAndFeel.install();
 
         textPane = new WebTextPane();
+        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
         textPane.setEditable(false);
 
         scrollPane = new WebScrollPane(textPane);
+        scrollPane.setDarkBorder(Color.LIGHT_GRAY);
+        scrollPane.setBorderColor(Color.LIGHT_GRAY);
 
         docTextPane = textPane.getStyledDocument();
 
@@ -202,21 +211,31 @@ public class Userinterface {
         });
 
         WebLabel lblUsername = new WebLabel("Username:");
+        lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
 
         textUsername = new WebTextField();
+        textUsername.setFont(new Font("Calibri", Font.PLAIN, 12));
         textUsername.setColumns(10);
 
         WebLabel lblPassword = new WebLabel("Password:");
+        lblPassword.setFont(new Font("Calibri", Font.BOLD, 12));
 
         passwordField = new WebPasswordField();
+        passwordField.setColumns(10);
+        passwordField.setFont(new Font("Calibri", Font.PLAIN, 11));
         passwordField.setEchoChar('*');
 
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
+        insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
 
 
         WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
+        lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
+        lblHost.setMargin(new Insets(0, 3, 0, 0));
+        lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
         urlField = new WebTextField();
+        urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
         //textHostURL.setColumns(10)
         urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
         urlField.setHideInputPromptOnFocus(false);
@@ -238,6 +257,7 @@ public class Userinterface {
         }
 
         WebButton btnSync = new WebButton("Start Synchronization");
+        btnSync.setFont(new Font("Calibri", Font.BOLD, 12));
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -253,9 +273,13 @@ public class Userinterface {
         WebLabel lblStatus = new WebLabel("Status:");
 
         lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
+        lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
         lblContactNumbers = new WebLabel("");
+        lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
 
         WebPanel northPanel = new WebPanel();
+        northPanel.setBorderColor(Color.LIGHT_GRAY);
+        northPanel.setMargin(new Insets(0, 5, 0, 5));
         northPanel.setLayout(new GridLayout(0, 1, 0, 0));
         northPanel.add(lblHost);
         northPanel.add(urlField);
@@ -265,6 +289,9 @@ public class Userinterface {
         accountPanel.add(textUsername);
         accountPanel.add(lblPassword);
         accountPanel.add(passwordField);
+        
+        separator = new JSeparator();
+        accountPanel.add(separator);
         accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
         WebPanel numberPanel = new WebPanel();
@@ -273,8 +300,8 @@ public class Userinterface {
         numberPanel.add(lblContactNumbers);
         northPanel.add(numberPanel);
         northPanel.add(btnSync);
-        frame.add(northPanel, BorderLayout.NORTH);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.getContentPane().add(northPanel, BorderLayout.NORTH);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         frame.getContentPane().setFocusTraversalPolicy(
                 new FocusTraversalOnArray(
