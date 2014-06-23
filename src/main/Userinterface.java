@@ -67,6 +67,7 @@ public class Userinterface {
     private WebTextField urlField;
     private WebCheckBox insecureSSLBox;
     private WebLabel lblContactNumbers;
+    private WebCheckBox savePasswordBox;
 
     private Thread worker = null;
 
@@ -225,9 +226,11 @@ public class Userinterface {
         passwordField.setFont(new Font("Calibri", Font.PLAIN, 11));
         passwordField.setEchoChar('*');
 
+        savePasswordBox = new WebCheckBox("Save Password");
+        savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
+
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
-
 
         WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
         lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -251,6 +254,7 @@ public class Userinterface {
                 passwordField.setText(in.readLine());
                 urlField.setText(in.readLine());
                 insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
+                savePasswordBox.setSelected(Boolean.valueOf(in.readLine()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -289,9 +293,10 @@ public class Userinterface {
         accountPanel.add(textUsername);
         accountPanel.add(lblPassword);
         accountPanel.add(passwordField);
-        
+
         separator = new JSeparator();
         accountPanel.add(separator);
+        accountPanel.add(savePasswordBox);
         accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
         WebPanel numberPanel = new WebPanel();
@@ -346,11 +351,14 @@ public class Userinterface {
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(textUsername.getText());
             writer.write(System.getProperty("line.separator"));
-            writer.write(passwordField.getPassword());
+            if (savePasswordBox.isSelected())
+                writer.write(passwordField.getPassword());
             writer.write(System.getProperty("line.separator"));
             writer.write(urlField.getText());
             writer.write(System.getProperty("line.separator"));
             writer.write(Boolean.toString(insecureSSLBox.isSelected()));
+            writer.write(System.getProperty("line.separator"));
+            writer.write(Boolean.toString(savePasswordBox.isSelected()));
             writer.write(System.getProperty("line.separator"));
 
             writer.flush();
