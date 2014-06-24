@@ -145,8 +145,9 @@ public class ManageOutlookContacts extends ManageOutlook {
 
             String strBody = Dispatch.get(dipContact, "Body").toString().trim();
 
-			//To clean Body - and generate new UUIDs
-            //String strBody = "";
+            //If Body contains UUID Comment - it will be deleted
+                        
+            
             SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
             Calendar calBirthday = null;
             Calendar calAnniversary = null;
