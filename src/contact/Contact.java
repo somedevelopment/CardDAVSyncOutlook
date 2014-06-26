@@ -33,6 +33,9 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
+import com.jacob.com.Dispatch;
+
+import utilities.Utilities;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.parameter.AddressType;
@@ -66,8 +69,7 @@ public class Contact {
     private VCard vcard = null;
     private String strPathToContactPicture = null;
     private String strUid = null;
-    // unique ID of an item in outlook. Changes when item is moved or recreated
-    // from backup
+    // unique ID of an item in outlook. Changes when item is moved or recreated from backup
     private String strEntryID = null;
     private String strFileOnDavServer = null;
     private Status statusConntact = null;

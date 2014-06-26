@@ -100,8 +100,8 @@ public abstract class ManageOutlook {
         StringSelection stringSelection = new StringSelection("");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 
-        // TODO: why?
-        ManageOutlook.axc.invoke("Quit", new Variant[]{});
+        // TODO: why? Nur weil ich es mag was das Programm öffnet das es das auch wieder schließt. ggf. Abfrage ob Programm bei start offen und dann nicht schließen
+        //ManageOutlook.axc.invoke("Quit", new Variant[]{});
 
         ManageOutlook.dipOutlook.safeRelease();
         ManageOutlook.axc.safeRelease();
@@ -124,8 +124,6 @@ public abstract class ManageOutlook {
         return Dispatch.call(ManageOutlook.dipNamespace, "GetItemFromID", strToUpdateItemID).toDispatch();
     }
 
-    ;
-
     protected String getNewOutlookItem() {
         Dispatch dipItem = Dispatch.call(ManageOutlook.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
 
@@ -146,8 +144,6 @@ public abstract class ManageOutlook {
         dipToUpdateItem.safeRelease();
     }
 
-    ;
-
     protected void deletOutlookItem(String strToDeleteItemID) {
         Dispatch dipItem = Dispatch.call(ManageOutlook.dipNamespace, "GetItemFromID", strToDeleteItemID).toDispatch();
 
@@ -155,9 +151,6 @@ public abstract class ManageOutlook {
 
         dipItem.safeRelease();
     }
-
-    ;
-
 
 
     /**

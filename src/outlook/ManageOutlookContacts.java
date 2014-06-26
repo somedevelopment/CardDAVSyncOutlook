@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import utilities.Utilities;
 import main.Status;
 
 import com.jacob.com.Dispatch;
@@ -143,10 +144,7 @@ public class ManageOutlookContacts extends ManageOutlook {
             String strBusinessAddressState = Dispatch.get(dipContact, "BusinessAddressState").toString().trim();
             String strBusinessAddressStreet = Dispatch.get(dipContact, "BusinessAddressStreet").toString().trim();
 
-            String strBody = Dispatch.get(dipContact, "Body").toString().trim();
-
-            //If Body contains UUID Comment - it will be deleted
-                        
+            String strBody = Dispatch.get(dipContact, "Body").toString().trim();          
             
             SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
             Calendar calBirthday = null;
