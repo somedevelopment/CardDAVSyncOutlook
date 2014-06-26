@@ -19,10 +19,15 @@
  */
 package main;
 
+import com.alee.extended.label.WebLinkLabel;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.menu.WebMenu;
+import com.alee.laf.menu.WebMenuBar;
+import com.alee.laf.menu.WebMenuItem;
+import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
@@ -32,10 +37,13 @@ import com.alee.laf.text.WebTextPane;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -48,16 +56,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.JFrame;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import outlook.ManageOutlookContacts;
 import webdav.ManageWebDAVContacts;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JSeparator;
-import java.awt.Insets;
-import java.awt.Color;
 
 public class Userinterface {
 
@@ -211,6 +216,55 @@ public class Userinterface {
             }
         });
 
+        // menu
+        WebMenuBar menubar = new WebMenuBar();
+
+        WebMenu fileMenu = new WebMenu("File");
+        WebMenuItem exitMenuItem = new WebMenuItem("Exit");
+        exitMenuItem.setToolTipText("Exit application");
+        exitMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        fileMenu.add(exitMenuItem);
+        menubar.add(fileMenu);
+
+        WebMenu helpMenu = new WebMenu("Help");
+        WebMenuItem aboutMenuItem = new WebMenuItem("About");
+        aboutMenuItem.setToolTipText("About...");
+        aboutMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                WebPanel aboutPanel = new WebPanel();
+                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.03b"));
+                WebLinkLabel linkLabel = new WebLinkLabel();
+                linkLabel.setLink("https://github.com/somedevelopment/CardDAVSyncOutlook/");
+                linkLabel.setText("Visit the developer site");
+                aboutPanel.add(linkLabel, BorderLayout.SOUTH);
+                WebOptionPane.showMessageDialog(frame,
+                        aboutPanel,
+                        "About",
+                        WebOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        helpMenu.add(aboutMenuItem);
+        menubar.add(helpMenu);
+
+        frame.setJMenuBar(menubar);
+
+        WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
+        lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
+        lblHost.setMargin(new Insets(0, 3, 0, 0));
+        lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
+
+        urlField = new WebTextField();
+        urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
+        //textHostURL.setColumns(10)
+        urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
+        urlField.setHideInputPromptOnFocus(false);
+
         WebLabel lblUsername = new WebLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
 
@@ -231,17 +285,6 @@ public class Userinterface {
 
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
-
-        WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
-        lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
-        lblHost.setMargin(new Insets(0, 3, 0, 0));
-        lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
-
-        urlField = new WebTextField();
-        urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
-        //textHostURL.setColumns(10)
-        urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
-        urlField.setHideInputPromptOnFocus(false);
 
         //Load config
         Status.print("Load Config");
