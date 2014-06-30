@@ -284,9 +284,13 @@ public class Userinterface {
 
         savePasswordBox = new WebCheckBox("Save Password");
         savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        String tooltipText = "Save the password in configuration file as plaintext(!)";
+        TooltipManager.addTooltip(savePasswordBox, tooltipText);
 
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certifcate";
+        TooltipManager.addTooltip(insecureSSLBox, tooltipText);
 
         WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -304,7 +308,7 @@ public class Userinterface {
 
         initModeBox = new WebCheckBox("Initialization Mode");
         initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        String tooltipText = "Compare contacts by all fields. Useful on the first run";
+        tooltipText = "Compare contacts by all fields. Useful on the first run";
         TooltipManager.addTooltip(initModeBox, tooltipText);
 
         WebLabel lblStatus = new WebLabel("Status:");
