@@ -209,6 +209,7 @@ public class Contacts {
 
             Contact davContact = davContacts.get(outlookKey);
             if (davContact == null) {
+                // case 2.1
                 // corresponding dav contact does not exist, insert it
                 Contact newContact = new Contact(outlookContact, Contact.Status.NEW);
                 newDAVContacts.add(newContact);
@@ -216,6 +217,7 @@ public class Contacts {
             }
 
             if (outlookContact.equalTo(davContact)) {
+                // case 4: both contacts are equal, nothing to do
                 outlookContact.setStatus(Contact.Status.UNCHANGED);
                 davContact.setStatus(Contact.Status.UNCHANGED);
                 continue;
@@ -223,6 +225,7 @@ public class Contacts {
 
             if (outlookContact.getLastModificationTime().getTime() >
                     davContact.getLastModificationTime().getTime()) {
+                // case 3.1
                 // outlook contact is newer then dav contact, dav contact will
                 // be replaced
                 replacedlDAVContacts.add(davContact);
@@ -233,6 +236,7 @@ public class Contacts {
                 outlookContact.setStatus(Contact.Status.UNCHANGED);
                 davContact.setStatus(Contact.Status.DELETE);
             } else {
+                // case 3.2
                 // dav contact is newer then outlook contact, outlook contact will
                 // be replaced
                 replacedOutlookContacts.add(outlookContact);
@@ -272,6 +276,8 @@ public class Contacts {
             Contact outlookContact = outlookContacts.get(davKey);
 
             if (outlookContact == null) {
+                // case 2.2
+                // corresponding outlook contact does not exist, insert it
                 Contact newContact = new Contact(davContact, Contact.Status.NEW);
                 newOutlookContacts.add(newContact);
             }
