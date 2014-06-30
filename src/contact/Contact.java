@@ -33,9 +33,6 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
-import com.jacob.com.Dispatch;
-
-import utilities.Utilities;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.parameter.AddressType;
@@ -386,7 +383,6 @@ public class Contact {
     }
 
     public boolean equalTo(Contact toCompareContact) {
-        main.Status.print("Compare: " + this.getLastName() + ", " + this.getFirstName());
 
         if (this.getAnniversary() != null) {
             if (toCompareContact.getAnniversary() != null) {
