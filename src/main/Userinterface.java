@@ -34,6 +34,7 @@ import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.text.WebTextPane;
+import com.alee.managers.tooltip.TooltipManager;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
 import java.awt.BorderLayout;
@@ -73,6 +74,7 @@ public class Userinterface {
     private WebCheckBox insecureSSLBox;
     private WebLabel lblContactNumbers;
     private WebCheckBox savePasswordBox;
+    private WebCheckBox initModeBox;
 
     private Thread worker = null;
 
@@ -286,23 +288,6 @@ public class Userinterface {
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        //Load config
-        Status.print("Load Config");
-
-        File file = new File("conf\\config.txt");
-
-        if (file.exists()) {
-            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-                textUsername.setText(in.readLine());
-                passwordField.setText(in.readLine());
-                urlField.setText(in.readLine());
-                insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
-                savePasswordBox.setSelected(Boolean.valueOf(in.readLine()));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-
         WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.BOLD, 12));
         btnSync.addActionListener(new ActionListener() {
@@ -317,6 +302,11 @@ public class Userinterface {
             }
         });
 
+        initModeBox = new WebCheckBox("Initialization Mode");
+        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        String tooltipText = "Compare contacts by all fields. Useful on the first run";
+        TooltipManager.addTooltip(initModeBox, tooltipText);
+
         WebLabel lblStatus = new WebLabel("Status:");
 
         lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
@@ -324,6 +314,7 @@ public class Userinterface {
         lblContactNumbers = new WebLabel("");
         lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
 
+        // layout
         WebPanel northPanel = new WebPanel();
         northPanel.setBorderColor(Color.LIGHT_GRAY);
         northPanel.setMargin(new Insets(0, 5, 0, 5));
@@ -347,7 +338,10 @@ public class Userinterface {
         numberPanel.add(lblNumbersOfContacts);
         numberPanel.add(lblContactNumbers);
         northPanel.add(numberPanel);
-        northPanel.add(btnSync);
+        WebPanel runPanel = new WebPanel();
+        runPanel.add(btnSync, BorderLayout.CENTER);
+        runPanel.add(initModeBox, BorderLayout.EAST);
+        northPanel.add(runPanel);
         frame.getContentPane().add(northPanel, BorderLayout.NORTH);
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
@@ -385,6 +379,20 @@ public class Userinterface {
                 )
         );
 
+        //Load config
+        Status.print("Load Config");
+        File file = new File("conf\\config.txt");
+        if (file.exists()) {
+            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
+                textUsername.setText(in.readLine());
+                passwordField.setText(in.readLine());
+                urlField.setText(in.readLine());
+                insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
+                savePasswordBox.setSelected(Boolean.valueOf(in.readLine()));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     private void saveConfig() {
