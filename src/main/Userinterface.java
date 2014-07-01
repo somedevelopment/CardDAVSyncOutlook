@@ -141,8 +141,8 @@ public class Userinterface {
             lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
 
             //Compare and modify Contacts
-            Status.print("Compare Adressbooks");
-            allContacts.compareAdressbooks();
+            Status.print("Compare Adress Books");
+            allContacts.compareAddressBooks(initModeBox.isSelected());
             //allContacts.printStatus();
 
             //Write Data

@@ -171,7 +171,14 @@ public class Contacts {
         }
     }
 
-    public void compareAdressbooks() {
+    public void compareAddressBooks(boolean initMode) {
+        if (initMode)
+            this.compareAddressBooksByFields();
+        else
+            this.compareAddressBooksByUID();
+    }
+
+    private void compareAddressBooksByUID() {
         // look for contacts in both address books that were present during last
         // sync and were deleted in one address book. Mark them as
         // "to delete" in the other one
@@ -284,6 +291,40 @@ public class Contacts {
             // all other cases already handled
         }
 
+        for (Contact contact : newOutlookContacts) {
+            this.addContact(Contacts.Addressbook.OUTLOOKADDRESSBOOK, contact);
+        }
+    }
+
+    /** Compare contacts by comparing all fields rather than UIDs.
+     * When all fields match, copy the UID of the DAV contact to outlook.
+     */
+    private void compareAddressBooksByFields() {
+
+        List<Contact> newOutlookContacts = new ArrayList();
+        List<Contact> replacedOutlookContacts = new ArrayList();
+
+        for (Contact outlookContact : outlookContacts.values()) {
+
+            if (outlookContact.getStatus() != Contact.Status.UIDADDED) {
+                // not a new contact, better skip
+                continue;
+            }
+
+            for (Contact davContact: davContacts.values()) {
+                if (outlookContact.equalTo(davContact)) {
+                    Contact newContact = new Contact(outlookContact, Contact.Status.UIDADDED, davContact.getUid());
+                    newOutlookContacts.add(newContact);
+                    replacedOutlookContacts.add(outlookContact);
+                    break;
+                }
+            }
+        }
+
+        // apply changes saved in temporary lists
+        for (Contact contact : replacedOutlookContacts) {
+            this.removeContact(Addressbook.OUTLOOKADDRESSBOOK, contact.getUid());
+        }
         for (Contact contact : newOutlookContacts) {
             this.addContact(Contacts.Addressbook.OUTLOOKADDRESSBOOK, contact);
         }

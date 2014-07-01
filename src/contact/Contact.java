@@ -78,10 +78,17 @@ public class Contact {
      * Create a copy of an existing contact.
      */
     public Contact(Contact toCopyContact, Contact.Status state) {
-        this.statusConntact = state;
+        this(toCopyContact, state, toCopyContact.getUid());
+    }
 
+    /**
+     * Create a copy of an existing contact with a new UID.
+     */
+    public Contact(Contact toCopyContact, Contact.Status state, String uid) {
+        this.statusConntact = state;
+        
         this.vcard = Ezvcard.parse(toCopyContact.getContactAsString()).first();
-        this.strUid = toCopyContact.getUid();
+        this.strUid = uid;
         this.strFileOnDavServer = toCopyContact.getFileOnDavServer();
         this.strEntryID = toCopyContact.getEntryID();
         this.strPathToContactPicture = toCopyContact.getPathToContactPicture();
