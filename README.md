@@ -4,8 +4,8 @@ CardDAVSyncOutlook
 A small tool to synchronize the address book of Outlook with a CardDAV 
 implementation (e.g. the address book of an OwnCloud user).
 
-__Make sure to have a backup of any important data before using this tool.__
-The 'User Field 1' of all synced contacts is automatically overwritten! In almost 
+__Make sure to have a backup of any important data before using this tool!__
+The 'User Field 1' of all synced Outlook contacts is automatically overwritten! In almost 
 all cases it does not contain any data.
 
 # FAQs
