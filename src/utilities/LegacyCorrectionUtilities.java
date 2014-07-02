@@ -19,11 +19,38 @@
  */
 package utilities;
 
+import contact.Contact;
 import ezvcard.property.Uid;
 
 public class LegacyCorrectionUtilities {
-
-	static public Boolean bodyHasUID(String strBody) {
+	
+    static public Boolean deleteUID(Contact currentContact) {
+    	String tmpNodeValue = currentContact.getBody();
+    	Boolean hasUID = false;
+	    
+    	if (tmpNodeValue != null) {
+    		if (LegacyCorrectionUtilities.bodyHasUID(tmpNodeValue)) {
+    			hasUID = true;
+                currentContact.setBody(LegacyCorrectionUtilities.cleanBodyFromUID(tmpNodeValue));
+                main.Status.print("Cleared contact node field from UID " + currentContact.getFirstName() + ", " + currentContact.getLastName());
+            }
+    	}
+    	
+    	return hasUID;
+    }
+    
+	static public String getBodyUID(String strBody) {
+		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
+			String[] result = strBody.split("\n");
+			for(int i =0; i < result.length; i++) {
+				if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---"))
+					return result[i+1].trim();
+			}
+		}
+		return "";
+	}
+	
+	static private Boolean bodyHasUID(String strBody) {
 		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
 			return true;
 		}
@@ -31,18 +58,7 @@ public class LegacyCorrectionUtilities {
 		return false;
 	}
 	
-	static public Uid getBodyUID(String strBody) {
-		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-			String[] result = strBody.split("\n");
-			for(int i =0; i < result.length; i++) {
-				if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---"))
-					return new Uid(result[i+1].trim());
-			}
-		}
-		return null;
-	}
-	
-    static public String cleanBodyFromUID(String strBody) {	
+    static private String cleanBodyFromUID(String strBody) {	
 		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
 			StringBuilder strBuilder = new StringBuilder();
 			String[] result = strBody.split("\n");

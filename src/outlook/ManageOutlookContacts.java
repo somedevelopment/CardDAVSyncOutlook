@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import utilities.LegacyCorrectionUtilities;
 import main.Status;
 
 import com.jacob.com.Dispatch;
@@ -204,39 +205,54 @@ public class ManageOutlookContacts extends ManageOutlook {
         for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
-                case UIDADDED:
-                    Status.print("Write Contact with new UID to Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
+            case UIDADDED:
+            	LegacyCorrectionUtilities.deleteUID(currentOutlookEntry.getValue());
+            	
+
+                Status.print("Write Contact with new UID to Outlook " +
+                        currentOutlookEntry.getValue().getFirstName() + ", " +
+                        currentOutlookEntry.getValue().getLastName());
+                super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                break;
+            case CHANGED:
+            	LegacyCorrectionUtilities.deleteUID(currentOutlookEntry.getValue());
+            	
+
+                Status.print("Write Changed Contact to Outlook " +
+                        currentOutlookEntry.getValue().getFirstName() + ", " +
+                        currentOutlookEntry.getValue().getLastName());
+                super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                break;
+            case NEW:
+            	LegacyCorrectionUtilities.deleteUID(currentOutlookEntry.getValue());
+            	
+
+                Status.print("Write New Contact to Outlook " +
+                        currentOutlookEntry.getValue().getFirstName() + ", " +
+                        currentOutlookEntry.getValue().getLastName());
+                currentOutlookEntry.getValue().setEntryID(super.getNewOutlookItem());
+                super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                break;
+            case DELETE:
+                Status.print("Delete Contact in Outlook " +
+                        currentOutlookEntry.getValue().getFirstName() + ", " +
+                        currentOutlookEntry.getValue().getLastName());
+                super.deletOutlookItem(currentOutlookEntry.getValue().getEntryID());
+                listDelOutlookContacts.add(currentOutlookEntry.getValue());
+                break;
+            case READIN:
+            	if (LegacyCorrectionUtilities.deleteUID(currentOutlookEntry.getValue())) {
+            		Status.print("Write Changed Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
                     super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
-                    break;
-                case CHANGED:
-                    Status.print("Write Changed Contact to Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
+            	}
+                break;
+            case UNCHANGED:
+            	if (LegacyCorrectionUtilities.deleteUID(currentOutlookEntry.getValue())) {
+            		Status.print("Write Changed Contact to Outlook " + currentOutlookEntry.getValue().getFirstName() + ", " + currentOutlookEntry.getValue().getLastName());
                     super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
-                    break;
-                case NEW:
-                    Status.print("Write New Contact to Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
-                    currentOutlookEntry.getValue().setEntryID(super.getNewOutlookItem());
-                    super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
-                    break;
-                case DELETE:
-                    Status.print("Delete Contact in Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
-                    super.deletOutlookItem(currentOutlookEntry.getValue().getEntryID());
-                    listDelOutlookContacts.add(currentOutlookEntry.getValue());
-                    break;
-                case READIN:
-                    //Do nothing
-                    break;
-                case UNCHANGED:
-                    //Do nothing
-                    break;
-            }
+            	}
+                break;
+        }
         }
 
         //Delete deleted Contacts

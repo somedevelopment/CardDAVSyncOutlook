@@ -101,7 +101,7 @@ public abstract class ManageOutlook {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 
         // TODO: why? Nur weil ich es mag was das Programm öffnet das es das auch wieder schließt. ggf. Abfrage ob Programm bei start offen und dann nicht schließen
-        //ManageOutlook.axc.invoke("Quit", new Variant[]{});
+        ManageOutlook.axc.invoke("Quit", new Variant[]{});
 
         ManageOutlook.dipOutlook.safeRelease();
         ManageOutlook.axc.safeRelease();
