@@ -147,7 +147,8 @@ public class ManageWebDAVContacts {
      * Public Section
      *
      */
-    public void connectHTTP(String strUser, String strPass, String strHost, boolean insecure) {
+    @SuppressWarnings("deprecation")
+	public void connectHTTP(String strUser, String strPass, String strHost, boolean insecure) {
         //Connect WebDAV with credentials
         hostConfig = new HostConfiguration();
         hostConfig.setHost(strHost);
@@ -197,7 +198,7 @@ public class ManageWebDAVContacts {
     }
 
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {
-        List<Contact> listDelDAVContacts = new ArrayList();
+        List<Contact> listDelDAVContacts = new ArrayList<Contact>();
 
         for (Entry<String, Contact> currentOutlookEntry: allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
 

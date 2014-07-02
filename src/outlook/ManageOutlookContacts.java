@@ -200,7 +200,7 @@ public class ManageOutlookContacts extends ManageOutlook {
     @Override
     public void writeOutlookObjects(Object allContant) {
         Contacts allContacts = (Contacts) allContant;
-        List<Contact> listDelOutlookContacts = new ArrayList();
+        List<Contact> listDelOutlookContacts = new ArrayList<Contact>();
 
         for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
 
