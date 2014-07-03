@@ -240,17 +240,11 @@ public class Userinterface {
             @Override
             public void actionPerformed(ActionEvent event) {
                 WebPanel aboutPanel = new WebPanel();
-                
+                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.03b"));
                 WebLinkLabel linkLabel = new WebLinkLabel();
                 linkLabel.setLink("https://github.com/somedevelopment/CardDAVSyncOutlook/");
-                linkLabel.setText("CardDAVSyncOutlook v0.03b (Unstable)");
-                aboutPanel.add(linkLabel, BorderLayout.PAGE_START);
-                
-                WebLinkLabel linkLabel2 = new WebLinkLabel();
-                linkLabel2.setLink("http://sourceforge.net/projects/carddavsyncoutlook/");
-                linkLabel2.setText("CardDAVSyncOutlook v0.02 (Stable)");
-                aboutPanel.add(linkLabel2, BorderLayout.PAGE_END);   
-                
+                linkLabel.setText("Visit the developer site");
+                aboutPanel.add(linkLabel, BorderLayout.SOUTH);
                 WebOptionPane.showMessageDialog(frame,
                         aboutPanel,
                         "About",
