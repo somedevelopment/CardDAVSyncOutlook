@@ -87,7 +87,7 @@ public class Contact {
      */
     public Contact(Contact toCopyContact, Contact.Status state, String uid) {
         this.statusConntact = state;
-        
+
         this.vcard = Ezvcard.parse(toCopyContact.getContactAsString()).first();
         this.strUid = uid;
         this.strFileOnDavServer = toCopyContact.getFileOnDavServer();
@@ -138,10 +138,10 @@ public class Contact {
         this.statusConntact = Status.READIN;
 
         this.vcard = new VCard();
-        
+
         //Legacy Correction with regards to the UID string which is included in the Body/Note field
-        strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
-        //Legacy
+        if (strUid.isEmpty())
+            strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
 
         if (strUid.isEmpty()) {
             this.vcard.setUid(Uid.random());
@@ -1478,7 +1478,7 @@ public class Contact {
         	this.vcard.addNote(strBody);
         }
     }
-    
+
     public String getBody() {
         if (!this.vcard.getNotes().isEmpty()) {
             if (this.vcard.getNotes().get(0).getValue() != null) {
