@@ -47,9 +47,9 @@ public class Contacts {
      * Constructor
      */
     public Contacts(String strWorkingDir) {
-        davContacts = new HashMap<String, Contact>();
-        outlookContacts = new HashMap<String, Contact>();
-        listSyncContacts = new ArrayList<String>();
+        davContacts = new HashMap();
+        outlookContacts = new HashMap();
+        listSyncContacts = new ArrayList();
 
         this.loadUidsFromFile(strWorkingDir);
     }
@@ -198,10 +198,10 @@ public class Contacts {
             }
         }
 
-        List<Contact> newOutlookContacts = new ArrayList<Contact>();
-        List<Contact> newDAVContacts = new ArrayList<Contact>();
-        List<Contact> replacedOutlookContacts = new ArrayList<Contact>();
-        List<Contact> replacedlDAVContacts = new ArrayList<Contact>();
+        List<Contact> newOutlookContacts = new ArrayList();
+        List<Contact> newDAVContacts = new ArrayList();
+        List<Contact> replacedOutlookContacts = new ArrayList();
+        List<Contact> replacedlDAVContacts = new ArrayList();
 
         //Leading Outlook
         for (Entry<String, Contact> outlookEntry : outlookContacts.entrySet()) {
@@ -301,8 +301,8 @@ public class Contacts {
      */
     private void compareAddressBooksByFields() {
 
-        List<Contact> newOutlookContacts = new ArrayList<Contact>();
-        List<Contact> replacedOutlookContacts = new ArrayList<Contact>();
+        List<Contact> newOutlookContacts = new ArrayList();
+        List<Contact> replacedOutlookContacts = new ArrayList();
 
         for (Contact outlookContact : outlookContacts.values()) {
 

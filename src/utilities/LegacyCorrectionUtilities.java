@@ -20,6 +20,7 @@
 package utilities;
 
 import contact.Contact;
+import ezvcard.property.Uid;
 
 public class LegacyCorrectionUtilities {
 	
