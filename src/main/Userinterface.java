@@ -75,6 +75,7 @@ public class Userinterface {
     private WebLabel lblContactNumbers;
     private WebCheckBox savePasswordBox;
     private WebCheckBox initModeBox;
+    private WebCheckBox outlookCheckBox;
 
     private Thread worker = null;
 
@@ -129,7 +130,7 @@ public class Userinterface {
             boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
             if (!loaded) {
                 Status.print("Could not load WebDAV contacts");
-                outlookContacts.closeOutlook();
+                outlookContacts.closeOutlook(outlookCheckBox.isSelected());
                 return;
             }
 
@@ -158,7 +159,7 @@ public class Userinterface {
             Status.print("Temporary Contact Pictures Files deleted");
 
             //Close
-            outlookContacts.closeOutlook();
+            outlookContacts.closeOutlook(outlookCheckBox.isSelected());
 
             Status.print("End");
         }
@@ -349,7 +350,7 @@ public class Userinterface {
         JSeparator separator_2 = new JSeparator();
         optionPanel.add(separator_2);
         
-        WebCheckBox outlookCheckBox = new WebCheckBox("Close Outlook?");
+        outlookCheckBox = new WebCheckBox("Close Outlook?");
         optionPanel.add(outlookCheckBox);
         outlookCheckBox.setText("Close Outlook?");
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -411,6 +412,7 @@ public class Userinterface {
                 urlField.setText(in.readLine());
                 insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
                 savePasswordBox.setSelected(Boolean.valueOf(in.readLine()));
+                outlookCheckBox.setSelected(Boolean.valueOf(in.readLine()));
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -432,6 +434,8 @@ public class Userinterface {
             writer.write(Boolean.toString(insecureSSLBox.isSelected()));
             writer.write(System.getProperty("line.separator"));
             writer.write(Boolean.toString(savePasswordBox.isSelected()));
+            writer.write(System.getProperty("line.separator"));
+            writer.write(Boolean.toString(outlookCheckBox.isSelected()));
             writer.write(System.getProperty("line.separator"));
 
             writer.flush();
