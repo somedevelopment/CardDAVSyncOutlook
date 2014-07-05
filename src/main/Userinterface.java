@@ -240,7 +240,7 @@ public class Userinterface {
             @Override
             public void actionPerformed(ActionEvent event) {
                 WebPanel aboutPanel = new WebPanel();
-                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.03b"));
+                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.03"));
                 WebLinkLabel linkLabel = new WebLinkLabel();
                 linkLabel.setLink("https://github.com/somedevelopment/CardDAVSyncOutlook/");
                 linkLabel.setText("Visit the developer site");
