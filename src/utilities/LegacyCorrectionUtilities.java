@@ -38,6 +38,7 @@ public class LegacyCorrectionUtilities {
     	return hasUID;
     }
     
+    //Changed to return type string
 	static public String getBodyUID(String strBody) {
 		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
 			String[] result = strBody.split("\n");
