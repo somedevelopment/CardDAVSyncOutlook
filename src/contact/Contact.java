@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import javax.imageio.ImageIO;
 
+import utilities.LegacyCorrectionUtilities;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.parameter.AddressType;
@@ -86,7 +87,7 @@ public class Contact {
      */
     public Contact(Contact toCopyContact, Contact.Status state, String uid) {
         this.statusConntact = state;
-        
+
         this.vcard = Ezvcard.parse(toCopyContact.getContactAsString()).first();
         this.strUid = uid;
         this.strFileOnDavServer = toCopyContact.getFileOnDavServer();
@@ -137,6 +138,10 @@ public class Contact {
         this.statusConntact = Status.READIN;
 
         this.vcard = new VCard();
+
+        //Legacy Correction with regards to the UID string which is included in the Body/Note field
+        if (strUid.isEmpty())
+            strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
 
         if (strUid.isEmpty()) {
             this.vcard.setUid(Uid.random());
@@ -1463,6 +1468,15 @@ public class Contact {
             }
         }
         return null;
+    }
+
+    public void setBody(String strBody) {
+        if (!this.vcard.getNotes().isEmpty()) {
+        	this.vcard.getNotes().get(0).setValue(strBody);
+        }
+        else {
+        	this.vcard.addNote(strBody);
+        }
     }
 
     public String getBody() {
