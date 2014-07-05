@@ -282,16 +282,6 @@ public class Userinterface {
         passwordField.setFont(new Font("Calibri", Font.PLAIN, 11));
         passwordField.setEchoChar('*');
 
-        savePasswordBox = new WebCheckBox("Save Password");
-        savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        String tooltipText = "Save the password in configuration file as plaintext(!)";
-        TooltipManager.addTooltip(savePasswordBox, tooltipText);
-
-        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
-        insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certifcate";
-        TooltipManager.addTooltip(insecureSSLBox, tooltipText);
-
         WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.BOLD, 12));
         btnSync.addActionListener(new ActionListener() {
@@ -305,11 +295,6 @@ public class Userinterface {
                 worker.start();
             }
         });
-
-        initModeBox = new WebCheckBox("Initialization Mode");
-        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Compare contacts by all fields. Useful on the first run";
-        TooltipManager.addTooltip(initModeBox, tooltipText);
 
         WebLabel lblStatus = new WebLabel("Status:");
 
@@ -334,9 +319,43 @@ public class Userinterface {
 
         separator = new JSeparator();
         accountPanel.add(separator);
-        accountPanel.add(savePasswordBox);
-        accountPanel.add(insecureSSLBox);
         northPanel.add(accountPanel);
+        
+        savePasswordBox = new WebCheckBox("Save Password");
+        accountPanel.add(savePasswordBox);
+        savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        String tooltipText = "Save the password in configuration file as plaintext(!)";
+        TooltipManager.addTooltip(savePasswordBox, tooltipText);
+        
+        WebPanel optionPanel = new WebPanel();
+        northPanel.add(optionPanel);
+        optionPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+                
+        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
+        optionPanel.add(insecureSSLBox);
+        insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certifcate";
+        TooltipManager.addTooltip(insecureSSLBox, tooltipText);
+                                
+        JSeparator separator_1 = new JSeparator();
+        optionPanel.add(separator_1);
+
+        initModeBox = new WebCheckBox("Initialization Mode");
+        optionPanel.add(initModeBox);
+        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Compare contacts by all fields. Useful on the first run";
+        TooltipManager.addTooltip(initModeBox, tooltipText);
+        
+        JSeparator separator_2 = new JSeparator();
+        optionPanel.add(separator_2);
+        
+        WebCheckBox outlookCheckBox = new WebCheckBox("Close Outlook?");
+        optionPanel.add(outlookCheckBox);
+        outlookCheckBox.setText("Close Outlook?");
+        outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Close Outlook after synchronization is finished.";
+        TooltipManager.addTooltip(outlookCheckBox, tooltipText);
+        
         WebPanel numberPanel = new WebPanel();
         numberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         numberPanel.add(lblNumbersOfContacts);
@@ -344,7 +363,6 @@ public class Userinterface {
         northPanel.add(numberPanel);
         WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
-        runPanel.add(initModeBox, BorderLayout.EAST);
         northPanel.add(runPanel);
         frame.getContentPane().add(northPanel, BorderLayout.NORTH);
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
