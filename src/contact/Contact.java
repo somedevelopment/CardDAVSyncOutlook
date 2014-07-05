@@ -138,7 +138,7 @@ public class Contact {
         this.statusConntact = Status.READIN;
 
         this.vcard = new VCard();
-
+        
         //Legacy Correction with regards to the UID string which is included in the Body/Note field
         if (strUid.isEmpty())
             strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
