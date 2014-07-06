@@ -56,6 +56,7 @@ import ezvcard.property.Url;
 public class Contact {
 
     public enum Status {
+
         CHANGED,
         UNCHANGED,
         DELETE,
@@ -73,8 +74,8 @@ public class Contact {
     private Status statusConntact = null;
     private Date dateLastModificationTme = null;
 
-    /** Constructor Section **/
-
+    /** Constructor Section */
+    
     /**
      * Create a copy of an existing contact.
      */
@@ -1472,10 +1473,9 @@ public class Contact {
 
     public void setBody(String strBody) {
         if (!this.vcard.getNotes().isEmpty()) {
-        	this.vcard.getNotes().get(0).setValue(strBody);
-        }
-        else {
-        	this.vcard.addNote(strBody);
+            this.vcard.getNotes().get(0).setValue(strBody);
+        } else {
+            this.vcard.addNote(strBody);
         }
     }
 

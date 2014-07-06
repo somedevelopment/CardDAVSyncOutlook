@@ -194,7 +194,7 @@ public class ManageWebDAVContacts {
     public void writeContacts(String strCardDAVUrl, Contacts allContacts) {
         List<Contact> listDelDAVContacts = new ArrayList();
 
-        for (Entry<String, Contact> currentOutlookEntry: allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
+        for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:
@@ -243,7 +243,7 @@ public class ManageWebDAVContacts {
         }
 
         //Delete deleted Contacts
-        for (Contact currentContact: listDelDAVContacts) {
+        for (Contact currentContact : listDelDAVContacts) {
             allContacts.removeContact(Addressbook.WEBDAVADDRESSBOOK, currentContact.getUid());
         }
     }

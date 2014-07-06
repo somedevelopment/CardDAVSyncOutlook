@@ -23,57 +23,56 @@ import contact.Contact;
 
 public class LegacyCorrectionUtilities {
 
-	static public Boolean bodyHasUID(String strBody) {
-		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-			return true;
-		}
-		
-		return false;
-	}
-	
+    static public Boolean bodyHasUID(String strBody) {
+        if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
+            return true;
+        }
+
+        return false;
+    }
+
     static public Boolean deleteUID(Contact currentContact) {
-    	String tmpNodeValue = currentContact.getBody();
-    	Boolean hasUID = false;
-	    
-    	if (tmpNodeValue != null) {
-    		if (LegacyCorrectionUtilities.bodyHasUID(tmpNodeValue)) {
-    			hasUID = true;
+        String tmpNodeValue = currentContact.getBody();
+        Boolean hasUID = false;
+
+        if (tmpNodeValue != null) {
+            if (LegacyCorrectionUtilities.bodyHasUID(tmpNodeValue)) {
+                hasUID = true;
                 currentContact.setBody(LegacyCorrectionUtilities.cleanBodyFromUID(tmpNodeValue));
                 main.Status.print("Cleared contact node field from UID " + currentContact.getFirstName() + ", " + currentContact.getLastName());
             }
-    	}
-    	
-    	return hasUID;
+        }
+
+        return hasUID;
     }
-    
-	static public String getBodyUID(String strBody) {
-		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-			String[] result = strBody.split("\n");
-			for(int i =0; i < result.length; i++) {
-				if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---"))
-					return result[i+1].trim();
-			}
-		}
-		return null;
-	}
-	
-    static public String cleanBodyFromUID(String strBody) {	
-		if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-			StringBuilder strBuilder = new StringBuilder();
-			String[] result = strBody.split("\n");
-			
-		    for(int i=0; i<result.length; i++) {
-		    	if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-		    		i = i+2;
-		    	}	
-		    	else {
-		    		strBuilder.append(result[i]);
-		    	}
-		    }
-		    
-		    return strBuilder.toString();
-		}
-		
-		return strBody;
-	}
+
+    static public String getBodyUID(String strBody) {
+        if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
+            String[] result = strBody.split("\n");
+            for (int i = 0; i < result.length; i++) {
+                if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---"))
+                    return result[i + 1].trim();
+            }
+        }
+        return null;
+    }
+
+    static public String cleanBodyFromUID(String strBody) {
+        if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
+            StringBuilder strBuilder = new StringBuilder();
+            String[] result = strBody.split("\n");
+
+            for (int i = 0; i < result.length; i++) {
+                if (result[i].contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
+                    i = i + 2;
+                } else {
+                    strBuilder.append(result[i]);
+                }
+            }
+
+            return strBuilder.toString();
+        }
+
+        return strBody;
+    }
 }

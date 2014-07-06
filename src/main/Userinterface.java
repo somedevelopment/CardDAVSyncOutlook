@@ -212,7 +212,7 @@ public class Userinterface {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosing(WindowEvent e) {
                 Userinterface.this.saveConfig();
                 frame.setVisible(false);
                 frame.dispose();
@@ -321,23 +321,23 @@ public class Userinterface {
         separator = new JSeparator();
         accountPanel.add(separator);
         northPanel.add(accountPanel);
-        
+
         savePasswordBox = new WebCheckBox("Save Password");
         accountPanel.add(savePasswordBox);
         savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
         String tooltipText = "Save the password in configuration file as plaintext(!)";
         TooltipManager.addTooltip(savePasswordBox, tooltipText);
-        
+
         WebPanel optionPanel = new WebPanel();
         northPanel.add(optionPanel);
         optionPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-                
+
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         optionPanel.add(insecureSSLBox);
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certifcate";
         TooltipManager.addTooltip(insecureSSLBox, tooltipText);
-                                
+
         JSeparator separator_1 = new JSeparator();
         optionPanel.add(separator_1);
 
@@ -346,17 +346,17 @@ public class Userinterface {
         initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Compare contacts by all fields. Useful on the first run";
         TooltipManager.addTooltip(initModeBox, tooltipText);
-        
+
         JSeparator separator_2 = new JSeparator();
         optionPanel.add(separator_2);
-        
+
         outlookCheckBox = new WebCheckBox("Close Outlook?");
         optionPanel.add(outlookCheckBox);
         outlookCheckBox.setText("Close Outlook?");
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Close Outlook after synchronization is finished.";
         TooltipManager.addTooltip(outlookCheckBox, tooltipText);
-        
+
         WebPanel numberPanel = new WebPanel();
         numberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         numberPanel.add(lblNumbersOfContacts);

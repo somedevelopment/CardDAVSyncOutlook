@@ -35,6 +35,7 @@ import main.Status;
 public class Contacts {
 
     public enum Addressbook {
+
         WEBDAVADDRESSBOOK,
         OUTLOOKADDRESSBOOK
     }
@@ -182,7 +183,7 @@ public class Contacts {
         // look for contacts in both address books that were present during last
         // sync and were deleted in one address book. Mark them as
         // "to delete" in the other one
-        for (String currentUID : listSyncContacts){
+        for (String currentUID : listSyncContacts) {
             if (davContacts.get(currentUID) == null) {
                 if (outlookContacts.get(currentUID) != null) {
                     // case 1.1: deleted contact in dav
@@ -311,7 +312,7 @@ public class Contacts {
                 continue;
             }
 
-            for (Contact davContact: davContacts.values()) {
+            for (Contact davContact : davContacts.values()) {
                 if (outlookContact.equalTo(davContact)) {
                     Contact newContact = new Contact(outlookContact, Contact.Status.UIDADDED, davContact.getUid());
                     newOutlookContacts.add(newContact);
@@ -338,11 +339,11 @@ public class Contacts {
     }
 
     private void print(HashMap<String, Contact> addressBook) {
-       for (Contact contact : addressBook.values()) {
-           String s = contact.getFirstName() + "," +
-                   contact.getLastName() + ": " +
-                   contact.getStatus();
-           Status.print(s);
-       }
+        for (Contact contact : addressBook.values()) {
+            String s = contact.getFirstName() + "," +
+                    contact.getLastName() + ": " +
+                    contact.getStatus();
+            Status.print(s);
+        }
     }
 }

@@ -240,7 +240,7 @@ public class ManageOutlookContacts extends ManageOutlook {
         }
 
         //Delete deleted Contacts
-        for (Contact currentContact: listDelOutlookContacts) {
+        for (Contact currentContact : listDelOutlookContacts) {
             allContacts.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
         }
 
