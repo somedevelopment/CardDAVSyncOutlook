@@ -15,6 +15,6 @@
 	<classpathentry kind="lib" path="lib/groovy-all-2.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/jackrabbit-webdav-2.6.5-jar-with-dependencies.jar"/>
-	<classpathentry kind="lib" path="lib/weblaf-1.27.jar"/>
+	<classpathentry kind="lib" path="lib/weblaf-complete-1.28.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
