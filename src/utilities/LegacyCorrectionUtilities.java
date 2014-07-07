@@ -54,7 +54,7 @@ public class LegacyCorrectionUtilities {
                     return result[i + 1].trim();
             }
         }
-        return null;
+        return "";
     }
 
     static public String cleanBodyFromUID(String strBody) {
