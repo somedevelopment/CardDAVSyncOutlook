@@ -68,6 +68,7 @@ public abstract class ManageOutlook {
         } catch (UnsatisfiedLinkError e) {
             Status.print("Cannot open com library");
             e.printStackTrace();
+            return false;
         }
 
         Boolean bolOutlookOpen = false;
