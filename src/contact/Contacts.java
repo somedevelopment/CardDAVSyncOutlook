@@ -173,13 +173,6 @@ public class Contacts {
     }
 
     public void compareAddressBooks(boolean initMode) {
-        if (initMode)
-            this.compareAddressBooksByFields();
-        else
-            this.compareAddressBooksByUID();
-    }
-
-    private void compareAddressBooksByUID() {
         // look for contacts in both address books that were present during last
         // sync and were deleted in one address book. Mark them as
         // "to delete" in the other one
@@ -225,8 +218,29 @@ public class Contacts {
             }
 
             if (davContact == null) {
-                // case 2.1
-                // corresponding dav contact does not exist, insert it
+                // case 2.1: corresponding dav contact does not exist
+                if (initMode) {
+                    // search for a dav contact that is equal to this outlook
+                    // contact and copy the UID of it
+                    Contact equalDavContact = null;
+                    for (Contact initDavContact : davContacts.values()) {
+                        if (outlookContact.equalTo(initDavContact)&&
+                               initDavContact.getStatus() == Contact.Status.READIN) {
+                            equalDavContact = initDavContact;
+                            break;
+                        }
+                    }
+                    if (equalDavContact != null) {
+                        Contact newContact = new Contact(outlookContact,
+                                Contact.Status.UIDADDED,
+                                equalDavContact.getUid());
+                        newOutlookContacts.add(newContact);
+                        replacedOutlookContacts.add(outlookContact);
+                        equalDavContact.setStatus(Contact.Status.UNCHANGED);
+                        continue;
+                    }
+                }
+                // else, or not found: insert it
                 Contact newContact = new Contact(outlookContact, Contact.Status.NEW);
                 newDAVContacts.add(newContact);
                 continue;
