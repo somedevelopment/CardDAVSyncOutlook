@@ -216,6 +216,14 @@ public class Contacts {
             }
 
             Contact davContact = davContacts.get(outlookKey);
+
+            // safety check
+            if ((outlookContact.getStatus() == Contact.Status.UIDADDED) !=
+                    (davContact == null)) {
+                Status.print("WARNING: inconsistent sync state");
+                continue;
+            }
+
             if (davContact == null) {
                 // case 2.1
                 // corresponding dav contact does not exist, insert it
