@@ -25,6 +25,7 @@ import contact.Contacts.Addressbook;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -85,6 +86,10 @@ public class ManageWebDAVContacts {
             responses = multiStatus.getResponses();
             pFind.releaseConnection();
         } catch (IOException | DavException e) {
+            if (e instanceof UnknownHostException)
+                Status.print("Error: Can't find server");
+            if (e instanceof DavException)
+                Status.print("Error: Can't find address book on server");
             e.printStackTrace();
         }
 
