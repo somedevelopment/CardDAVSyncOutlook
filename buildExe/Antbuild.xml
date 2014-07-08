@@ -62,8 +62,7 @@
 	<target name="Launch4j_ini">
 		<echo file="buildExe/CardDAVSyncOutlook.l4j.ini_tmp" append="false"># Launch4j runtime config
 -Dcom.jacob.debug=true
--Dcom.jacob.autogc=true
-		</echo>
+-Dcom.jacob.autogc=true</echo>
 		
 		<copy file="buildExe/CardDAVSyncOutlook.l4j.ini_tmp" tofile="buildExe/CardDAVSyncOutlook.l4j.ini" >
 		    <filterchain>
