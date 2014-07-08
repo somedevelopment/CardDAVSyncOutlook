@@ -246,23 +246,25 @@ public class ManageOutlookContacts extends ManageOutlook {
                     break;
                 case READIN:
                     //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
                         currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
                     
-                    Status.print("Write Changed (UID Correction) Contact to Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
-                    super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                        Status.print("Write Changed (UID Correction) Contact to Outlook " +
+                                currentOutlookEntry.getValue().getFirstName() + ", " +
+                                currentOutlookEntry.getValue().getLastName());
+                        super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                    }
                     break;
                 case UNCHANGED:
                     //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
                         currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
                     
-                    Status.print("Write Changed (UID Correction) Contact to Outlook " +
-                            currentOutlookEntry.getValue().getFirstName() + ", " +
-                            currentOutlookEntry.getValue().getLastName());
-                    super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                        Status.print("Write Changed (UID Correction) Contact to Outlook " +
+                                currentOutlookEntry.getValue().getFirstName() + ", " +
+                                currentOutlookEntry.getValue().getLastName());
+                        super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
+                    }
                     break;
             }
         }
