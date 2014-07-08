@@ -6,3 +6,7 @@ conf/
 workingdir/
 dist/
 Manifest.MF
+buildExe/CardDAVSyncOutlook.exe
+buildExe/CardDAVSyncOutlook.jar
+buildExe/CardDAVSyncOutlook.l4j.ini
+
