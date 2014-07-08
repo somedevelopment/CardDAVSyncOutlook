@@ -210,7 +210,7 @@ public class Contacts {
 
             Contact davContact = davContacts.get(outlookKey);
 
-            // safety check
+            // safety check            
             if ((outlookContact.getStatus() == Contact.Status.UIDADDED) !=
                     (davContact == null)) {
                 Status.print("WARNING: inconsistent sync state");

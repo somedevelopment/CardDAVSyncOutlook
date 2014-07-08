@@ -141,8 +141,10 @@ public class Contact {
         this.vcard = new VCard();
 
         //Legacy Correction with regards to the UID string which is included in the Body/Note field
-        if (strUid.isEmpty())
+        if (strUid.isEmpty()) {
             strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
+            this.statusConntact = Status.UIDADDED;
+        }
 
         if (strUid.isEmpty()) {
             this.vcard.setUid(Uid.random());
