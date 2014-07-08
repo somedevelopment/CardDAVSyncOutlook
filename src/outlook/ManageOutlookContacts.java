@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 
+import utilities.LegacyCorrectionUtilities;
 import main.Status;
 
 import com.jacob.com.Dispatch;
@@ -205,18 +206,30 @@ public class ManageOutlookContacts extends ManageOutlook {
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
+                    //Legacy correction UID call
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                    
                     Status.print("Write Contact with new UID to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
                     break;
                 case CHANGED:
+                    //Legacy correction UID call
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                    
                     Status.print("Write Changed Contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
                     super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
                     break;
                 case NEW:
+                    //Legacy correction UID call
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                    
                     Status.print("Write New Contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
@@ -231,10 +244,24 @@ public class ManageOutlookContacts extends ManageOutlook {
                     listDelOutlookContacts.add(currentOutlookEntry.getValue());
                     break;
                 case READIN:
-                    //Do nothing
+                    //Legacy correction UID call
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                    
+                    Status.print("Write Changed (UID Correction) Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
                     break;
                 case UNCHANGED:
-                    //Do nothing
+                    //Legacy correction UID call
+                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
+                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                    
+                    Status.print("Write Changed (UID Correction) Contact to Outlook " +
+                            currentOutlookEntry.getValue().getFirstName() + ", " +
+                            currentOutlookEntry.getValue().getLastName());
+                    super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
                     break;
             }
         }

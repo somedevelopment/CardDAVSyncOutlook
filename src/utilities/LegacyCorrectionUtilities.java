@@ -19,31 +19,15 @@
  */
 package utilities;
 
-import contact.Contact;
-
 public class LegacyCorrectionUtilities {
 
     static public Boolean bodyHasUID(String strBody) {
-        if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) {
-            return true;
+        if (strBody != "" && strBody != null) {
+            if (strBody.contains("---_Start_Do_Not_Delete_or_Change_Required_for_CardDAVSyncOutlook_---")) 
+                return true;
         }
-
+        
         return false;
-    }
-
-    static public Boolean deleteUID(Contact currentContact) {
-        String tmpNodeValue = currentContact.getBody();
-        Boolean hasUID = false;
-
-        if (tmpNodeValue != null) {
-            if (LegacyCorrectionUtilities.bodyHasUID(tmpNodeValue)) {
-                hasUID = true;
-                currentContact.setBody(LegacyCorrectionUtilities.cleanBodyFromUID(tmpNodeValue));
-                main.Status.print("Cleared contact node field from UID " + currentContact.getFirstName() + ", " + currentContact.getLastName());
-            }
-        }
-
-        return hasUID;
     }
 
     static public String getBodyUID(String strBody) {
