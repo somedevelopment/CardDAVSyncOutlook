@@ -29,9 +29,9 @@
 	
     <target name="clean">
         <delete dir="bin"/>
-    	<delete file="build/CardDAVSyncOutlook.jar"/>
-    	<delete file="build/CardDAVSyncOutlook.exe"/>
-    	<delete file="build/CardDAVSyncOutlook.l4j.ini"/>
+    	<delete file="buildExe/CardDAVSyncOutlook.jar"/>
+    	<delete file="buildExe/CardDAVSyncOutlook.exe"/>
+    	<delete file="buildExe/CardDAVSyncOutlook.l4j.ini"/>
     </target>
       
 	<target depends="clean, init" name="build">
@@ -49,8 +49,8 @@
         </java>
     </target>
 
-	<target depends="build" name="Runable Jar">
-		<jar destfile="build/CardDAVSyncOutlook.jar" 
+	<target depends="build" name="Runable_Jar">
+		<jar destfile="buildExe/CardDAVSyncOutlook.jar" 
 			basedir="bin">
 			<manifest>
 				<attribute name="Main-Class" value="main.Userinterface"/>
@@ -59,25 +59,27 @@
 		</jar>
 	</target>
 	
-	<target name="exe" depends="Launch4j ini, Runable Jar" description="Create a selfcontaining executable">
-	   <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
-	       classpath="build/launch4j/launch4j.jar:build/launch4j/xstream.jar" />
-	   <launch4j configFile="build/Launch4j_CardDAVSync.xml" />	
-	</target>
-	
-	<target name="Launch4j ini">
-		<echo file="build/CardDAVSyncOutlook.l4j.ini_tmp" append="false"># Launch4j runtime config
+	<target name="Launch4j_ini">
+		<echo file="buildExe/CardDAVSyncOutlook.l4j.ini_tmp" append="false"># Launch4j runtime config
 -Dcom.jacob.debug=true
 -Dcom.jacob.autogc=true
 		</echo>
 		
-		<copy file="build/CardDAVSyncOutlook.l4j.ini_tmp" tofile="build/CardDAVSyncOutlook.l4j.ini" >
+		<copy file="buildExe/CardDAVSyncOutlook.l4j.ini_tmp" tofile="buildExe/CardDAVSyncOutlook.l4j.ini" >
 		    <filterchain>
 		        <tokenfilter delimoutput="${line.separator}" />
 		    </filterchain>
 		</copy>
 		
-		<delete file="build/CardDAVSyncOutlook.l4j.ini_tmp"/>
+		<delete file="buildExe/CardDAVSyncOutlook.l4j.ini_tmp"/>
 	</target>
+	
+	<target name="exe" depends="Runable_Jar, Launch4j_ini" description="Create a selfcontaining executable">
+	   <taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
+	       classpath="buildExe/launch4j/launch4j.jar:buildExe/launch4j/xstream.jar" />
+	   <launch4j configFile="buildExe/Launch4j_CardDAVSync.xml" />	
+	</target>
+	
+
 	
 </project>
