@@ -207,12 +207,14 @@ public class ManageWebDAVContacts {
 
         for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
             
+            //Legacy correction UID call
+            if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
+                currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
+                currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+            }
+        	
             switch (currentOutlookEntry.getValue().getStatus()) {
-                case CHANGED:
-                    //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
-                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
-                    
+                case CHANGED:                    
                     Status.print("Write Changed Contact to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
@@ -223,10 +225,6 @@ public class ManageWebDAVContacts {
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
                 case NEW:
-                    //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody()))
-                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
-                    
                     Status.print("Write New Contact to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
@@ -247,20 +245,8 @@ public class ManageWebDAVContacts {
                     listDelDAVContacts.add(currentOutlookEntry.getValue());
                     break;
                 case READIN:
-                    //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
-                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
-                    
-                        Status.print("Write Changed (UID Correction) Contact to WebDAV " +
-                                currentOutlookEntry.getValue().getFirstName() + ", " +
-                                currentOutlookEntry.getValue().getLastName());
-                        uploadVCardsToWebDAV(
-                                generateWebDavUriFilename(
-                                        currentOutlookEntry.getValue(),
-                                        strCardDAVUrl),
-                                currentOutlookEntry.getValue().getContactAsString());
-                    }
-                    break;
+                	//Nothing to do
+                	break;
                 case UIDADDED:
                     Status.print("Write Contact with new UID to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
@@ -268,19 +254,7 @@ public class ManageWebDAVContacts {
                     Status.print("WARNING: this should not happen!");
                     break;
                 case UNCHANGED:
-                    //Legacy correction UID call
-                    if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
-                        currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
-                    
-                        Status.print("Write Changed (UID Correction) Contact to WebDAV " +
-                                currentOutlookEntry.getValue().getFirstName() + ", " +
-                                currentOutlookEntry.getValue().getLastName());
-                        uploadVCardsToWebDAV(
-                                generateWebDavUriFilename(
-                                        currentOutlookEntry.getValue(),
-                                        strCardDAVUrl),
-                                currentOutlookEntry.getValue().getContactAsString());
-                    }
+                	//Nothing to do
                     break;
             }
         }
