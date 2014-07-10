@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Swen Walkowski.
  * All rights reserved. Originator: Swen Walkowski.
- * Get more information about CardDAVSyncOutlook at http://sourceforge.net/projects/carddavsyncoutlook
+ * Get more information about CardDAVSyncOutlook at https://github.com/somedevelopment/CardDAVSyncOutlook/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
