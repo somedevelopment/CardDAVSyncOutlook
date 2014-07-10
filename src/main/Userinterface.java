@@ -64,6 +64,12 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import outlook.ManageOutlookContacts;
 import webdav.ManageWebDAVContacts;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Userinterface {
 
@@ -241,7 +247,7 @@ public class Userinterface {
             @Override
             public void actionPerformed(ActionEvent event) {
                 WebPanel aboutPanel = new WebPanel();
-                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.03"));
+                aboutPanel.add(new WebLabel("CardDAVSyncOutlook v0.04 (Beta)"));
                 WebLinkLabel linkLabel = new WebLinkLabel();
                 linkLabel.setLink("https://github.com/somedevelopment/CardDAVSyncOutlook/");
                 linkLabel.setText("Visit the developer site");
@@ -263,11 +269,20 @@ public class Userinterface {
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
         urlField = new WebTextField();
+        urlField.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseExited(MouseEvent arg0) {
+        		if (urlField.getText().trim().startsWith("https://")) {
+        			insecureSSLBox.setSelected(true);
+        			urlField.setText("http" + urlField.getText().substring(5));
+        		}
+        	}
+        });
         urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
         //textHostURL.setColumns(10)
         urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
         urlField.setHideInputPromptOnFocus(false);
-
+        
         WebLabel lblUsername = new WebLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
 
