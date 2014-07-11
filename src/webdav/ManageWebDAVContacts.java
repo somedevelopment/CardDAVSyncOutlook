@@ -22,7 +22,6 @@ package webdav;
 import contact.Contact;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -30,9 +29,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-
+import javax.net.ssl.SSLHandshakeException;
 import main.Status;
-
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
@@ -53,7 +51,6 @@ import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.client.methods.DavMethod;
 import org.apache.jackrabbit.webdav.client.methods.PropFindMethod;
-
 import utilities.LegacyCorrectionUtilities;
 
 public class ManageWebDAVContacts {
@@ -95,6 +92,8 @@ public class ManageWebDAVContacts {
                 Status.print("Error: Can't find server");
             if (e instanceof DavException)
                 Status.print("Error: Can't find address book on server");
+            if (e instanceof SSLHandshakeException)
+                Status.print("Error: SSL Certificate not accepted");
             e.printStackTrace();
         }
 
@@ -206,15 +205,15 @@ public class ManageWebDAVContacts {
         List<Contact> listDelDAVContacts = new ArrayList();
 
         for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.WEBDAVADDRESSBOOK).entrySet()) {
-            
+
             //Legacy correction UID call
             if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
                 currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
                 currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
             }
-        	
+
             switch (currentOutlookEntry.getValue().getStatus()) {
-                case CHANGED:                    
+                case CHANGED:
                     Status.print("Write Changed Contact to WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
@@ -234,7 +233,7 @@ public class ManageWebDAVContacts {
                                     strCardDAVUrl),
                             currentOutlookEntry.getValue().getContactAsString());
                     break;
-                case DELETE:                    
+                case DELETE:
                     Status.print("Delete Contact from WebDAV " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
