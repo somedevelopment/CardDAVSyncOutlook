@@ -53,7 +53,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
 import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
@@ -65,6 +67,8 @@ import outlook.ManageOutlookContacts;
 import webdav.ManageWebDAVContacts;
 
 public class Userinterface {
+
+    private static ServerSocket run = null;
 
     private WebFrame frame;
     private WebPasswordField passwordField;
@@ -170,6 +174,28 @@ public class Userinterface {
      * Launch the application.
      */
     public static void main(String[] args) {
+
+        // set up logging
+        try {
+            Log.init();
+        } catch (IOException e) {
+            System.out.println("can't set up logging");
+            e.printStackTrace();
+        }
+        System.out.println("START");
+
+        // check if already running
+        try {
+            InetAddress addr = InetAddress.getByAddress(new byte[] {127, 0, 0, 1});
+            run = new ServerSocket(9872, 10, addr);
+        } catch(java.net.BindException e){
+            System.out.println("already running");
+            System.exit(2);
+        } catch(IOException e){
+            System.out.println("can't create socket");
+            e.printStackTrace();
+        }
+
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -187,14 +213,6 @@ public class Userinterface {
      * Create the application.
      */
     public Userinterface() {
-
-        try {
-            Log.init();
-        } catch (IOException e) {
-            System.out.println("can't set up logging");
-            e.printStackTrace();
-        }
-        System.out.println("START");
 
         WebLookAndFeel.install();
 
@@ -221,6 +239,12 @@ public class Userinterface {
             @Override
             public void windowClosing(WindowEvent e) {
                 Userinterface.this.saveConfig();
+                try {
+                    Userinterface.run.close();
+                } catch (IOException e2) {
+                    System.out.println("can't close socket");
+                    e2.printStackTrace();
+                }
                 frame.setVisible(false);
                 frame.dispose();
             }
