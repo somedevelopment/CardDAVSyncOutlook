@@ -47,6 +47,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -64,12 +66,6 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import outlook.ManageOutlookContacts;
 import webdav.ManageWebDAVContacts;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class Userinterface {
 
@@ -195,6 +191,14 @@ public class Userinterface {
      */
     public Userinterface() {
 
+        try {
+            Log.init();
+        } catch (IOException e) {
+            System.out.println("can't set up logging");
+            e.printStackTrace();
+        }
+        System.out.println("START");
+
         WebLookAndFeel.install();
 
         textPane = new WebTextPane();
@@ -283,7 +287,7 @@ public class Userinterface {
         //textHostURL.setColumns(10)
         urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
         urlField.setHideInputPromptOnFocus(false);
-        
+
         WebLabel lblUsername = new WebLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
 
