@@ -51,10 +51,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -424,46 +421,26 @@ public class Userinterface {
 
         //Load config
         Status.print("Load Config");
-        File file = new File("conf\\config.txt");
-        if (file.exists()) {
-            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-                textUsername.setText(in.readLine());
-                passwordField.setText(in.readLine());
-                urlField.setText(in.readLine());
-                insecureSSLBox.setSelected(Boolean.valueOf(in.readLine()));
-                savePasswordBox.setSelected(Boolean.valueOf(in.readLine()));
-                outlookCheckBox.setSelected(Boolean.valueOf(in.readLine()));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
+        Config config = Config.getInstance();
+        textUsername.setText(config.getString(Config.ACC_USER, ""));
+        passwordField.setText(config.getString(Config.ACC_PASS, ""));
+        urlField.setText(config.getString(Config.ACC_URL, ""));
+        insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
+        savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
+        outlookCheckBox.setSelected(config.getBoolean(Config.GLOB_CLOSE, false));
     }
 
     private void saveConfig() {
-        String confDir = "conf";
-        new File(confDir).mkdir();
-        File file = new File(confDir + File.separator + "config.txt");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(textUsername.getText());
-            writer.write(System.getProperty("line.separator"));
-            if (savePasswordBox.isSelected())
-                writer.write(passwordField.getPassword());
-            writer.write(System.getProperty("line.separator"));
-            writer.write(urlField.getText());
-            writer.write(System.getProperty("line.separator"));
-            writer.write(Boolean.toString(insecureSSLBox.isSelected()));
-            writer.write(System.getProperty("line.separator"));
-            writer.write(Boolean.toString(savePasswordBox.isSelected()));
-            writer.write(System.getProperty("line.separator"));
-            writer.write(Boolean.toString(outlookCheckBox.isSelected()));
-            writer.write(System.getProperty("line.separator"));
-
-            writer.flush();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        Config config = Config.getInstance();
+        config.setProperty(Config.ACC_USER, textUsername.getText());
+        if (savePasswordBox.isSelected())
+            config.setProperty(Config.ACC_PASS, new String(passwordField.getPassword()));
+        config.setProperty(Config.ACC_URL, urlField.getText());
+        config.setProperty(Config.ACC_SSL, insecureSSLBox.isSelected());
+        config.setProperty(Config.ACC_SAVE_PASS, savePasswordBox.isSelected());
+        config.setProperty(Config.GLOB_CLOSE, outlookCheckBox.isSelected());
+        config.saveToFile();
         Status.print("Config Saved");
-
     }
 
     static public void setTextinTextPane(String strText) {
