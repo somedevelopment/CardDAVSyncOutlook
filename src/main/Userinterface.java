@@ -275,6 +275,7 @@ public class Userinterface {
         		if (urlField.getText().trim().startsWith("https://")) {
         			insecureSSLBox.setSelected(true);
         			urlField.setText("http" + urlField.getText().substring(5));
+        			Status.print("Activated insecure SSL");
         		}
         	}
         });
