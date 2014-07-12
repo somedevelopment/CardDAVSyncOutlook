@@ -294,16 +294,16 @@ public class Userinterface {
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
 
         urlField = new WebTextField();
-        urlField.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseExited(MouseEvent arg0) {
-        		if (urlField.getText().trim().startsWith("https://")) {
-        			insecureSSLBox.setSelected(true);
-        			urlField.setText("http" + urlField.getText().substring(5));
-        			Status.print("Activated insecure SSL");
-        		}
-        	}
-        });
+       // urlField.addMouseListener(new MouseAdapter() {
+        	//@Override
+        	//public void mouseExited(MouseEvent arg0) {
+        	//	if (urlField.getText().trim().startsWith("https://")) {
+        	//		insecureSSLBox.setSelected(true);
+        	//		urlField.setText("http" + urlField.getText().substring(5));
+        	//		Status.print("Activated insecure SSL");
+        	//	}
+        	//}
+       // });
         urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
         //textHostURL.setColumns(10)
         urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
