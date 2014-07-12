@@ -213,8 +213,11 @@ public class Contacts {
             // safety check            
             if ((outlookContact.getStatus() == Contact.Status.UIDADDED) !=
                     (davContact == null)) {
-                Status.print("WARNING: inconsistent sync state");
-                continue;
+                //Added for an first import where Contacts in Outlook have already an UID and no Contacts are on the owncloud server
+                if (!initMode) {
+                    Status.print("WARNING: inconsistent sync state");
+                    continue;
+                }
             }
 
             if (davContact == null) {
