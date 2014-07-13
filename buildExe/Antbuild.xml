@@ -16,7 +16,8 @@
         <pathelement location="lib/commons-io-1.4.jar"/>
         <pathelement location="lib/jackrabbit-webdav-2.6.5-jar-with-dependencies.jar"/>
         <pathelement location="lib/weblaf-complete-1.28.jar"/>
-    	  <pathelement location="lib/commons-configuration-1.10.jar"/>
+    	<pathelement location="lib/commons-configuration-1.10.jar"/>
+    	<pathelement location="lib/ez-vcard-0.9.4.jar"/>
     </path>
 	
     <target name="init">
