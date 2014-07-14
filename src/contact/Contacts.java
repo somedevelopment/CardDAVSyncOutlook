@@ -210,14 +210,12 @@ public class Contacts {
 
             Contact davContact = davContacts.get(outlookKey);
 
-            // safety check            
-            if ((outlookContact.getStatus() == Contact.Status.UIDADDED) !=
-                    (davContact == null)) {
-                //Added for an first import where Contacts in Outlook have already an UID and no Contacts are on the owncloud server
-                if (!initMode) {
-                    Status.print("WARNING: inconsistent sync state");
-                    continue;
-                }
+            // safety check, very unlikely to happen
+            if ((outlookContact.getStatus() == Contact.Status.UIDADDED) &&
+                    (davContact != null)) {
+                Status.print("WARNING: inconsistent sync state, contact UID: " +
+                        outlookContact.getUid());
+                continue;
             }
 
             if (davContact == null) {
@@ -234,6 +232,12 @@ public class Contacts {
                         }
                     }
                     if (equalDavContact != null) {
+                        // another safety check
+                        if (outlookContact.getStatus() != Contact.Status.UIDADDED) {
+                            Status.print("WARNING: overwriting old sync state, contact UID: " +
+                                outlookContact.getUid());
+                            // still continue(?)
+                        }
                         Contact newContact = new Contact(outlookContact,
                                 Contact.Status.UIDADDED,
                                 equalDavContact.getUid());
