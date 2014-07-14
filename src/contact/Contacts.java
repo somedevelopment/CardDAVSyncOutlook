@@ -43,15 +43,20 @@ public class Contacts {
     private final HashMap<String, Contact> davContacts;
     private final HashMap<String, Contact> outlookContacts;
     private final List<String> listSyncContacts;
+    private String strDefaultRegion = null;
+    private Boolean bolCorrectNumber = false;
 
     /**
      * Constructor
      */
-    public Contacts(String strWorkingDir) {
+    public Contacts(String strWorkingDir, String strRegion, Boolean bolClearNumbers) {
         davContacts = new HashMap();
         outlookContacts = new HashMap();
         listSyncContacts = new ArrayList();
-
+        
+        this.strDefaultRegion = strRegion;
+        this.bolCorrectNumber = bolClearNumbers;
+        
         this.loadUidsFromFile(strWorkingDir);
     }
 
@@ -370,5 +375,13 @@ public class Contacts {
                     contact.getStatus();
             Status.print(s);
         }
+    }
+
+    public String getDefaultRegion() {
+        return strDefaultRegion;
+    }
+
+    public Boolean getCorrectNumber() {
+        return bolCorrectNumber;
     }
 }
