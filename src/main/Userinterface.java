@@ -37,6 +37,7 @@ import com.alee.laf.text.WebTextPane;
 import com.alee.managers.tooltip.TooltipManager;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
+import ezvcard.util.org.apache.commons.codec.binary.Hex;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,6 +56,8 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -92,10 +95,6 @@ public class Userinterface {
         public void run() {
             int intOutlookFolder = 10;
 
-            String strWorkingdir = System.getProperty("user.dir");
-            strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
-            new File(strWorkingdir).mkdir();
-
             textPane.setText("");
 
             URL host;
@@ -108,7 +107,7 @@ public class Userinterface {
             }
             String server = host.getProtocol() + "://" + host.getAuthority();
             String fullPath = server + "/" + host.getPath();
-            
+
             if (clearNumbersBox.isSelected()) {
                 if (txtRegion.getText().length() == 0) {
                     Status.print("Please set region code (two letter code)");
@@ -116,10 +115,27 @@ public class Userinterface {
                 }
             }
 
+            // working dir
+            String strWorkingdir = System.getProperty("user.dir");
+            strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
+            new File(strWorkingdir).mkdir();
+
+            // path to sync file
+            String serverPart = host.getAuthority().replace(".", "&");
+            byte[] hashBytes;
+            try {
+                 hashBytes = MessageDigest.getInstance("MD5").digest(host.getPath().getBytes());
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return;
+            }
+            String hostPathHash = Hex.encodeHexString(hashBytes).substring(0, 8);
+            String syncFilePath = strWorkingdir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
+
             Status.print("Start");
-            
+
             //Build Addressbooks
-            Contacts allContacts = new Contacts(strWorkingdir, txtRegion.getText(), clearNumbersBox.isSelected());
+            Contacts allContacts = new Contacts(syncFilePath, txtRegion.getText(), clearNumbersBox.isSelected());
 
             //Get Outlook instance
             ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
@@ -162,7 +178,7 @@ public class Userinterface {
 
             //Save last Sync Uids
             Status.print("Save last Sync UIDs");
-            allContacts.saveUidsToFile(strWorkingdir);
+            allContacts.saveUidsToFile();
 
             //Delete Tmp Contact Pictures
             allContacts.deleteTmpContactPictures();
@@ -391,16 +407,16 @@ public class Userinterface {
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Close Outlook after synchronization is finished.";
         TooltipManager.addTooltip(outlookCheckBox, tooltipText);
-        
+
         WebPanel internationalNumberPanel = new WebPanel();
         northPanel.add(internationalNumberPanel);
         internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        
+
         WebLabel regionLabel = new WebLabel("Default region:");
         regionLabel.setText("Default region");
         internationalNumberPanel.add(regionLabel);
         regionLabel.setFont(new Font("Calibri", Font.BOLD, 12));
-        
+
         txtRegion = new WebTextField();
         txtRegion.setInputPromptPosition(2);
         txtRegion.setInputPrompt("DE");
@@ -408,10 +424,10 @@ public class Userinterface {
         txtRegion.setText("");
         txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
         txtRegion.setColumns(2);
-        
+
         JSeparator separator_3 = new JSeparator();
         internationalNumberPanel.add(separator_3);
-        
+
         clearNumbersBox = new WebCheckBox("Number Correction?");
         internationalNumberPanel.add(clearNumbersBox);
         clearNumbersBox.setText("International number correction?");
@@ -419,20 +435,20 @@ public class Userinterface {
         clearNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "e.g. +49 89 1234567";
         TooltipManager.addTooltip(clearNumbersBox, tooltipText);
-        
+
         WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
         northPanel.add(runPanel);
         frame.getContentPane().add(northPanel, BorderLayout.NORTH);
-        
+
         WebPanel southPanel = new WebPanel();
         frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
         southPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        
+
         lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
         southPanel.add(lblNumbersOfContacts);
         lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
-        
+
         JSeparator separator_5 = new JSeparator();
         southPanel.add(separator_5);
         lblContactNumbers = new WebLabel("");
@@ -483,7 +499,7 @@ public class Userinterface {
         insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
         savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
         outlookCheckBox.setSelected(config.getBoolean(Config.GLOB_CLOSE, false));
-                
+
         JSeparator separator_2 = new JSeparator();
         optionPanel.add(separator_2);
 

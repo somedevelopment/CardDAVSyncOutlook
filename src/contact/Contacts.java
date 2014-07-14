@@ -40,6 +40,7 @@ public class Contacts {
         OUTLOOKADDRESSBOOK
     }
 
+    private final String syncFilePath;
     private final HashMap<String, Contact> davContacts;
     private final HashMap<String, Contact> outlookContacts;
     private final List<String> listSyncContacts;
@@ -49,27 +50,27 @@ public class Contacts {
     /**
      * Constructor
      */
-    public Contacts(String strWorkingDir, String strRegion, Boolean bolClearNumbers) {
+    public Contacts(String syncFilePath, String strRegion, Boolean bolClearNumbers) {
+        this.syncFilePath = syncFilePath;
         davContacts = new HashMap();
         outlookContacts = new HashMap();
         listSyncContacts = new ArrayList();
-        
+
         this.strDefaultRegion = strRegion;
         this.bolCorrectNumber = bolClearNumbers;
-        
-        this.loadUidsFromFile(strWorkingDir);
+
+        this.loadUidsFromFile();
     }
 
     /**
      * Private
      */
-    private void loadUidsFromFile(String strWorkingDir) {
+    private void loadUidsFromFile() {
         Status.print("Load last Sync UIDs");
-        File file = new File((strWorkingDir + "lastSync.txt"));
+        File file = new File(syncFilePath);
 
         if (file.exists()) {
-            try (BufferedReader in = new BufferedReader(
-                    new FileReader(strWorkingDir + "lastSync.txt"))) {
+            try (BufferedReader in = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = in.readLine()) != null) {
                     this.listSyncContacts.add(line);
@@ -143,19 +144,15 @@ public class Contacts {
         }
     }
 
-    public void saveUidsToFile(String strWorkingDir) {
-        File file = new File(strWorkingDir + "lastSync.txt");
-        FileWriter writer;
-        try {
-            writer = new FileWriter(file);
+    public void saveUidsToFile() {
+        File file = new File(syncFilePath);
 
+        try (FileWriter writer = new FileWriter(file)) {
             for (Entry<String, Contact> entry : davContacts.entrySet()) {
                 writer.write(entry.getValue().getUid());
                 writer.write(System.getProperty("line.separator"));
             }
-
             writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
