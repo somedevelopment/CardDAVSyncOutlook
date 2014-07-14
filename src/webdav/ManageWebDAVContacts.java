@@ -211,6 +211,12 @@ public class ManageWebDAVContacts {
                 currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
                 currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
             }
+            
+            //Correction of numbers INTERNATIONAL formating
+            if (allContacts.getCorrectNumber()) {
+                currentOutlookEntry.getValue().correctNumbers(allContacts.getDefaultRegion());
+                currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+            }
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case CHANGED:

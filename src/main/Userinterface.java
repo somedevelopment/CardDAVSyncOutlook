@@ -47,8 +47,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -79,6 +77,8 @@ public class Userinterface {
     private WebCheckBox savePasswordBox;
     private WebCheckBox initModeBox;
     private WebCheckBox outlookCheckBox;
+    private WebCheckBox clearNumbersBox;
+    private WebTextField txtRegion;
 
     private Thread worker = null;
 
@@ -108,11 +108,18 @@ public class Userinterface {
             }
             String server = host.getProtocol() + "://" + host.getAuthority();
             String fullPath = server + "/" + host.getPath();
+            
+            if (clearNumbersBox.isSelected()) {
+                if (txtRegion.getText().length() == 0) {
+                    Status.print("Please set region code (two letter code)");
+                    return;
+                }
+            }
 
             Status.print("Start");
-
+            
             //Build Addressbooks
-            Contacts allContacts = new Contacts(strWorkingdir);
+            Contacts allContacts = new Contacts(strWorkingdir, txtRegion.getText(), clearNumbersBox.isSelected());
 
             //Get Outlook instance
             ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
@@ -340,11 +347,6 @@ public class Userinterface {
 
         WebLabel lblStatus = new WebLabel("Status:");
 
-        lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
-        lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
-        lblContactNumbers = new WebLabel("");
-        lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
-
         // layout
         WebPanel northPanel = new WebPanel();
         northPanel.setBorderColor(Color.LIGHT_GRAY);
@@ -381,15 +383,7 @@ public class Userinterface {
 
         JSeparator separator_1 = new JSeparator();
         optionPanel.add(separator_1);
-
-        initModeBox = new WebCheckBox("Initialization Mode");
-        optionPanel.add(initModeBox);
-        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Compare contacts by all fields. Useful on the first run";
-        TooltipManager.addTooltip(initModeBox, tooltipText);
-
-        JSeparator separator_2 = new JSeparator();
-        optionPanel.add(separator_2);
 
         outlookCheckBox = new WebCheckBox("Close Outlook?");
         optionPanel.add(outlookCheckBox);
@@ -397,16 +391,53 @@ public class Userinterface {
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Close Outlook after synchronization is finished.";
         TooltipManager.addTooltip(outlookCheckBox, tooltipText);
-
-        WebPanel numberPanel = new WebPanel();
-        numberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        numberPanel.add(lblNumbersOfContacts);
-        numberPanel.add(lblContactNumbers);
-        northPanel.add(numberPanel);
+        
+        WebPanel internationalNumberPanel = new WebPanel();
+        northPanel.add(internationalNumberPanel);
+        internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        
+        WebLabel regionLabel = new WebLabel("Default region:");
+        regionLabel.setText("Default region");
+        internationalNumberPanel.add(regionLabel);
+        regionLabel.setFont(new Font("Calibri", Font.BOLD, 12));
+        
+        txtRegion = new WebTextField();
+        txtRegion.setInputPromptPosition(2);
+        txtRegion.setInputPrompt("DE");
+        internationalNumberPanel.add(txtRegion);
+        txtRegion.setText("");
+        txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
+        txtRegion.setColumns(2);
+        
+        JSeparator separator_3 = new JSeparator();
+        internationalNumberPanel.add(separator_3);
+        
+        clearNumbersBox = new WebCheckBox("Number Correction?");
+        internationalNumberPanel.add(clearNumbersBox);
+        clearNumbersBox.setText("International number correction?");
+        clearNumbersBox.setSelected(false);
+        clearNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "e.g. +49 89 1234567";
+        TooltipManager.addTooltip(clearNumbersBox, tooltipText);
+        
         WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
         northPanel.add(runPanel);
         frame.getContentPane().add(northPanel, BorderLayout.NORTH);
+        
+        WebPanel southPanel = new WebPanel();
+        frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
+        southPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        
+        lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
+        southPanel.add(lblNumbersOfContacts);
+        lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
+        
+        JSeparator separator_5 = new JSeparator();
+        southPanel.add(separator_5);
+        lblContactNumbers = new WebLabel("");
+        southPanel.add(lblContactNumbers);
+        lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         frame.getContentPane().setFocusTraversalPolicy(
@@ -452,6 +483,14 @@ public class Userinterface {
         insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
         savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
         outlookCheckBox.setSelected(config.getBoolean(Config.GLOB_CLOSE, false));
+                
+        JSeparator separator_2 = new JSeparator();
+        optionPanel.add(separator_2);
+
+        initModeBox = new WebCheckBox("Initialization Mode");
+        optionPanel.add(initModeBox);
+        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        TooltipManager.addTooltip(initModeBox, tooltipText);
     }
 
     private void saveConfig() {

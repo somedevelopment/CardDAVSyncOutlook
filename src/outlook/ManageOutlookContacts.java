@@ -211,6 +211,13 @@ public class ManageOutlookContacts extends ManageOutlook {
                 currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
             }
             
+            //Correction of numbers INTERNATIONAL formating
+            if (allContacts.getCorrectNumber()) {
+                currentOutlookEntry.getValue().correctNumbers(allContacts.getDefaultRegion());
+                currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+            }
+
+            
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:                    
                     Status.print("Write Contact with new UID to Outlook " +
