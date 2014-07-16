@@ -208,13 +208,21 @@ public class ManageOutlookContacts extends ManageOutlook {
         	//Legacy correction UID call
             if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
                 currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
-                currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+                if ((currentOutlookEntry.getValue().getStatus() == Contact.Status.READIN) ||
+                        (currentOutlookEntry.getValue().getStatus() == Contact.Status.UIDADDED) ||
+                        (currentOutlookEntry.getValue().getStatus() == Contact.Status.UNCHANGED)) {
+                    currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+                }
             }
             
             //Correction of numbers INTERNATIONAL formating
             if (allContacts.getCorrectNumber()) {
                 currentOutlookEntry.getValue().correctNumbers(allContacts.getDefaultRegion());
-                currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+                if ((currentOutlookEntry.getValue().getStatus() == Contact.Status.READIN) ||
+                        (currentOutlookEntry.getValue().getStatus() == Contact.Status.UIDADDED) ||
+                        (currentOutlookEntry.getValue().getStatus() == Contact.Status.UNCHANGED)) {
+                    currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
+                }
             }
 
             
