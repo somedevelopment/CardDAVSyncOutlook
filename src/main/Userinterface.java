@@ -35,9 +35,11 @@ import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.text.WebTextPane;
 import com.alee.managers.tooltip.TooltipManager;
+
 import contact.Contacts;
 import contact.Contacts.Addressbook;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -58,13 +60,17 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
+
 import outlook.ManageOutlookContacts;
+import utilities.Config;
+import utilities.Log;
 import webdav.ManageWebDAVContacts;
 
 public class Userinterface {
