@@ -75,11 +75,11 @@ public class Contact {
     // unique ID of an item in outlook. Changes when item is moved or recreated from backup
     private String strEntryID = null;
     private String strFileOnDavServer = null;
-    private Status statusConntact = null;
+    private Status statusContact = null;
     private Date dateLastModificationTme = null;
 
     /** Constructor Section */
-    
+
     /**
      * Create a copy of an existing contact.
      */
@@ -91,7 +91,7 @@ public class Contact {
      * Create a copy of an existing contact with a new UID.
      */
     public Contact(Contact toCopyContact, Contact.Status state, String uid) {
-        this.statusConntact = state;
+        this.statusContact = state;
 
         this.vcard = Ezvcard.parse(toCopyContact.getContactAsString()).first();
         this.strUid = uid;
@@ -105,7 +105,7 @@ public class Contact {
      * Create contact from WebDAV.
      */
     public Contact(String strVCardData, String strFileOnDavServer, String strWorkingDir) {
-        this.statusConntact = Status.READIN;
+        this.statusContact = Status.READIN;
 
         this.vcard = Ezvcard.parse(strVCardData).first();
         this.strUid = this.vcard.getUid().getValue();
@@ -140,19 +140,19 @@ public class Contact {
             String strBusinessAddressCity, String strBusinessAddressCountry, String strBusinessAddressPostalCode, String strBusinessAddressState,
             String strBusinessAddressStreet, String strBody, Calendar calBirthday, Calendar calAnniversary, String strPathToTmpPicture, String strLastModificationTime) {
 
-        this.statusConntact = Status.READIN;
+        this.statusContact = Status.READIN;
 
         this.vcard = new VCard();
 
         //Legacy Correction with regards to the UID string which is included in the Body/Note field
         if (strUid.isEmpty()) {
             strUid = LegacyCorrectionUtilities.getBodyUID(strBody);
-            this.statusConntact = Status.UIDADDED;
+            this.statusContact = Status.UIDADDED;
         }
 
         if (strUid.isEmpty()) {
             this.vcard.setUid(Uid.random());
-            this.statusConntact = Status.UIDADDED;
+            this.statusContact = Status.UIDADDED;
         } else {
             this.vcard.setUid(new Uid(strUid.trim()));
         }
@@ -361,7 +361,7 @@ public class Contact {
     public String internationalNumber(String strPhoneNumber, String strDefaultRegion) {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         PhoneNumber phoneNumber = new PhoneNumber();
-        
+
         try {
             phoneNumber = phoneUtil.parse(strPhoneNumber, strDefaultRegion);
         } catch (NumberParseException e) {
@@ -372,7 +372,7 @@ public class Contact {
 
         return strPhoneNumber;
     }
-    
+
     private Boolean comparePictures(String strPathToComparePicture) {
         BufferedImage imageA;
         BufferedImage imageB;
@@ -404,13 +404,13 @@ public class Contact {
 
     /**
      * Public Section
-     */    
+     */
     public void correctNumbers(String strDefaultRegion) {
         for (Telephone number : this.vcard.getTelephoneNumbers()) {
             number.setText(internationalNumber(number.getText(), strDefaultRegion));
         }
     }
-    
+
     public void deleteTmpContactPictureFile() {
         if (this.strPathToContactPicture != null) {
             File tmpFile = new File(this.strPathToContactPicture);
@@ -420,7 +420,7 @@ public class Contact {
             }
         }
     }
-    
+
     public boolean equalTo(Contact toCompareContact) {
 
         if (this.getAnniversary() != null) {
@@ -1044,37 +1044,37 @@ public class Contact {
      * Getter & Setter
      */
     public Status getStatus() {
-        return this.statusConntact;
+        return this.statusContact;
     }
-    
+
     public void setStatus(Contact.Status newStauts) {
-        this.statusConntact = newStauts;
+        this.statusContact = newStauts;
     }
-    
+
     public String getEntryID() {
         return this.strEntryID;
     }
-    
+
     public void setEntryID(String strEntryID) {
         this.strEntryID = strEntryID;
     }
-    
+
     public String getWebDavUriFilename() {
         return this.strFileOnDavServer;
     }
-    
+
     public void setWebDavUriFilename(String strFileOnDavServer) {
         this.strFileOnDavServer = strFileOnDavServer;
     }
-    
+
     public final String getContactAsString() {
         return this.vcard.write();
     }
-    
+
     public String getUid() {
         return this.strUid;
     }
-    
+
     public String getTitle() {
         if (!this.vcard.getStructuredNames().isEmpty()) {
             if (!this.vcard.getStructuredName().getPrefixes().isEmpty()) {
@@ -1088,7 +1088,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getFirstName() {
         if (!this.vcard.getStructuredNames().isEmpty()) {
             if (this.vcard.getStructuredName().getGiven() != null) {
@@ -1100,7 +1100,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getMiddleName() {
         if (!this.vcard.getStructuredNames().isEmpty()) {
             if (!this.vcard.getStructuredName().getAdditional().isEmpty()) {
@@ -1114,7 +1114,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getLastName() {
         if (!this.vcard.getStructuredNames().isEmpty()) {
             if (this.vcard.getStructuredName().getFamily() != null) {
@@ -1126,7 +1126,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getSuffix() {
         if (!this.vcard.getStructuredNames().isEmpty()) {
             if (!this.vcard.getStructuredName().getSuffixes().isEmpty()) {
@@ -1140,7 +1140,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getCompanyName() {
         Iterator<Organization> iter = this.vcard.getOrganizations().iterator();
         while (iter.hasNext()) {
@@ -1155,7 +1155,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getJobTitle() {
         if (!this.vcard.getTitles().isEmpty()) {
             if (this.vcard.getTitles().get(0).getValue() != null) {
@@ -1167,7 +1167,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getEmail1Address() {
         Iterator<Email> iter = (Iterator<Email>) this.vcard.getEmails().iterator();
 
@@ -1182,7 +1182,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getEmail2Address() {
         Iterator<Email> iter = (Iterator<Email>) this.vcard.getEmails().iterator();
 
@@ -1197,7 +1197,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getEmail3Address() {
         Iterator<Email> iter = (Iterator<Email>) this.vcard.getEmails().iterator();
 
@@ -1212,7 +1212,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getWebPage() {
         if (!this.vcard.getUrls().isEmpty()) {
             if (this.vcard.getUrls().get(0).getValue().length() > 0) {
@@ -1222,7 +1222,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getMobileTelephoneNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1237,7 +1237,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusinessTelephoneNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1252,7 +1252,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusiness2TelephoneNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1267,7 +1267,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusinessFaxNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1282,7 +1282,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeTelephoneNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1297,7 +1297,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHome2TelephoneNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1312,7 +1312,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeFaxNumber() {
         Iterator<Telephone> iter = (Iterator<Telephone>) this.vcard.getTelephoneNumbers().iterator();
 
@@ -1327,7 +1327,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeAddressCity() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1344,7 +1344,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeAddressCountry() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1361,7 +1361,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeAddressPostalCode() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1378,7 +1378,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeAddressState() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1395,7 +1395,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getHomeAddressStreet() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1412,7 +1412,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusinessAddressCity() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1429,7 +1429,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusinessAddressCountry() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1446,7 +1446,7 @@ public class Contact {
 
         return null;
     }
-    
+
     public String getBusinessAddressPostalCode() {
         Iterator<Address> iter = (Iterator<Address>) this.vcard.getAddresses().iterator();
 
@@ -1661,7 +1661,7 @@ public class Contact {
 
     public String getFileOnDavServer() {
         return strFileOnDavServer;
-    }    
+    }
 
 
 }
