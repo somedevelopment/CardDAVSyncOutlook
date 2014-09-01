@@ -169,7 +169,7 @@ public class Userinterface {
             lblContactNumbers.setText(allContacts.numberOfContacts(Addressbook.WEBDAVADDRESSBOOK).toString() + " WebDAV");
 
             //Load Outlook Contacts
-            outlookContacts.loadContantFromOutlook(allContacts);
+            outlookContacts.loadContentFromOutlook(allContacts);
 
             lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
 
@@ -524,6 +524,7 @@ public class Userinterface {
         config.setProperty(Config.ACC_SSL, insecureSSLBox.isSelected());
         config.setProperty(Config.ACC_SAVE_PASS, savePasswordBox.isSelected());
         config.setProperty(Config.GLOB_CLOSE, outlookCheckBox.isSelected());
+
         config.saveToFile();
         Status.print("Config Saved");
     }

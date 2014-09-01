@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import main.Status;
 import utilities.Utilities;
 
-public abstract class ManageOutlook {
+public abstract class ManageOutlook<T1, T2> {
 
     static private ActiveXComponent axc;
 
@@ -158,10 +158,10 @@ public abstract class ManageOutlook {
      * Abstract Interfaces
      */
 
-    abstract protected Dispatch generatePutDispatchContent(Object dataItem);
+    abstract protected Dispatch generatePutDispatchContent(T1 dataItem);
 
-    abstract public void writeOutlookObjects(Object allContant);
+    abstract public void writeOutlookObjects(T2 allContent);
 
-    abstract public void loadContantFromOutlook(Object allContant);
+    abstract public void loadContentFromOutlook(T2 allContent);
 
 }

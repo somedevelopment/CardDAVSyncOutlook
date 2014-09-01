@@ -37,7 +37,7 @@ import contact.Contact;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
 
-public class ManageOutlookContacts extends ManageOutlook {
+public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
     /**
      * Constructors
@@ -80,8 +80,7 @@ public class ManageOutlookContacts extends ManageOutlook {
      *
      */
     @Override
-    public void loadContantFromOutlook(Object allContant) {
-        Contacts allContacts = (Contacts) allContant;
+    public void loadContentFromOutlook(Contacts contacts) {
 
         Dispatch dipContactsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
@@ -179,7 +178,7 @@ public class ManageOutlookContacts extends ManageOutlook {
             String strLastModificationTime = Dispatch.get(dipContact, "LastModificationTime").toString().trim();
 
             //Add Contact
-            allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
+            contacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
                     strCompanyName, strJobTitle, strEmail1Address, strEmail2Address, strEmail3Address,
                     strWebPage, strMobileTelephoneNumber, strAssistantTelephoneNumber, strCallbackTelephoneNumber,
                     strCarTelephoneNumber, strCompanyMainTelephoneNumber, strOtherTelephoneNumber,
@@ -198,12 +197,11 @@ public class ManageOutlookContacts extends ManageOutlook {
     }
 
     @Override
-    public void writeOutlookObjects(Object allContant) {
-        Contacts allContacts = (Contacts) allContant;
-        
+    public void writeOutlookObjects(Contacts contacts) {
+
         List<Contact> listDelOutlookContacts = new ArrayList();
 
-        for (Entry<String, Contact> currentOutlookEntry : allContacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
+        for (Entry<String, Contact> currentOutlookEntry : contacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
 
         	//Legacy correction UID call
             if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
@@ -214,10 +212,10 @@ public class ManageOutlookContacts extends ManageOutlook {
                     currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
                 }
             }
-            
+
             //Correction of numbers INTERNATIONAL formating
-            if (allContacts.getCorrectNumber()) {
-                currentOutlookEntry.getValue().correctNumbers(allContacts.getDefaultRegion());
+            if (contacts.getCorrectNumber()) {
+                currentOutlookEntry.getValue().correctNumbers(contacts.getDefaultRegion());
                 if ((currentOutlookEntry.getValue().getStatus() == Contact.Status.READIN) ||
                         (currentOutlookEntry.getValue().getStatus() == Contact.Status.UIDADDED) ||
                         (currentOutlookEntry.getValue().getStatus() == Contact.Status.UNCHANGED)) {
@@ -225,9 +223,9 @@ public class ManageOutlookContacts extends ManageOutlook {
                 }
             }
 
-            
+
             switch (currentOutlookEntry.getValue().getStatus()) {
-                case UIDADDED:                    
+                case UIDADDED:
                     Status.print("Write Contact with new UID to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
@@ -264,13 +262,12 @@ public class ManageOutlookContacts extends ManageOutlook {
 
         //Delete deleted Contacts
         for (Contact currentContact : listDelOutlookContacts) {
-            allContacts.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
+            contacts.removeContact(Addressbook.OUTLOOKADDRESSBOOK, currentContact.getUid());
         }
 
     }
 
-    @Override
-    protected Dispatch generatePutDispatchContent(Object dataItem) {
+    protected Dispatch generatePutDispatchContent(Contact dataItem) {
         Contact dataContact = (Contact) dataItem;
         Dispatch dipContact = super.getOutlookItem(dataContact.getEntryID());
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);

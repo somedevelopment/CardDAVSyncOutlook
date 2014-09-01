@@ -19,14 +19,13 @@
  */
 package outlook;
 
-import main.Status;
 import appointment.Appointment;
 import appointment.Appointment.Sensitivity;
 import appointment.Appointments;
-
 import com.jacob.com.Dispatch;
+import main.Status;
 
-public class ManageOutlookAppointments extends ManageOutlook {
+public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appointments> {
 
     private final Sensitivity senSensitivity;
 
@@ -43,20 +42,19 @@ public class ManageOutlookAppointments extends ManageOutlook {
     }
 
     @Override
-    public Dispatch generatePutDispatchContent(Object dataItem) {
+    public Dispatch generatePutDispatchContent(Appointment appointment) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void writeOutlookObjects(Object allContant) {
+    public void writeOutlookObjects(Appointments appointments) {
 		// TODO Auto-generated method stub
 
     }
 
     @Override
-    public void loadContantFromOutlook(Object allContant) {
-        Appointments allAppointments = (Appointments) allContant;
+    public void loadContentFromOutlook(Appointments appointments) {
 
         Dispatch dipAppointmentsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipAppointmentsItems = Dispatch.get(dipAppointmentsFolder, "items").toDispatch();
@@ -85,7 +83,7 @@ public class ManageOutlookAppointments extends ManageOutlook {
                 String strOptionalAttendees = Dispatch.get(dipAppointment, "OptionalAttendees").toString().trim();
                 String strReminderMinutesBeforeStart = Dispatch.get(dipAppointment, "ReminderMinutesBeforeStart").toString().trim();
 
-                allAppointments.addAppointment(Appointments.Calenders.OUTLOOKCALENDER, new Appointment(
+                appointments.addAppointment(Appointments.Calenders.OUTLOOKCALENDER, new Appointment(
                         strEntryID, strSubject, strBody, sensitivity, strStartUTC, strEndUTC, strAllDayEvent,
                         bolIsRecurring, strLocation, strRequiredAttendees, strOptionalAttendees, strReminderMinutesBeforeStart));
 
