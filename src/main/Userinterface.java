@@ -400,12 +400,11 @@ public class Userinterface {
         insecureSSLBox = new WebCheckBox("Allow insecure SSL");
         optionPanel.add(insecureSSLBox);
         insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certifcate";
+        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certificate";
         TooltipManager.addTooltip(insecureSSLBox, tooltipText);
 
         JSeparator separator_1 = new JSeparator();
         optionPanel.add(separator_1);
-        tooltipText = "Compare contacts by all fields. Useful on the first run";
 
         outlookCheckBox = new WebCheckBox("Close Outlook?");
         optionPanel.add(outlookCheckBox);
@@ -512,6 +511,7 @@ public class Userinterface {
         initModeBox = new WebCheckBox("Initialization Mode");
         optionPanel.add(initModeBox);
         initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Compare contacts by all fields. Useful on the first run";
         TooltipManager.addTooltip(initModeBox, tooltipText);
     }
 
