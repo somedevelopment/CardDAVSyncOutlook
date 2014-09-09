@@ -36,14 +36,10 @@ import com.alee.laf.text.WebTextField;
 import com.alee.laf.text.WebTextPane;
 import com.alee.managers.tooltip.TooltipManager;
 
-import contact.Contacts;
-import contact.Contacts.Addressbook;
-import ezvcard.util.org.apache.commons.codec.binary.Hex;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -52,14 +48,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.ServerSocket;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
@@ -68,14 +56,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 
-import outlook.ManageOutlookContacts;
 import utilities.Config;
-import utilities.Log;
-import webdav.ManageWebDAVContacts;
 
 public class Userinterface {
-
-    private static ServerSocket run = null;
 
     private WebFrame frame;
     private WebPasswordField passwordField;
@@ -89,159 +72,16 @@ public class Userinterface {
     private WebCheckBox clearNumbersBox;
     private WebTextField txtRegion;
 
-    private Thread worker = null;
-
     static private WebTextPane textPane;
     static private WebScrollPane scrollPane;
     static private StyledDocument docTextPane;
-
-    //Start Worker Thread for Update Text Area
-    Runnable syncWorker = new Runnable() {
-        @Override
-        public void run() {
-            int intOutlookFolder = 10;
-
-            textPane.setText("");
-
-            URL host;
-            try {
-                host = new URL(urlField.getText().trim());
-            } catch (MalformedURLException e) {
-                Status.print("Invalid host URL");
-                e.printStackTrace();
-                return;
-            }
-            String server = host.getProtocol() + "://" + host.getAuthority();
-            String fullPath = server + "/" + host.getPath();
-
-            if (clearNumbersBox.isSelected()) {
-                if (txtRegion.getText().length() == 0) {
-                    Status.print("Please set region code (two letter code)");
-                    return;
-                }
-            }
-
-            // working dir
-            String strWorkingdir = System.getProperty("user.dir");
-            strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
-            new File(strWorkingdir).mkdir();
-
-            // path to sync file
-            String serverPart = host.getAuthority().replace(".", "&");
-            byte[] hashBytes;
-            try {
-                 hashBytes = MessageDigest.getInstance("MD5").digest(host.getPath().getBytes());
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-                return;
-            }
-            String hostPathHash = Hex.encodeHexString(hashBytes).substring(0, 8);
-            String syncFilePath = strWorkingdir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
-
-            Status.print("Start");
-
-            //Build Addressbooks
-            Contacts allContacts = new Contacts(syncFilePath, txtRegion.getText(), clearNumbersBox.isSelected());
-
-            //Get Outlook instance
-            ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
-            boolean opened = outlookContacts.openOutlook();
-            if (!opened) {
-                Status.print("Can't open Outlook");
-                return;
-            }
-
-            //Connect WebDAV
-            ManageWebDAVContacts webDAVConnection = new ManageWebDAVContacts();
-            webDAVConnection.connectHTTP(textUsername.getText().trim(),
-                    String.valueOf(passwordField.getPassword()).trim(),
-                    server,
-                    insecureSSLBox.isSelected());
-
-            //Load WebDAV Contacts, if connection true proceed
-            boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
-            if (!loaded) {
-                Status.print("Could not load WebDAV contacts");
-                outlookContacts.closeOutlook(outlookCheckBox.isSelected());
-                return;
-            }
-
-            lblContactNumbers.setText(allContacts.numberOfContacts(Addressbook.WEBDAVADDRESSBOOK).toString() + " WebDAV");
-
-            //Load Outlook Contacts
-            outlookContacts.loadContentFromOutlook(allContacts);
-
-            lblContactNumbers.setText(lblContactNumbers.getText() + " / " + allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
-
-            //Compare and modify Contacts
-            Status.print("Compare Adress Books");
-            allContacts.compareAddressBooks(initModeBox.isSelected());
-            //allContacts.printStatus();
-
-            //Write Data
-            outlookContacts.writeOutlookObjects(allContacts);
-            webDAVConnection.writeContacts(fullPath, allContacts);
-
-            //Save last Sync Uids
-            Status.print("Save last Sync UIDs");
-            allContacts.saveUidsToFile();
-
-            //Delete Tmp Contact Pictures
-            allContacts.deleteTmpContactPictures();
-            Status.print("Temporary Contact Pictures Files deleted");
-
-            //Close
-            outlookContacts.closeOutlook(outlookCheckBox.isSelected());
-
-            Status.print("End");
-        }
-    };
     private WebLabel lblNumbersOfContacts;
     private JSeparator separator;
 
     /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-
-        // set up logging
-        try {
-            Log.init();
-        } catch (IOException e) {
-            System.out.println("can't set up logging");
-            e.printStackTrace();
-        }
-        System.out.println("START");
-
-        // check if already running
-        try {
-            InetAddress addr = InetAddress.getByAddress(new byte[] {127, 0, 0, 1});
-            run = new ServerSocket(9872, 10, addr);
-        } catch(java.net.BindException e){
-            System.out.println("already running");
-            System.exit(2);
-        } catch(IOException e){
-            System.out.println("can't create socket");
-            e.printStackTrace();
-        }
-
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Userinterface window = new Userinterface();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    /**
      * Create the application.
      */
-    public Userinterface() {
+    public Userinterface(final Main main) {
 
         WebLookAndFeel.install();
 
@@ -268,12 +108,7 @@ public class Userinterface {
             @Override
             public void windowClosing(WindowEvent e) {
                 Userinterface.this.saveConfig();
-                try {
-                    Userinterface.run.close();
-                } catch (IOException e2) {
-                    System.out.println("can't close socket");
-                    e2.printStackTrace();
-                }
+                main.shutdown();
                 frame.setVisible(false);
                 frame.dispose();
             }
@@ -358,12 +193,16 @@ public class Userinterface {
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (worker != null && worker.isAlive()) {
-                    // already running
-                    return;
-                }
-                worker = new Thread(syncWorker);
-                worker.start();
+                textPane.setText("");
+                String url = urlField.getText().trim();
+                boolean clearNumbers = clearNumbersBox.isSelected();
+                String region = txtRegion.getText();
+                String username = textUsername.getText().trim();
+                String password = String.valueOf(passwordField.getPassword()).trim();
+                boolean insecureSSL = insecureSSLBox.isSelected();
+                boolean closeOutlook = outlookCheckBox.isSelected();
+                boolean initMode = initModeBox.isSelected();
+                main.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
             }
         });
 
@@ -515,6 +354,14 @@ public class Userinterface {
         TooltipManager.addTooltip(initModeBox, tooltipText);
     }
 
+    public void setVisible() {
+        frame.setVisible(true);
+    }
+
+    public void setContactNumbers(String text) {
+        lblContactNumbers.setText(text);
+    }
+
     private void saveConfig() {
         Config config = Config.getInstance();
         config.setProperty(Config.ACC_USER, textUsername.getText());
@@ -529,7 +376,7 @@ public class Userinterface {
         Status.print("Config Saved");
     }
 
-    static public void setTextinTextPane(String strText) {
+    static public void setTextInTextPane(String strText) {
         try {
             if (docTextPane.getLength() > 0) {
                 docTextPane.insertString(docTextPane.getLength(), strText + "\n", null);
