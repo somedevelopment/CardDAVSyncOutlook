@@ -27,6 +27,7 @@ import com.alee.laf.label.WebLabel;
 import com.alee.laf.menu.WebMenu;
 import com.alee.laf.menu.WebMenuBar;
 import com.alee.laf.menu.WebMenuItem;
+import com.alee.laf.menu.WebPopupMenu;
 import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
@@ -35,30 +36,37 @@ import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.text.WebTextPane;
 import com.alee.managers.tooltip.TooltipManager;
-
-
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.SystemTray;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
-
 import utilities.Config;
 
 public class Userinterface {
+
+    private Main control;
 
     private WebFrame frame;
     private WebPasswordField passwordField;
@@ -77,11 +85,14 @@ public class Userinterface {
     static private StyledDocument docTextPane;
     private WebLabel lblNumbersOfContacts;
     private JSeparator separator;
+    private TrayIcon trayIcon;
 
     /**
      * Create the application.
      */
     public Userinterface(final Main main) {
+
+        control = main;
 
         WebLookAndFeel.install();
 
@@ -107,10 +118,7 @@ public class Userinterface {
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Userinterface.this.saveConfig();
-                main.shutdown();
-                frame.setVisible(false);
-                frame.dispose();
+                Userinterface.this.shutdown();
             }
         });
 
@@ -193,16 +201,7 @@ public class Userinterface {
         btnSync.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textPane.setText("");
-                String url = urlField.getText().trim();
-                boolean clearNumbers = clearNumbersBox.isSelected();
-                String region = txtRegion.getText();
-                String username = textUsername.getText().trim();
-                String password = String.valueOf(passwordField.getPassword()).trim();
-                boolean insecureSSL = insecureSSLBox.isSelected();
-                boolean closeOutlook = outlookCheckBox.isSelected();
-                boolean initMode = initModeBox.isSelected();
-                main.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
+                Userinterface.this.callSync();
             }
         });
 
@@ -352,6 +351,8 @@ public class Userinterface {
         initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Compare contacts by all fields. Useful on the first run";
         TooltipManager.addTooltip(initModeBox, tooltipText);
+
+        this.setTray();
     }
 
     public void setVisible() {
@@ -360,6 +361,19 @@ public class Userinterface {
 
     public void setContactNumbers(String text) {
         lblContactNumbers.setText(text);
+    }
+
+    private void callSync() {
+        textPane.setText("");
+        String url = urlField.getText().trim();
+        boolean clearNumbers = clearNumbersBox.isSelected();
+        String region = txtRegion.getText();
+        String username = textUsername.getText().trim();
+        String password = String.valueOf(passwordField.getPassword()).trim();
+        boolean insecureSSL = insecureSSLBox.isSelected();
+        boolean closeOutlook = outlookCheckBox.isSelected();
+        boolean initMode = initModeBox.isSelected();
+        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
     }
 
     private void saveConfig() {
@@ -374,6 +388,92 @@ public class Userinterface {
 
         config.saveToFile();
         Status.print("Config Saved");
+    }
+
+    private void toggleState() {
+        if (frame.getState() == Frame.NORMAL) {
+            frame.setState(Frame.ICONIFIED);
+            frame.setVisible(false);
+        } else {
+            frame.setState(Frame.NORMAL);
+            frame.setVisible(true);
+        }
+    }
+
+    void shutdown() {
+        this.saveConfig();
+        frame.setVisible(false);
+        frame.dispose();
+        control.shutdown();
+    }
+
+    private void setTray() {
+        if (!SystemTray.isSupported()) {
+            System.out.println("tray icon not supported");
+            return;
+        }
+
+        if (trayIcon != null)
+            // already set
+            return;
+
+        // load image
+        Image image = new BufferedImage(22, 22, Image.SCALE_SMOOTH);
+        //image = image.getScaledInstance(22, 22, Image.SCALE_SMOOTH);
+
+        // TODO popup menu
+        final WebPopupMenu popup = new WebPopupMenu();
+        WebMenuItem syncItem = new WebMenuItem("Sync");
+        syncItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Userinterface.this.callSync();
+            }
+        });
+        popup.add(syncItem);
+        WebMenuItem quitItem = new WebMenuItem("Quit");
+        quitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Userinterface.this.shutdown();
+            }
+        });
+        popup.add(quitItem);
+
+        // create an action listener to listen for default action executed on the tray icon
+        MouseListener listener = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                check(e);
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                    Userinterface.this.toggleState();
+                else
+                    check(e);
+            }
+            private void check(MouseEvent e) {
+                if (!e.isPopupTrigger())
+                    return;
+
+                // TODO ugly
+                popup.setLocation(e.getX() - 20, e.getY() - 40);
+                popup.setInvoker(popup);
+                popup.setVisible(true);
+            }
+        };
+
+        trayIcon = new TrayIcon(image, "CardDAVSyncOutlook" /*, popup*/);
+        trayIcon.setImageAutoSize(true);
+        trayIcon.addMouseListener(listener);
+
+        SystemTray tray = SystemTray.getSystemTray();
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
     }
 
     static public void setTextInTextPane(String strText) {
