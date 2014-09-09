@@ -43,7 +43,7 @@ public class Main {
 
     private ServerSocket run = null;
     private Userinterface window;
-    private Thread worker = null;
+    private Thread worker = new Thread();
 
     Main() {
         // check if already running
@@ -75,11 +75,17 @@ public class Main {
 
     public void shutdown() {
         try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
             this.run.close();
         } catch (IOException e2) {
             System.out.println("can't close socket");
             e2.printStackTrace();
         }
+        System.exit(0);
     }
 
     public void performSync(final String url,
@@ -195,14 +201,13 @@ public class Main {
             }
         };
 
-        if (worker != null && worker.isAlive()) {
+        if (worker.isAlive()) {
             // already running
             return;
         }
         worker = new Thread(syncWorker);
         worker.start();
     }
-
 
     /**
      * Launch the application.
