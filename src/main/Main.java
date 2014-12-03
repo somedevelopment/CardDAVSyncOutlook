@@ -20,6 +20,7 @@
 
 package main;
 
+import appointment.Appointments;
 import contact.Contacts;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
 
@@ -143,6 +144,35 @@ public class Main {
                 String syncFilePath = strWorkingdir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
 
                 Status.print("Start");
+                
+                /**
+                 * @author Swen Walkowski
+                 */
+                // TODO Abfrage Sync Appointments
+                if (false) {
+                    Status.print("Sync appointments");
+                    
+                    int intOutlookFolder = 9;
+                    
+                    //Get Outlook instance for Appointments
+                    ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
+                    boolean opened = outlookAppointments.openOutlook();
+                    if (!opened) {
+                        Status.print("Can't open Outlook");
+                        return;
+                    }
+                    
+                    //Build Schedule
+                    Appointments allAppointments = new Appointments();
+
+                    //Load outlook appointments
+                    outlookAppointments.loadContentFromOutlook(allAppointments);
+                    
+                    allAppointments.printAppointments();
+                    
+                    //Close
+                    outlookAppointments.closeOutlook(closeOutlook);
+                }
                 
                 /**
                  * @author Swen Walkowski
