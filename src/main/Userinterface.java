@@ -397,6 +397,7 @@ public class Userinterface {
         } else {
             frame.setState(Frame.NORMAL);
             frame.setVisible(true);
+            frame.toFront();
         }
     }
 
@@ -419,9 +420,7 @@ public class Userinterface {
 
         // load image
         Image image = new BufferedImage(22, 22, Image.SCALE_SMOOTH);
-        //image = image.getScaledInstance(22, 22, Image.SCALE_SMOOTH);
 
-        // TODO popup menu
         final WebPopupMenu popup = new WebPopupMenu();
         WebMenuItem syncItem = new WebMenuItem("Sync");
         syncItem.addActionListener(new ActionListener() {
@@ -458,8 +457,12 @@ public class Userinterface {
                     return;
 
                 // TODO ugly
+                // Weblaf 1.28 doesn't support popups outside of a frame, this
+                // is a workaround
                 popup.setLocation(e.getX() - 20, e.getY() - 40);
+                // this is wrong, but a TrayIcon is not a component
                 popup.setInvoker(popup);
+                popup.setCornerWidth(0);
                 popup.setVisible(true);
             }
         };
