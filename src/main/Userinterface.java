@@ -64,6 +64,7 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
 import utilities.Config;
 
+//TODO split up user interface for Outlook, DAV and general configuration information
 public class Userinterface {
 
     private Main control;
@@ -79,6 +80,8 @@ public class Userinterface {
     private WebCheckBox outlookCheckBox;
     private WebCheckBox clearNumbersBox;
     private WebTextField txtRegion;
+    private WebCheckBox syncOutlookCheckBox;
+    private WebCheckBox iCalCheckBox;
 
     static private WebTextPane textPane;
     static private WebScrollPane scrollPane;
@@ -250,34 +253,53 @@ public class Userinterface {
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Close Outlook after synchronization is finished.";
         TooltipManager.addTooltip(outlookCheckBox, tooltipText);
+        
+        WebPanel webPanel = new WebPanel();
+        northPanel.add(webPanel);
+        webPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        
+        WebLabel webLabel = new WebLabel("Default region:");
+        webLabel.setText("Default region");
+        webLabel.setFont(new Font("Calibri", Font.BOLD, 12));
+        webPanel.add(webLabel);
+        
+        txtRegion = new WebTextField();
+        txtRegion.setText("");
+        txtRegion.setInputPromptPosition(2);
+        txtRegion.setInputPrompt("DE");
+        txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
+        txtRegion.setColumns(2);
+        webPanel.add(txtRegion);
+        
+        JSeparator separator_4 = new JSeparator();
+        webPanel.add(separator_4);
+        
+        clearNumbersBox = new WebCheckBox("Number Correction?");
+        clearNumbersBox.setText("International number correction?");
+        clearNumbersBox.setSelected(false);
+        clearNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        webPanel.add(clearNumbersBox);
 
         WebPanel internationalNumberPanel = new WebPanel();
         northPanel.add(internationalNumberPanel);
         internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-        WebLabel regionLabel = new WebLabel("Default region:");
-        regionLabel.setText("Default region");
-        internationalNumberPanel.add(regionLabel);
-        regionLabel.setFont(new Font("Calibri", Font.BOLD, 12));
-
-        txtRegion = new WebTextField();
-        txtRegion.setInputPromptPosition(2);
-        txtRegion.setInputPrompt("DE");
-        internationalNumberPanel.add(txtRegion);
-        txtRegion.setText("");
-        txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
-        txtRegion.setColumns(2);
+        
+        syncOutlookCheckBox = new WebCheckBox("Sync Contacts");
+        syncOutlookCheckBox.setSelected(false);
+        syncOutlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        internationalNumberPanel.add(syncOutlookCheckBox);
+        tooltipText = "Check if you want to sync your outlook contacts with your webdav installation.";
+        TooltipManager.addTooltip(syncOutlookCheckBox, tooltipText);
 
         JSeparator separator_3 = new JSeparator();
         internationalNumberPanel.add(separator_3);
-
-        clearNumbersBox = new WebCheckBox("Number Correction?");
-        internationalNumberPanel.add(clearNumbersBox);
-        clearNumbersBox.setText("International number correction?");
-        clearNumbersBox.setSelected(false);
-        clearNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "e.g. +49 89 1234567";
-        TooltipManager.addTooltip(clearNumbersBox, tooltipText);
+        
+        iCalCheckBox= new WebCheckBox("Export Outlook calender to iCAL");
+        iCalCheckBox.setSelected(false);
+        iCalCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        internationalNumberPanel.add(iCalCheckBox);
+        tooltipText = "Check if you want to exort your outlook calender to your file system (iCAL format; to date - one month";
+        TooltipManager.addTooltip(iCalCheckBox, tooltipText);
 
         WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
@@ -373,7 +395,9 @@ public class Userinterface {
         boolean insecureSSL = insecureSSLBox.isSelected();
         boolean closeOutlook = outlookCheckBox.isSelected();
         boolean initMode = initModeBox.isSelected();
-        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
+        boolean syncContacts = syncOutlookCheckBox.isSelected();
+        boolean exportICAL = iCalCheckBox.isSelected();
+        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts, exportICAL);
     }
 
     private void saveConfig() {

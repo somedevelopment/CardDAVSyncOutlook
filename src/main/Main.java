@@ -22,6 +22,7 @@ package main;
 
 import contact.Contacts;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
+
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,10 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.Date;
+
+import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
 import utilities.Log;
 import webdav.ManageWebDAVContacts;
@@ -95,13 +100,13 @@ public class Main {
             final String password,
             final boolean insecureSSL,
             final boolean closeOutlook,
-            final boolean initMode) {
+            final boolean initMode,
+            final boolean syncContacts,
+            final boolean exportICAL) {
         //Start Worker Thread for Update Text Area
         Runnable syncWorker = new Runnable() {
             @Override
             public void run() {
-                int intOutlookFolder = 10;
-
                 URL host;
                 try {
                     host = new URL(url);
@@ -138,64 +143,98 @@ public class Main {
                 String syncFilePath = strWorkingdir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
 
                 Status.print("Start");
+                
+                /**
+                 * @author Swen Walkowski
+                 */
+                // TODO Abfrage Save as iCal
+                if (exportICAL) {
+                    Status.print("Save Outlook as iCal");
+                    
+                    int intOutlookFolder = 9;
+                  
+                    //Get Outlook instance for Appointments
+                    ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
+                    boolean opened = outlookAppointments.openOutlook();
+                    if (!opened) {
+                        Status.print("Can't open Outlook");
+                        return;
+                    }
+                    
+                    //Save Outlook calender to iCal
+                    Date dateToday = new Date();
+                    Date dataLastMonth = new Date();
+                    dataLastMonth.setMonth(dateToday.getMonth()-1);
+                    outlookAppointments.saveAsICalender(strWorkingdir, dataLastMonth.toString(), dateToday.toString());
+                  
+                } //End Save as iCal
 
-                //Build Addressbooks
-                Contacts allContacts = new Contacts(syncFilePath, region, clearNumbers);
+                /**
+                 * @changed Swen Walkowski
+                 */
+                // TODO Sync Contacts Abfrage
+                if (syncContacts) {
+                    Status.print("Sync Contacts");
+                    
+                    //Connect WebDAV
+                    ManageWebDAVContacts webDAVConnection = new ManageWebDAVContacts();
+                    webDAVConnection.connectHTTP(username,
+                            password,
+                            server,
+                            insecureSSL);
 
-                //Get Outlook instance
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
-                boolean opened = outlookContacts.openOutlook();
-                if (!opened) {
-                    Status.print("Can't open Outlook");
-                    return;
-                }
-
-                // TODO
-                //outlookContacts.listContactFolders();
-                //if (true) return;
-
-                //Connect WebDAV
-                ManageWebDAVContacts webDAVConnection = new ManageWebDAVContacts();
-                webDAVConnection.connectHTTP(username,
-                        password,
-                        server,
-                        insecureSSL);
-
-                //Load WebDAV Contacts, if connection true proceed
-                boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
-                if (!loaded) {
-                    Status.print("Could not load WebDAV contacts");
+                    // TODO
+                    //outlookContacts.listContactFolders();
+                    //if (true) return;
+                    int intOutlookFolder = 10;
+                    
+                    //Get Outlook instance for Contacts
+                    ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
+                    boolean opened = outlookContacts.openOutlook();
+                    if (!opened) {
+                        Status.print("Can't open Outlook");
+                        return;
+                    }
+                    
+                    //Build Addressbooks
+                    Contacts allContacts = new Contacts(syncFilePath, region, clearNumbers);
+    
+                    //Load WebDAV Contacts, if connection true proceed
+                    boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
+                    if (!loaded) {
+                        Status.print("Could not load WebDAV contacts");
+                        outlookContacts.closeOutlook(closeOutlook);
+                        return;
+                    }
+    
+                    int contactNumberWebDAV = allContacts.numberOfContacts(Contacts.Addressbook.WEBDAVADDRESSBOOK);
+                    window.setContactNumbers(contactNumberWebDAV + " WebDAV");
+    
+                    //Load Outlook Contacts
+                    outlookContacts.loadContentFromOutlook(allContacts);
+    
+                    window.setContactNumbers(contactNumberWebDAV + " WebDAV / " + allContacts.numberOfContacts(Contacts.Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
+    
+                    //Compare and modify Contacts
+                    Status.print("Compare Adress Books");
+                    allContacts.compareAddressBooks(initMode);
+                    //allContacts.printStatus();
+    
+                    //Write Data
+                    outlookContacts.writeOutlookObjects(allContacts);
+                    webDAVConnection.writeContacts(fullPath, allContacts);
+    
+                    //Save last Sync Uids
+                    Status.print("Save last Sync UIDs");
+                    allContacts.saveUidsToFile();
+    
+                    //Delete Tmp Contact Pictures
+                    allContacts.deleteTmpContactPictures();
+                    Status.print("Temporary Contact Pictures Files deleted");
+                    
+                    //Close
                     outlookContacts.closeOutlook(closeOutlook);
-                    return;
-                }
-
-                int contactNumberWebDAV = allContacts.numberOfContacts(Contacts.Addressbook.WEBDAVADDRESSBOOK);
-                window.setContactNumbers(contactNumberWebDAV + " WebDAV");
-
-                //Load Outlook Contacts
-                outlookContacts.loadContentFromOutlook(allContacts);
-
-                window.setContactNumbers(contactNumberWebDAV + " WebDAV / " + allContacts.numberOfContacts(Contacts.Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
-
-                //Compare and modify Contacts
-                Status.print("Compare Adress Books");
-                allContacts.compareAddressBooks(initMode);
-                //allContacts.printStatus();
-
-                //Write Data
-                outlookContacts.writeOutlookObjects(allContacts);
-                webDAVConnection.writeContacts(fullPath, allContacts);
-
-                //Save last Sync Uids
-                Status.print("Save last Sync UIDs");
-                allContacts.saveUidsToFile();
-
-                //Delete Tmp Contact Pictures
-                allContacts.deleteTmpContactPictures();
-                Status.print("Temporary Contact Pictures Files deleted");
-
-                //Close
-                outlookContacts.closeOutlook(closeOutlook);
+                } //Contact Sync End
 
                 Status.print("End");
             }
