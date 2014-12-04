@@ -267,6 +267,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
     }
 
+    @Override
     protected Dispatch generatePutDispatchContent(Contact dataItem) {
         Contact dataContact = (Contact) dataItem;
         Dispatch dipContact = super.getOutlookItem(dataContact.getEntryID());
@@ -523,6 +524,25 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
         }
 
         return dipContact;
+    }
+
+    //TODO
+    public void listContactFolders() {
+
+        //Dispatch dipRootFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetRootFolder").toDispatch();
+        Dispatch dipRootFolder = Dispatch.call(ManageOutlook.dipNamespace, "Folders").toDispatch();
+        Dispatch dipFolders = Dispatch.get(dipRootFolder, "Folders").toDispatch();
+
+        int count = Dispatch.call(dipFolders, "Count").getInt();
+        for (int i = 1; i <= count; i++) {
+
+            Dispatch dipFolder = Dispatch.call(dipFolders, "Folder", i).toDispatch();
+
+            // user1 field is used for storing the CardDAV UID in Outlook
+            String strName = Dispatch.get(dipFolder, "Name").toString().trim();
+            String strMessageClass = Dispatch.get(dipFolder, "DefaultMessageClass").toString().trim();
+            System.out.println("TODO: "+i+" "+strName+" "+strMessageClass);
+        }
     }
 
 }
