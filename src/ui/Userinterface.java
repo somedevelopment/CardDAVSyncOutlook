@@ -89,7 +89,6 @@ public class Userinterface {
     private WebCheckBox clearNumbersBox;
     private WebTextField txtRegion;
     private WebCheckBox syncOutlookCheckBox;
-    private WebCheckBox iCalCheckBox;
 
     static private WebTextPane textPane;
     static private WebScrollPane scrollPane;
@@ -149,6 +148,15 @@ public class Userinterface {
         menubar.add(fileMenu);
 
         WebMenu extrasMenu = new WebMenu("Extras");
+        WebMenuItem exportICALMenuItem = new WebMenuItem("Export calendar");
+        exportICALMenuItem.setToolTipText("Export Outlook calendar to iCAL file (to date - one month)");
+        exportICALMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                control.exportICAL();
+            }
+        });
+        extrasMenu.add(exportICALMenuItem);
         WebMenuItem prefMenuItem = new WebMenuItem("Preferences");
         prefMenuItem.setToolTipText("Global Preferences");
         prefMenuItem.addActionListener(new ActionListener() {
@@ -184,7 +192,7 @@ public class Userinterface {
 
         frame.setJMenuBar(menubar);
 
-        WebLabel lblHost = new WebLabel("CardDAV calendar address: ");
+        WebLabel lblHost = new WebLabel("CardDAV addressbook URL: ");
         lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
         lblHost.setMargin(new Insets(0, 3, 0, 0));
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -308,13 +316,6 @@ public class Userinterface {
         JSeparator separator_3 = new JSeparator();
         internationalNumberPanel.add(separator_3);
 
-        iCalCheckBox= new WebCheckBox("Export Outlook calender to iCAL");
-        iCalCheckBox.setSelected(false);
-        iCalCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        internationalNumberPanel.add(iCalCheckBox);
-        tooltipText = "Check if you want to exort your outlook calender to your file system (iCAL format; to date - one month";
-        TooltipManager.addTooltip(iCalCheckBox, tooltipText);
-
         WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
         northPanel.add(runPanel);
@@ -399,7 +400,6 @@ public class Userinterface {
     }
 
     private void callSync() {
-        textPane.setText("");
 
         // options from gui components
         String url = urlField.getText().trim();
@@ -410,13 +410,12 @@ public class Userinterface {
         boolean insecureSSL = insecureSSLBox.isSelected();
         boolean initMode = initModeBox.isSelected();
         boolean syncContacts = syncOutlookCheckBox.isSelected();
-        boolean exportICAL = iCalCheckBox.isSelected();
 
         // options from config
         Config config = Config.getInstance();
         boolean closeOutlook = config.getBoolean(Config.GLOB_CLOSE, false);
 
-        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts, exportICAL);
+        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts);
     }
 
     private void saveConfig() {
@@ -520,7 +519,11 @@ public class Userinterface {
         }
     }
 
-    static public void setTextInTextPane(String strText) {
+    public static void resetTextPane() {
+        textPane.setText("");;
+    }
+
+    public static void setTextInTextPane(String strText) {
         try {
             if (docTextPane.getLength() > 0) {
                 docTextPane.insertString(docTextPane.getLength(), strText + "\n", null);

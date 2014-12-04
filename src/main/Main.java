@@ -20,10 +20,8 @@
 
 package main;
 
-import ui.Userinterface;
 import contact.Contacts;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
-
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +32,9 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
 import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
+import ui.Userinterface;
 import utilities.Log;
 import webdav.ManageWebDAVContacts;
 
@@ -101,12 +99,13 @@ public class Main {
             final boolean insecureSSL,
             final boolean closeOutlook,
             final boolean initMode,
-            final boolean syncContacts,
-            final boolean exportICAL) {
+            final boolean syncContacts) {
         //Start Worker Thread for Update Text Area
         Runnable syncWorker = new Runnable() {
             @Override
             public void run() {
+                Userinterface.resetTextPane();
+
                 URL host;
                 try {
                     host = new URL(url);
@@ -125,10 +124,7 @@ public class Main {
                     }
                 }
 
-                // working dir
-                String strWorkingdir = System.getProperty("user.dir");
-                strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
-                new File(strWorkingdir).mkdir();
+                String strWorkingdir = getWorkingDir();
 
                 // path to sync file
                 String serverPart = host.getAuthority().replace(".", "&");
@@ -194,31 +190,6 @@ public class Main {
                     }
                     **/
                 }
-
-                /**
-                 * @author Swen Walkowski
-                 */
-                // TODO Abfrage Save as iCal
-                if (exportICAL) {
-                    Status.print("Save Outlook as iCal");
-
-                    int intOutlookFolder = 9;
-
-                    //Get Outlook instance for Appointments
-                    ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
-                    boolean opened = outlookAppointments.openOutlook();
-                    if (!opened) {
-                        Status.print("Can't open Outlook");
-                        return;
-                    }
-
-                    //Save Outlook calender to iCal
-                    Date dateToday = new Date();
-                    Date dataLastMonth = new Date();
-                    dataLastMonth.setMonth(dateToday.getMonth()-1);
-                    outlookAppointments.saveAsICalender(strWorkingdir, dataLastMonth.toString(), dateToday.toString());
-
-                } //End Save as iCal
 
                 /**
                  * @changed Swen Walkowski
@@ -297,6 +268,55 @@ public class Main {
         }
         worker = new Thread(syncWorker);
         worker.start();
+    }
+
+    /**
+     * @author Swen Walkowski
+     */
+    public void exportICAL() {
+        //Start Worker Thread for Update Text Area
+        Runnable syncWorker = new Runnable() {
+            @Override
+            public void run() {
+                Userinterface.resetTextPane();
+                
+                // TODO Abfrage Save as iCal
+                Status.print("Save Outlook as iCal");
+
+                int intOutlookFolder = 9;
+
+                String strWorkingdir = getWorkingDir();
+
+                //Get Outlook instance for Appointments
+                ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
+                boolean opened = outlookAppointments.openOutlook();
+                if (!opened) {
+                    Status.print("Can't open Outlook");
+                    return;
+                }
+
+                //Save Outlook calender to iCal
+                Date dateToday = new Date();
+                Date dataLastMonth = new Date();
+                dataLastMonth.setMonth(dateToday.getMonth()-1);
+                outlookAppointments.saveAsICalender(strWorkingdir, dataLastMonth.toString(), dateToday.toString());
+                Status.print("Export done");
+            }
+        };
+
+        if (worker.isAlive()) {
+            // already running
+            return;
+        }
+        worker = new Thread(syncWorker);
+        worker.start();
+    }
+
+    private static String getWorkingDir() {
+        String strWorkingdir = System.getProperty("user.dir");
+        strWorkingdir = strWorkingdir + File.separator + "workingdir" + File.separator;
+        new File(strWorkingdir).mkdir();
+        return strWorkingdir;
     }
 
     /**
