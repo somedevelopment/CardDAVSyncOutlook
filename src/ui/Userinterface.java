@@ -86,8 +86,6 @@ public class Userinterface {
     private WebLabel lblContactNumbers;
     private WebCheckBox savePasswordBox;
     private WebCheckBox initModeBox;
-    private WebCheckBox clearNumbersBox;
-    private WebTextField txtRegion;
     private WebCheckBox syncOutlookCheckBox;
 
     static private WebTextPane textPane;
@@ -276,32 +274,6 @@ public class Userinterface {
         JSeparator separator_1 = new JSeparator();
         optionPanel.add(separator_1);
 
-        WebPanel webPanel = new WebPanel();
-        northPanel.add(webPanel);
-        webPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-        WebLabel webLabel = new WebLabel("Default region:");
-        webLabel.setText("Default region");
-        webLabel.setFont(new Font("Calibri", Font.BOLD, 12));
-        webPanel.add(webLabel);
-
-        txtRegion = new WebTextField();
-        txtRegion.setText("");
-        txtRegion.setInputPromptPosition(2);
-        txtRegion.setInputPrompt("DE");
-        txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
-        txtRegion.setColumns(2);
-        webPanel.add(txtRegion);
-
-        JSeparator separator_4 = new JSeparator();
-        webPanel.add(separator_4);
-
-        clearNumbersBox = new WebCheckBox("Number Correction?");
-        clearNumbersBox.setText("International number correction?");
-        clearNumbersBox.setSelected(false);
-        clearNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        webPanel.add(clearNumbersBox);
-
         WebPanel internationalNumberPanel = new WebPanel();
         northPanel.add(internationalNumberPanel);
         internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -400,11 +372,8 @@ public class Userinterface {
     }
 
     private void callSync() {
-
         // options from gui components
         String url = urlField.getText().trim();
-        boolean clearNumbers = clearNumbersBox.isSelected();
-        String region = txtRegion.getText();
         String username = textUsername.getText().trim();
         String password = String.valueOf(passwordField.getPassword()).trim();
         boolean insecureSSL = insecureSSLBox.isSelected();
@@ -414,6 +383,8 @@ public class Userinterface {
         // options from config
         Config config = Config.getInstance();
         boolean closeOutlook = config.getBoolean(Config.GLOB_CLOSE, false);
+        boolean clearNumbers = config.getBoolean(Config.GLOB_CORRECT_NUMBERS, false);
+        String region = config.getString(Config.GLOB_REGION_CODE, "");
 
         control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts);
     }

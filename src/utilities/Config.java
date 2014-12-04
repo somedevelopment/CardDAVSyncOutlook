@@ -38,6 +38,8 @@ public final class Config extends PropertiesConfiguration {
     public final static String ACC_URL = "acc.url";
     public final static String ACC_SSL = "acc.ssl";
     public final static String GLOB_CLOSE = "glob.close";
+    public final static String GLOB_CORRECT_NUMBERS = "glob.clear_region";
+    public final static String GLOB_REGION_CODE = "glob.region_code";
 
     private Config() {
         super();

@@ -23,13 +23,20 @@ package ui;
 import com.alee.extended.panel.GroupPanel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.checkbox.WebCheckBox;
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.optionpane.WebOptionPane;
+import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebDialog;
-import com.alee.managers.tooltip.TooltipManager;
+import com.alee.laf.text.WebTextField;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.Box;
+import javax.swing.border.EmptyBorder;
 import utilities.Config;
 
 /**
@@ -49,15 +56,49 @@ public class PreferencesDialog extends WebDialog {
 
         final Config config = Config.getInstance();
         GroupPanel prefPanel = new GroupPanel(10, false);
+        prefPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // preferences
-        final WebCheckBox outlookCheckBox = new WebCheckBox("Close Outlook?");
-        outlookCheckBox.setText("Close Outlook?");
+        // preferences: close outlook...
+        final WebCheckBox outlookCheckBox = new WebCheckBox("Close Outlook");
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         String tooltipText = "Close Outlook after synchronization is finished.";
-        TooltipManager.addTooltip(outlookCheckBox, tooltipText);
+        outlookCheckBox.setToolTipText(tooltipText);
         outlookCheckBox.setSelected(config.getBoolean(Config.GLOB_CLOSE, false));
         prefPanel.add(outlookCheckBox);
+
+        // ... region
+        WebPanel regionPanel = new WebPanel(false);
+        regionPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+        final WebTextField regionField = new WebTextField();
+
+        final WebCheckBox corrNumbersBox = new WebCheckBox("Number correction");
+        corrNumbersBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                regionField.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+            }
+        });
+        corrNumbersBox.setSelected(config.getBoolean(Config.GLOB_CORRECT_NUMBERS, false));
+        corrNumbersBox.setToolTipText("International phone number correction");
+        corrNumbersBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        regionPanel.add(corrNumbersBox);
+
+        regionPanel.add(Box.createHorizontalStrut(20));
+
+        WebLabel regionLabel = new WebLabel("Default region:");
+        regionLabel.setFont(new Font("Calibri", Font.BOLD, 12));
+        regionPanel.add(regionLabel);
+
+        regionField.setInputPromptPosition(2);
+        regionField.setInputPrompt("DE");
+        regionField.setFont(new Font("Calibri", Font.PLAIN, 12));
+        regionField.setColumns(2);
+        regionField.setText(config.getString(Config.GLOB_REGION_CODE, ""));
+        regionField.setEnabled(corrNumbersBox.isSelected());
+        regionPanel.add(regionField);
+
+        prefPanel.add(regionPanel);
 
         this.add(prefPanel, BorderLayout.CENTER);
 
@@ -73,7 +114,17 @@ public class PreferencesDialog extends WebDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (corrNumbersBox.isSelected() && regionField.getText().isEmpty()) {
+                    WebOptionPane.showMessageDialog(PreferencesDialog.this,
+                            "Please enter a region code",
+                            "",
+                            WebOptionPane.INFORMATION_MESSAGE );
+                    return;
+                }
+
                 config.setProperty(Config.GLOB_CLOSE, outlookCheckBox.isSelected());
+                config.setProperty(Config.GLOB_CORRECT_NUMBERS, corrNumbersBox.isSelected());
+                config.setProperty(Config.GLOB_REGION_CODE, regionField.getText());
                 PreferencesDialog.this.dispose();
             }
         });
