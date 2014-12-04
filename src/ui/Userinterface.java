@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package main;
+package ui;
 
 import com.alee.extended.label.WebLinkLabel;
 import com.alee.laf.WebLookAndFeel;
@@ -66,6 +66,9 @@ import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.StyledDocument;
+import main.FocusTraversalOnArray;
+import main.Main;
+import main.Status;
 import utilities.Config;
 
 //TODO split up user interface for Outlook, DAV and general configuration information
@@ -83,7 +86,6 @@ public class Userinterface {
     private WebLabel lblContactNumbers;
     private WebCheckBox savePasswordBox;
     private WebCheckBox initModeBox;
-    private WebCheckBox outlookCheckBox;
     private WebCheckBox clearNumbersBox;
     private WebTextField txtRegion;
     private WebCheckBox syncOutlookCheckBox;
@@ -145,6 +147,19 @@ public class Userinterface {
         });
         fileMenu.add(exitMenuItem);
         menubar.add(fileMenu);
+
+        WebMenu extrasMenu = new WebMenu("Extras");
+        WebMenuItem prefMenuItem = new WebMenuItem("Preferences");
+        prefMenuItem.setToolTipText("Global Preferences");
+        prefMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PreferencesDialog pref = new PreferencesDialog();
+                pref.setVisible(true);
+            }
+        });
+        extrasMenu.add(prefMenuItem);
+        menubar.add(extrasMenu);
 
         WebMenu helpMenu = new WebMenu("Help");
         WebMenuItem aboutMenuItem = new WebMenuItem("About");
@@ -252,13 +267,6 @@ public class Userinterface {
 
         JSeparator separator_1 = new JSeparator();
         optionPanel.add(separator_1);
-
-        outlookCheckBox = new WebCheckBox("Close Outlook?");
-        optionPanel.add(outlookCheckBox);
-        outlookCheckBox.setText("Close Outlook?");
-        outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Close Outlook after synchronization is finished.";
-        TooltipManager.addTooltip(outlookCheckBox, tooltipText);
 
         WebPanel webPanel = new WebPanel();
         northPanel.add(webPanel);
@@ -369,7 +377,6 @@ public class Userinterface {
         urlField.setText(config.getString(Config.ACC_URL, ""));
         insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
         savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
-        outlookCheckBox.setSelected(config.getBoolean(Config.GLOB_CLOSE, false));
 
         JSeparator separator_2 = new JSeparator();
         optionPanel.add(separator_2);
@@ -393,16 +400,22 @@ public class Userinterface {
 
     private void callSync() {
         textPane.setText("");
+
+        // options from gui components
         String url = urlField.getText().trim();
         boolean clearNumbers = clearNumbersBox.isSelected();
         String region = txtRegion.getText();
         String username = textUsername.getText().trim();
         String password = String.valueOf(passwordField.getPassword()).trim();
         boolean insecureSSL = insecureSSLBox.isSelected();
-        boolean closeOutlook = outlookCheckBox.isSelected();
         boolean initMode = initModeBox.isSelected();
         boolean syncContacts = syncOutlookCheckBox.isSelected();
         boolean exportICAL = iCalCheckBox.isSelected();
+
+        // options from config
+        Config config = Config.getInstance();
+        boolean closeOutlook = config.getBoolean(Config.GLOB_CLOSE, false);
+
         control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts, exportICAL);
     }
 
@@ -414,8 +427,6 @@ public class Userinterface {
         config.setProperty(Config.ACC_URL, urlField.getText());
         config.setProperty(Config.ACC_SSL, insecureSSLBox.isSelected());
         config.setProperty(Config.ACC_SAVE_PASS, savePasswordBox.isSelected());
-        config.setProperty(Config.GLOB_CLOSE, outlookCheckBox.isSelected());
-
         config.saveToFile();
         Status.print("Config Saved");
     }

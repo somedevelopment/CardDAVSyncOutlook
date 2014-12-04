@@ -20,6 +20,7 @@
 
 package main;
 
+import ui.Userinterface;
 import contact.Contacts;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
 
