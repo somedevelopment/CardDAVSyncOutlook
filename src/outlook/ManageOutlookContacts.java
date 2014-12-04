@@ -524,5 +524,4 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
         return dipContact;
     }
-
 }
