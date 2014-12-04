@@ -449,7 +449,7 @@ public class Userinterface {
             return;
 
         // load image
-        Image image = new BufferedImage(22, 22, Image.SCALE_SMOOTH);
+        Image image = getImage("dav_sync_outlook.png");
 
         final WebPopupMenu popup = new WebPopupMenu();
         WebMenuItem syncItem = new WebMenuItem("Sync");
@@ -525,7 +525,7 @@ public class Userinterface {
         Path filePath = Paths.get(RES_PATH, fileName);
         URL imageUrl = ClassLoader.getSystemResource(filePath.toString());
         if (imageUrl == null) {
-            System.out.println("can't find icon image resource");
+            System.out.println("can't find image resource");
             return new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
         }
         return Toolkit.getDefaultToolkit().createImage(imageUrl);
