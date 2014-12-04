@@ -544,5 +544,4 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
             System.out.println("TODO: "+i+" "+strName+" "+strMessageClass);
         }
     }
-
 }

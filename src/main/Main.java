@@ -36,9 +36,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.httpclient.protocol.Protocol;
+
+import net.fortuna.ical4j.connector.ObjectNotFoundException;
+import net.fortuna.ical4j.connector.ObjectStoreException;
+import net.fortuna.ical4j.connector.dav.CalDavCalendarCollection;
+import net.fortuna.ical4j.connector.dav.CalDavCalendarStore;
+import net.fortuna.ical4j.connector.dav.PathResolver;
 import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
 import utilities.Log;
+import webdav.EasySSLProtocolSocketFactory;
 import webdav.ManageWebDAVContacts;
 
 /**
@@ -151,27 +159,49 @@ public class Main {
                 // TODO Abfrage Sync Appointments
                 if (false) {
                     Status.print("Sync appointments");
-                    
-                    int intOutlookFolder = 9;
+                    //int intOutlookFolder = 9;
                     
                     //Get Outlook instance for Appointments
-                    ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
+                    /**ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
                     boolean opened = outlookAppointments.openOutlook();
                     if (!opened) {
                         Status.print("Can't open Outlook");
                         return;
                     }
+                    **/
                     
                     //Build Schedule
-                    Appointments allAppointments = new Appointments();
+                    //Appointments allAppointments = new Appointments();
 
                     //Load outlook appointments
-                    outlookAppointments.loadContentFromOutlook(allAppointments);
-                    
-                    allAppointments.printAppointments();
+                    //outlookAppointments.loadContentFromOutlook(allAppointments);
                     
                     //Close
-                    outlookAppointments.closeOutlook(closeOutlook);
+                    //outlookAppointments.closeOutlook(closeOutlook);
+                    
+                    /**
+                    String user = "swen";
+                    String password = "tzu468hgf";
+                    
+                    URL url;
+                    try {
+                        url = new URL("https", "192.168.178.20", "");
+                        Protocol lEasyHttps = new Protocol("https", new EasySSLProtocolSocketFactory(), 443);
+                        Protocol.registerProtocol("https", lEasyHttps);
+                        CalDavCalendarStore store = new CalDavCalendarStore("-//MacTI//WOCal//EN", url, PathResolver.GCAL);
+                        store.connect(user, password.toCharArray());
+                        CalDavCalendarCollection  collection = store.getCollection("/owncloud/remote.php/caldav/");
+                    } catch (MalformedURLException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (ObjectStoreException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (ObjectNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    **/
                 }
                 
                 /**
