@@ -47,6 +47,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,6 +57,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.swing.JFrame;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -66,6 +70,8 @@ import utilities.Config;
 
 //TODO split up user interface for Outlook, DAV and general configuration information
 public class Userinterface {
+
+    private final static String RES_PATH = "res";
 
     private Main control;
 
@@ -253,16 +259,16 @@ public class Userinterface {
         outlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
         tooltipText = "Close Outlook after synchronization is finished.";
         TooltipManager.addTooltip(outlookCheckBox, tooltipText);
-        
+
         WebPanel webPanel = new WebPanel();
         northPanel.add(webPanel);
         webPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        
+
         WebLabel webLabel = new WebLabel("Default region:");
         webLabel.setText("Default region");
         webLabel.setFont(new Font("Calibri", Font.BOLD, 12));
         webPanel.add(webLabel);
-        
+
         txtRegion = new WebTextField();
         txtRegion.setText("");
         txtRegion.setInputPromptPosition(2);
@@ -270,10 +276,10 @@ public class Userinterface {
         txtRegion.setFont(new Font("Calibri", Font.PLAIN, 12));
         txtRegion.setColumns(2);
         webPanel.add(txtRegion);
-        
+
         JSeparator separator_4 = new JSeparator();
         webPanel.add(separator_4);
-        
+
         clearNumbersBox = new WebCheckBox("Number Correction?");
         clearNumbersBox.setText("International number correction?");
         clearNumbersBox.setSelected(false);
@@ -283,7 +289,7 @@ public class Userinterface {
         WebPanel internationalNumberPanel = new WebPanel();
         northPanel.add(internationalNumberPanel);
         internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        
+
         syncOutlookCheckBox = new WebCheckBox("Sync Contacts");
         syncOutlookCheckBox.setSelected(false);
         syncOutlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -293,7 +299,7 @@ public class Userinterface {
 
         JSeparator separator_3 = new JSeparator();
         internationalNumberPanel.add(separator_3);
-        
+
         iCalCheckBox= new WebCheckBox("Export Outlook calender to iCAL");
         iCalCheckBox.setSelected(false);
         iCalCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -513,5 +519,15 @@ public class Userinterface {
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+    }
+
+    static Image getImage(String fileName) {
+        Path filePath = Paths.get(RES_PATH, fileName);
+        URL imageUrl = ClassLoader.getSystemResource(filePath.toString());
+        if (imageUrl == null) {
+            System.out.println("can't find icon image resource");
+            return new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
+        }
+        return Toolkit.getDefaultToolkit().createImage(imageUrl);
     }
 }
