@@ -30,6 +30,7 @@ import com.alee.laf.menu.WebMenuItem;
 import com.alee.laf.menu.WebPopupMenu;
 import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
+import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.separator.WebSeparator;
@@ -433,6 +434,12 @@ public class Userinterface {
         });
         popup.add(quitItem);
 
+        // workaround: hidden dialog, so that the popup menu disappears when
+        // focus is lost
+        /* Initialize the hidden dialog as a headless, titleless dialog window */
+        final WebDialog hiddenDialog = new WebDialog ();
+        hiddenDialog.setUndecorated(true);
+
         // create an action listener to listen for default action executed on the tray icon
         MouseListener listener = new MouseAdapter() {
             @Override
@@ -450,12 +457,14 @@ public class Userinterface {
                 if (!e.isPopupTrigger())
                     return;
 
+                hiddenDialog.setVisible(true);
+
                 // TODO ugly
                 // Weblaf 1.28 doesn't support popups outside of a frame, this
                 // is a workaround
                 popup.setLocation(e.getX() - 20, e.getY() - 40);
                 // this is wrong, but a TrayIcon is not a component
-                popup.setInvoker(popup);
+                popup.setInvoker(hiddenDialog);
                 popup.setCornerWidth(0);
                 popup.setVisible(true);
             }
