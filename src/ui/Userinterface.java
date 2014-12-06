@@ -80,19 +80,16 @@ public class Userinterface {
     private Main control;
 
     private WebFrame frame;
-    private WebPasswordField passwordField;
-    private WebTextField usernameField;
-    private WebTextField urlField;
-    private WebCheckBox insecureSSLBox;
-    private WebLabel lblContactNumbers;
-    private WebCheckBox savePasswordBox;
-    private WebCheckBox initModeBox;
+    private final WebPasswordField passwordField;
+    private final WebTextField usernameField;
+    private final WebTextField urlField;
+    private final WebCheckBox insecureSSLBox;
+    private final WebLabel lblContactNumbers;
+    private final WebCheckBox savePasswordBox;
+    private final WebCheckBox initModeBox;
 
     static private WebTextPane textPane;
-    static private WebScrollPane scrollPane;
     static private StyledDocument docTextPane;
-    private WebLabel lblNumbersOfContacts;
-    private TrayIcon trayIcon;
 
     /**
      * Create the application.
@@ -277,7 +274,7 @@ public class Userinterface {
         textPane.setEditable(false);
         docTextPane = textPane.getStyledDocument();
 
-        scrollPane = new WebScrollPane(textPane);
+        WebScrollPane scrollPane = new WebScrollPane(textPane);
         scrollPane.setDarkBorder(Color.LIGHT_GRAY);
         scrollPane.setBorderColor(Color.LIGHT_GRAY);
 
@@ -292,7 +289,7 @@ public class Userinterface {
         frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
         southPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 
-        lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
+        WebLabel lblNumbersOfContacts = new WebLabel("# of loaded Contacts:");
         southPanel.add(lblNumbersOfContacts);
         lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
 
@@ -409,10 +406,6 @@ public class Userinterface {
             return;
         }
 
-        if (trayIcon != null)
-            // already set
-            return;
-
         // load image
         Image image = getImage("dav_sync_outlook.png");
 
@@ -470,7 +463,7 @@ public class Userinterface {
             }
         };
 
-        trayIcon = new TrayIcon(image, "CardDAVSyncOutlook" /*, popup*/);
+        TrayIcon trayIcon = new TrayIcon(image, "CardDAVSyncOutlook" /*, popup*/);
         trayIcon.setImageAutoSize(true);
         trayIcon.addMouseListener(listener);
 
