@@ -90,6 +90,7 @@ public class PreferencesDialog extends WebDialog {
         regionLabel.setFont(new Font("Calibri", Font.BOLD, 12));
         regionPanel.add(regionLabel);
 
+        regionField.setToolTipText("Region code for number correction");
         regionField.setInputPromptPosition(2);
         regionField.setInputPrompt("DE");
         regionField.setFont(new Font("Calibri", Font.PLAIN, 12));

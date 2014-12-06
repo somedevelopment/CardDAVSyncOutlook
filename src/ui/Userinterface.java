@@ -32,6 +32,7 @@ import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
+import com.alee.laf.separator.WebSeparator;
 import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.text.WebTextPane;
@@ -61,7 +62,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JFrame;
-import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
@@ -80,7 +80,7 @@ public class Userinterface {
 
     private WebFrame frame;
     private WebPasswordField passwordField;
-    private WebTextField textUsername;
+    private WebTextField usernameField;
     private WebTextField urlField;
     private WebCheckBox insecureSSLBox;
     private WebLabel lblContactNumbers;
@@ -92,7 +92,6 @@ public class Userinterface {
     static private WebScrollPane scrollPane;
     static private StyledDocument docTextPane;
     private WebLabel lblNumbersOfContacts;
-    private JSeparator separator;
     private TrayIcon trayIcon;
 
     /**
@@ -103,20 +102,6 @@ public class Userinterface {
         control = main;
 
         WebLookAndFeel.install();
-
-        textPane = new WebTextPane();
-        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
-        textPane.setEditable(false);
-
-        scrollPane = new WebScrollPane(textPane);
-        scrollPane.setDarkBorder(Color.LIGHT_GRAY);
-        scrollPane.setBorderColor(Color.LIGHT_GRAY);
-
-        docTextPane = textPane.getStyledDocument();
-
-        //textPane.getCaret().
-        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
-        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         frame = new WebFrame();
         frame.setBounds(100, 100, 630, 430);
@@ -190,41 +175,101 @@ public class Userinterface {
 
         frame.setJMenuBar(menubar);
 
+        // ui components and layout:...
+        WebPanel northPanel = new WebPanel();
+        northPanel.setBorderColor(Color.LIGHT_GRAY);
+        northPanel.setMargin(new Insets(0, 5, 0, 5));
+        northPanel.setLayout(new GridLayout(0, 1, 0, 0));
+
+        // ...URL...
         WebLabel lblHost = new WebLabel("CardDAV addressbook URL: ");
         lblHost.setVerticalAlignment(SwingConstants.BOTTOM);
         lblHost.setMargin(new Insets(0, 3, 0, 0));
         lblHost.setFont(new Font("Calibri", Font.BOLD, 12));
+        northPanel.add(lblHost);
 
         urlField = new WebTextField();
        // urlField.addMouseListener(new MouseAdapter() {
-        	//@Override
-        	//public void mouseExited(MouseEvent arg0) {
-        	//	if (urlField.getText().trim().startsWith("https://")) {
-        	//		insecureSSLBox.setSelected(true);
-        	//		urlField.setText("http" + urlField.getText().substring(5));
-        	//		Status.print("Activated insecure SSL");
-        	//	}
-        	//}
+               //@Override
+               //public void mouseExited(MouseEvent arg0) {
+               //	if (urlField.getText().trim().startsWith("https://")) {
+               //		insecureSSLBox.setSelected(true);
+               //		urlField.setText("http" + urlField.getText().substring(5));
+               //		Status.print("Activated insecure SSL");
+               //	}
+               //}
        // });
         urlField.setFont(new Font("Calibri", Font.PLAIN, 12));
         //textHostURL.setColumns(10)
         urlField.setInputPrompt("http://<server-name>/owncloud/remote.php/carddav/addressbooks/<user_name>/<addr_book_name>");
         urlField.setHideInputPromptOnFocus(false);
+        northPanel.add(urlField);
+
+        // ...account: credentials and login options...
+        WebPanel accountPanel = new WebPanel();
+        accountPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
 
         WebLabel lblUsername = new WebLabel("Username:");
         lblUsername.setFont(new Font("Calibri", Font.BOLD, 12));
+        accountPanel.add(lblUsername);
 
-        textUsername = new WebTextField();
-        textUsername.setFont(new Font("Calibri", Font.PLAIN, 12));
-        textUsername.setColumns(10);
+        usernameField = new WebTextField();
+        usernameField.setFont(new Font("Calibri", Font.PLAIN, 12));
+        usernameField.setColumns(10);
+        accountPanel.add(usernameField);
+
+        accountPanel.add(new WebSeparator());
 
         WebLabel lblPassword = new WebLabel("Password:");
         lblPassword.setFont(new Font("Calibri", Font.BOLD, 12));
+        accountPanel.add(lblPassword);
 
         passwordField = new WebPasswordField();
         passwordField.setColumns(10);
         passwordField.setFont(new Font("Calibri", Font.PLAIN, 11));
         passwordField.setEchoChar('*');
+        accountPanel.add(passwordField);
+
+        accountPanel.add(new WebSeparator());
+
+        savePasswordBox = new WebCheckBox("Save Password");
+        savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        String tooltipText = "Save the password in configuration file as plaintext(!)";
+        TooltipManager.addTooltip(savePasswordBox, tooltipText);
+        accountPanel.add(savePasswordBox);
+
+        accountPanel.add(new WebSeparator());
+
+        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
+        insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certificate";
+        TooltipManager.addTooltip(insecureSSLBox, tooltipText);
+        accountPanel.add(insecureSSLBox);
+
+        northPanel.add(accountPanel);
+
+        // ...additional sync options...
+        WebPanel syncPanel = new WebPanel();
+        northPanel.add(syncPanel);
+        syncPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+
+        initModeBox = new WebCheckBox("Initialization Mode");
+        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Compare contacts by all fields. Useful on the first run";
+        TooltipManager.addTooltip(initModeBox, tooltipText);
+        syncPanel.add(initModeBox);
+
+        syncPanel.add(new WebSeparator());
+
+        syncOutlookCheckBox = new WebCheckBox("Sync Contacts");
+        syncOutlookCheckBox.setSelected(false);
+        syncOutlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Check if you want to sync your outlook contacts with your webdav installation.";
+        TooltipManager.addTooltip(syncOutlookCheckBox, tooltipText);
+        syncPanel.add(syncOutlookCheckBox);
+
+        // ...sync button...
+        WebPanel runPanel = new WebPanel();
 
         WebButton btnSync = new WebButton("Start Synchronization");
         btnSync.setFont(new Font("Calibri", Font.BOLD, 12));
@@ -234,65 +279,29 @@ public class Userinterface {
                 Userinterface.this.callSync();
             }
         });
-
-        WebLabel lblStatus = new WebLabel("Status:");
-
-        // layout
-        WebPanel northPanel = new WebPanel();
-        northPanel.setBorderColor(Color.LIGHT_GRAY);
-        northPanel.setMargin(new Insets(0, 5, 0, 5));
-        northPanel.setLayout(new GridLayout(0, 1, 0, 0));
-        northPanel.add(lblHost);
-        northPanel.add(urlField);
-        WebPanel accountPanel = new WebPanel();
-        accountPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        accountPanel.add(lblUsername);
-        accountPanel.add(textUsername);
-        accountPanel.add(lblPassword);
-        accountPanel.add(passwordField);
-
-        separator = new JSeparator();
-        accountPanel.add(separator);
-        northPanel.add(accountPanel);
-
-        savePasswordBox = new WebCheckBox("Save Password");
-        accountPanel.add(savePasswordBox);
-        savePasswordBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        String tooltipText = "Save the password in configuration file as plaintext(!)";
-        TooltipManager.addTooltip(savePasswordBox, tooltipText);
-
-        WebPanel optionPanel = new WebPanel();
-        northPanel.add(optionPanel);
-        optionPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-        insecureSSLBox = new WebCheckBox("Allow insecure SSL");
-        optionPanel.add(insecureSSLBox);
-        insecureSSLBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Do not check the SSL certificate. Needed when the server uses a self-signed certificate";
-        TooltipManager.addTooltip(insecureSSLBox, tooltipText);
-
-        JSeparator separator_1 = new JSeparator();
-        optionPanel.add(separator_1);
-
-        WebPanel internationalNumberPanel = new WebPanel();
-        northPanel.add(internationalNumberPanel);
-        internationalNumberPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-        syncOutlookCheckBox = new WebCheckBox("Sync Contacts");
-        syncOutlookCheckBox.setSelected(false);
-        syncOutlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        internationalNumberPanel.add(syncOutlookCheckBox);
-        tooltipText = "Check if you want to sync your outlook contacts with your webdav installation.";
-        TooltipManager.addTooltip(syncOutlookCheckBox, tooltipText);
-
-        JSeparator separator_3 = new JSeparator();
-        internationalNumberPanel.add(separator_3);
-
-        WebPanel runPanel = new WebPanel();
         runPanel.add(btnSync, BorderLayout.CENTER);
+
         northPanel.add(runPanel);
+
         frame.getContentPane().add(northPanel, BorderLayout.NORTH);
 
+        // ... status text pane...
+        textPane = new WebTextPane();
+        textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
+        textPane.setEditable(false);
+        docTextPane = textPane.getStyledDocument();
+
+        scrollPane = new WebScrollPane(textPane);
+        scrollPane.setDarkBorder(Color.LIGHT_GRAY);
+        scrollPane.setBorderColor(Color.LIGHT_GRAY);
+
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+        //textPane.getCaret().
+        DefaultCaret caret = (DefaultCaret) textPane.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
+        // ...number of contacts.
         WebPanel southPanel = new WebPanel();
         frame.getContentPane().add(southPanel, BorderLayout.SOUTH);
         southPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -301,23 +310,21 @@ public class Userinterface {
         southPanel.add(lblNumbersOfContacts);
         lblNumbersOfContacts.setFont(new Font("Calibri", Font.BOLD, 12));
 
-        JSeparator separator_5 = new JSeparator();
-        southPanel.add(separator_5);
+        southPanel.add(new WebSeparator());
+
         lblContactNumbers = new WebLabel("");
         southPanel.add(lblContactNumbers);
         lblContactNumbers.setFont(new Font("Calibri", Font.PLAIN, 12));
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         frame.getContentPane().setFocusTraversalPolicy(
                 new FocusTraversalOnArray(
                         new Component[]{
-                            textUsername,
+                            usernameField,
                             passwordField,
                             urlField,
                             btnSync,
                             textPane,
                             scrollPane,
-                            lblStatus,
                             lblHost,
                             lblPassword,
                             lblUsername
@@ -327,12 +334,11 @@ public class Userinterface {
         frame.setFocusTraversalPolicy(
                 new FocusTraversalOnArray(
                         new Component[]{
-                            textUsername,
+                            usernameField,
                             passwordField,
                             urlField,
                             btnSync,
                             textPane,
-                            lblStatus,
                             lblHost,
                             lblPassword,
                             frame.getContentPane(),
@@ -345,20 +351,11 @@ public class Userinterface {
         //Load config
         Status.print("Load Config");
         Config config = Config.getInstance();
-        textUsername.setText(config.getString(Config.ACC_USER, ""));
+        usernameField.setText(config.getString(Config.ACC_USER, ""));
         passwordField.setText(config.getString(Config.ACC_PASS, ""));
         urlField.setText(config.getString(Config.ACC_URL, ""));
         insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
         savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
-
-        JSeparator separator_2 = new JSeparator();
-        optionPanel.add(separator_2);
-
-        initModeBox = new WebCheckBox("Initialization Mode");
-        optionPanel.add(initModeBox);
-        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Compare contacts by all fields. Useful on the first run";
-        TooltipManager.addTooltip(initModeBox, tooltipText);
 
         this.setTray();
     }
@@ -374,7 +371,7 @@ public class Userinterface {
     private void callSync() {
         // options from gui components
         String url = urlField.getText().trim();
-        String username = textUsername.getText().trim();
+        String username = usernameField.getText().trim();
         String password = String.valueOf(passwordField.getPassword()).trim();
         boolean insecureSSL = insecureSSLBox.isSelected();
         boolean initMode = initModeBox.isSelected();
@@ -391,7 +388,7 @@ public class Userinterface {
 
     private void saveConfig() {
         Config config = Config.getInstance();
-        config.setProperty(Config.ACC_USER, textUsername.getText());
+        config.setProperty(Config.ACC_USER, usernameField.getText());
         if (savePasswordBox.isSelected())
             config.setProperty(Config.ACC_PASS, new String(passwordField.getPassword()));
         config.setProperty(Config.ACC_URL, urlField.getText());
@@ -491,7 +488,7 @@ public class Userinterface {
     }
 
     public static void resetTextPane() {
-        textPane.setText("");;
+        textPane.setText("");
     }
 
     public static void setTextInTextPane(String strText) {
