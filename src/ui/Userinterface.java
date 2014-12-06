@@ -351,6 +351,11 @@ public class Userinterface {
         lblContactNumbers.setText(text);
     }
 
+    public void runAndShutDown() {
+        this.callSync();
+        this.shutdown();
+    }
+
     private void callSync() {
         // options from gui components
         String url = urlField.getText().trim();

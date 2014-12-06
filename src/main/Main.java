@@ -64,13 +64,17 @@ public class Main {
         }
     }
 
-    void run() {
+    void run(final boolean singleRun) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
                     window = new Userinterface(Main.this);
                     window.setVisible();
+                    // TODO UI not visible during single run
+                    if (singleRun) {
+                        window.runAndShutDown();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -324,7 +328,6 @@ public class Main {
      * Launch the application.
      */
     public static void main(String[] args) {
-
         // set up logging
         try {
             Log.init();
@@ -333,7 +336,26 @@ public class Main {
             e.printStackTrace();
         }
         System.out.println("START");
+
+        // parse args
+        boolean singleRun = false;
+        for (String arg : args) {
+            switch (arg) {
+                case "--singlerun":
+                    singleRun = true;
+                    break;
+                default:
+                    String className = new java.io.File(Main.class.getProtectionDomain()
+                        .getCodeSource()
+                        .getLocation()
+                        .getPath())
+                        .getName();
+                    System.out.println("Usage: java "+className+" [--singlerun]");
+                    return;
+            }
+        }
+
         Main main = new Main();
-        main.run();
+        main.run(singleRun);
     }
 }
