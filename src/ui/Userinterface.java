@@ -86,7 +86,6 @@ public class Userinterface {
     private WebLabel lblContactNumbers;
     private WebCheckBox savePasswordBox;
     private WebCheckBox initModeBox;
-    private WebCheckBox syncOutlookCheckBox;
 
     static private WebTextPane textPane;
     static private WebScrollPane scrollPane;
@@ -248,27 +247,7 @@ public class Userinterface {
 
         northPanel.add(accountPanel);
 
-        // ...additional sync options...
-        WebPanel syncPanel = new WebPanel();
-        northPanel.add(syncPanel);
-        syncPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-
-        initModeBox = new WebCheckBox("Initialization Mode");
-        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Compare contacts by all fields. Useful on the first run";
-        TooltipManager.addTooltip(initModeBox, tooltipText);
-        syncPanel.add(initModeBox);
-
-        syncPanel.add(new WebSeparator());
-
-        syncOutlookCheckBox = new WebCheckBox("Sync Contacts");
-        syncOutlookCheckBox.setSelected(false);
-        syncOutlookCheckBox.setFont(new Font("Calibri", Font.BOLD, 12));
-        tooltipText = "Check if you want to sync your outlook contacts with your webdav installation.";
-        TooltipManager.addTooltip(syncOutlookCheckBox, tooltipText);
-        syncPanel.add(syncOutlookCheckBox);
-
-        // ...sync button...
+        // ...sync button and sync options...
         WebPanel runPanel = new WebPanel();
 
         WebButton btnSync = new WebButton("Start Synchronization");
@@ -280,6 +259,12 @@ public class Userinterface {
             }
         });
         runPanel.add(btnSync, BorderLayout.CENTER);
+
+        initModeBox = new WebCheckBox("Initialization Mode");
+        initModeBox.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Compare contacts by all fields. Useful on the first run";
+        TooltipManager.addTooltip(initModeBox, tooltipText);
+        runPanel.add(initModeBox, BorderLayout.EAST);
 
         northPanel.add(runPanel);
 
@@ -375,7 +360,6 @@ public class Userinterface {
         String password = String.valueOf(passwordField.getPassword()).trim();
         boolean insecureSSL = insecureSSLBox.isSelected();
         boolean initMode = initModeBox.isSelected();
-        boolean syncContacts = syncOutlookCheckBox.isSelected();
 
         // options from config
         Config config = Config.getInstance();
@@ -383,7 +367,9 @@ public class Userinterface {
         boolean clearNumbers = config.getBoolean(Config.GLOB_CORRECT_NUMBERS, false);
         String region = config.getString(Config.GLOB_REGION_CODE, "");
 
-        control.performSync(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode, syncContacts);
+        control.syncContacts(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
+        // TODO, for testing a appointments sync
+        //control.syncAppointments();
     }
 
     private void saveConfig() {
