@@ -82,7 +82,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
     @Override
     public void loadContentFromOutlook(Contacts contacts) {
 
-        Dispatch dipContactsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
@@ -528,10 +528,12 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
     //TODO
     public void listContactFolders() {
+        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace,
+                "GetDefaultFolder",
+                super.intOutlookFolder).toDispatch();
 
-        //Dispatch dipRootFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetRootFolder").toDispatch();
-        Dispatch dipRootFolder = Dispatch.call(ManageOutlook.dipNamespace, "Folders").toDispatch();
-        Dispatch dipFolders = Dispatch.get(dipRootFolder, "Folders").toDispatch();
+        Dispatch dipFolders = Dispatch.call(dipContactsFolder,
+                "Folders").toDispatch();
 
         int count = Dispatch.call(dipFolders, "Count").getInt();
         for (int i = 1; i <= count; i++) {

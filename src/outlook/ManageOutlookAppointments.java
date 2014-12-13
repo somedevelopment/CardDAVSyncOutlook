@@ -19,10 +19,8 @@
  */
 package outlook;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -65,7 +63,7 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
     @Override
     public void loadContentFromOutlook(Appointments appointments) {
 
-        Dispatch dipAppointmentsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipAppointmentsItems = Dispatch.get(dipAppointmentsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
@@ -107,9 +105,9 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
     }
 
     public void saveAsICalender(String strWorkingDir, String strStartDate, String strEndDate) {
-        Dispatch dipAppointmentsFolder = Dispatch.call(ManageOutlook.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
         Dispatch dipCalendarSharing = Dispatch.get(dipAppointmentsFolder, "GetCalendarExporter").toDispatch();
-        
+
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
         Date dateStartDate = null;
         Date dateEndDate = null;
@@ -120,7 +118,7 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         Dispatch.put(dipCalendarSharing, "CalendarDetail", "2");
         Dispatch.put(dipCalendarSharing, "IncludeWholeCalendar", false);
         Dispatch.put(dipCalendarSharing, "StartDate", dateStartDate);
@@ -128,11 +126,11 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
         Dispatch.put(dipCalendarSharing, "IncludeAttachments", false);
         Dispatch.put(dipCalendarSharing, "IncludePrivateDetails", true);
         Dispatch.put(dipCalendarSharing, "RestrictToWorkingHours", false);
-        
-        
+
+
         Date tmpDate = new Date();
         String strSaveTo = strWorkingDir + "Calendar.ics";
-        
+
         Status.print(strSaveTo);
         Dispatch.call(dipCalendarSharing, "SaveAsICal", strSaveTo);
     }

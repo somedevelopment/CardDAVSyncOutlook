@@ -32,11 +32,11 @@ import utilities.Utilities;
 
 public abstract class ManageOutlook<T1, T2> {
 
-    static private ActiveXComponent axc;
+    private ActiveXComponent axc = null;
 
-    static protected Dispatch dipNamespace;
-    static protected Dispatch dipOutlook;
-    static protected String strWorkingDir;
+    protected Dispatch dipNamespace = null;
+    private Dispatch dipOutlook = null;
+    protected String strWorkingDir;
 
     protected int intOutlookFolder;
 
@@ -44,11 +44,8 @@ public abstract class ManageOutlook<T1, T2> {
      * Constructors
      */
     protected ManageOutlook(String strWorkingDir, int intOutlookFolder) {
-        ManageOutlook.axc = null;
-        ManageOutlook.dipNamespace = null;
-        ManageOutlook.dipOutlook = null;
 
-        ManageOutlook.strWorkingDir = strWorkingDir;
+        this.strWorkingDir = strWorkingDir;
         this.intOutlookFolder = intOutlookFolder;
 
         // add directory with jacob library (loaded later) to library path
@@ -73,8 +70,8 @@ public abstract class ManageOutlook<T1, T2> {
 
         Boolean bolOutlookOpen = false;
 
-        if (ManageOutlook.axc == null) {
-            ManageOutlook.axc = new ActiveXComponent("Outlook.Application");
+        if (this.axc == null) {
+            this.axc = new ActiveXComponent("Outlook.Application");
 
             //Wait some sec to open Outlook
             try {
@@ -83,10 +80,10 @@ public abstract class ManageOutlook<T1, T2> {
                 e.printStackTrace();
             }
 
-            ManageOutlook.dipOutlook = axc.getObject();
-            if (ManageOutlook.dipOutlook != null) {
+            this.dipOutlook = axc.getObject();
+            if (this.dipOutlook != null) {
                 bolOutlookOpen = true;
-                ManageOutlook.dipNamespace = axc.getProperty("Session").toDispatch();
+                this.dipNamespace = axc.getProperty("Session").toDispatch();
 
                 Status.print("Outlook opened");
             }
@@ -102,18 +99,18 @@ public abstract class ManageOutlook<T1, T2> {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 
         if (bolCloseOutlook)
-            ManageOutlook.axc.invoke("Quit", new Variant[]{});
+            this.axc.invoke("Quit", new Variant[]{});
 
-        ManageOutlook.dipOutlook.safeRelease();
-        ManageOutlook.axc.safeRelease();
-        ManageOutlook.dipNamespace.safeRelease();
+        this.dipOutlook.safeRelease();
+        this.axc.safeRelease();
+        this.dipNamespace.safeRelease();
 
         ComThread.Release();
         ComThread.quitMainSTA();
 
-        ManageOutlook.dipOutlook = null;
-        ManageOutlook.dipNamespace = null;
-        ManageOutlook.axc = null;
+        this.dipOutlook = null;
+        this.dipNamespace = null;
+        this.axc = null;
 
         Status.print("Outlook closed");
     }
@@ -122,11 +119,11 @@ public abstract class ManageOutlook<T1, T2> {
      * Protected Section
      */
     protected Dispatch getOutlookItem(String strToUpdateItemID) {
-        return Dispatch.call(ManageOutlook.dipNamespace, "GetItemFromID", strToUpdateItemID).toDispatch();
+        return Dispatch.call(this.dipNamespace, "GetItemFromID", strToUpdateItemID).toDispatch();
     }
 
     protected String getNewOutlookItem() {
-        Dispatch dipItem = Dispatch.call(ManageOutlook.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
+        Dispatch dipItem = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
 
         // need to save the item. Before, the entry ID is null
         // TODO is saving twice a good idea?
@@ -146,7 +143,7 @@ public abstract class ManageOutlook<T1, T2> {
     }
 
     protected void deletOutlookItem(String strToDeleteItemID) {
-        Dispatch dipItem = Dispatch.call(ManageOutlook.dipNamespace, "GetItemFromID", strToDeleteItemID).toDispatch();
+        Dispatch dipItem = Dispatch.call(this.dipNamespace, "GetItemFromID", strToDeleteItemID).toDispatch();
 
         Dispatch.call(dipItem, "Delete");
 
