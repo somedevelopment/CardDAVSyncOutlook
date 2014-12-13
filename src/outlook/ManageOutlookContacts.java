@@ -19,25 +19,26 @@
  */
 package outlook;
 
+import com.jacob.com.Dispatch;
+import contact.Contact;
+import contact.Contacts;
+import contact.Contacts.Addressbook;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
-
-import utilities.LegacyCorrectionUtilities;
 import main.Status;
-
-import com.jacob.com.Dispatch;
-
-import contact.Contact;
-import contact.Contacts;
-import contact.Contacts.Addressbook;
+import utilities.LegacyCorrectionUtilities;
 
 public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
+
+    public static int DEFAULT_CONTACT_FOLDER_NUM = 10;
 
     /**
      * Constructors

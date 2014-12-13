@@ -152,13 +152,9 @@ public class Main {
                         server,
                         insecureSSL);
 
-                // TODO, for testing sync with non-default addressbooks
-                //outlookContacts.listContactFolders();
-                //if (true) return;
-                int intOutlookFolder = 10;
-
                 //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir, intOutlookFolder);
+                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir,
+                    ManageOutlookContacts.DEFAULT_CONTACT_FOLDER_NUM);
                 boolean opened = outlookContacts.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
