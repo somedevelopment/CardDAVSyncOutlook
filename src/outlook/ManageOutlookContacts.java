@@ -28,10 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Map.Entry;
 import main.Status;
 import utilities.LegacyCorrectionUtilities;
@@ -527,8 +525,10 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
         return dipContact;
     }
 
-    //TODO
-    public void listContactFolders() {
+    /**
+     * Get all contact folders from outlook (without default folder).
+     */
+    public List<String> getContactFolders() {
         Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace,
                 "GetDefaultFolder",
                 super.intOutlookFolder).toDispatch();
@@ -536,13 +536,16 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
         Dispatch dipFolders = Dispatch.call(dipContactsFolder,
                 "Folders").toDispatch();
 
-        int NumFolder = Dispatch.call(dipFolders, "Count").getInt();
-        for (int i = 1; i <= NumFolder; i++) {
-
+        int numFolders = Dispatch.call(dipFolders, "Count").getInt();
+        List<String> folders = new ArrayList<>(numFolders);
+        Status.print("Outlook Contact Folder:");
+        for (int i = 1; i <= numFolders; i++) {
             Dispatch dipFolder = Dispatch.call(dipFolders, "Item", i).toDispatch();
-            String strName = Dispatch.get(dipFolder, "Name").toString().trim();
-            String strMessageClass = Dispatch.get(dipFolder, "DefaultMessageClass").toString().trim();
-            System.out.println("TODO: "+i+" "+strName+" "+strMessageClass);
+            String folderName = Dispatch.get(dipFolder, "Name").toString().trim();
+            String MessageClass = Dispatch.get(dipFolder, "DefaultMessageClass").toString().trim();
+            Status.print(i+" "+folderName+" "+MessageClass);
+            folders.add(folderName);
         }
+        return folders;
     }
 }
