@@ -320,6 +320,7 @@ public class Main {
                 }
 
                 List<String> contactFolders = outlookContacts.getContactFolders();
+                Userinterface.setContactFolderItems(contactFolders);
             }
         };
         this.runWorkerThreader(syncWorker);

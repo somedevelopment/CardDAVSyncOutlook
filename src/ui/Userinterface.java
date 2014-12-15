@@ -63,6 +63,7 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 import javax.swing.text.BadLocationException;
@@ -77,6 +78,7 @@ import utilities.Config;
 public class Userinterface {
 
     private final static String RES_PATH = "res";
+    private final static String DEFAULT_CONTACT_FOLDER = "Default";
 
     private Main control;
 
@@ -270,7 +272,7 @@ public class Userinterface {
         listContactFolderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO
+                control.listContactFolders();
             }
         });
         contactFolderPanel.add(listContactFolderButton);
@@ -526,6 +528,13 @@ public class Userinterface {
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setContactFolderItems(List<String> contactFolders) {
+        contactFolderBox.removeAllItems();
+        contactFolderBox.addItem(DEFAULT_CONTACT_FOLDER);
+        for (String folder : contactFolders)
+            contactFolderBox.addItem(folder);
     }
 
     static Image getImage(String fileName) {
