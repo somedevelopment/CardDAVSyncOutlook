@@ -23,6 +23,7 @@ import com.alee.extended.label.WebLinkLabel;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.checkbox.WebCheckBox;
+import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.menu.WebMenu;
 import com.alee.laf.menu.WebMenuBar;
@@ -90,6 +91,7 @@ public class Userinterface {
 
     static private WebTextPane textPane;
     static private StyledDocument docTextPane;
+    static private WebComboBox contactFolderBox;
 
     /**
      * Create the application.
@@ -244,6 +246,36 @@ public class Userinterface {
         accountPanel.add(insecureSSLBox);
 
         northPanel.add(accountPanel);
+
+        // ...outlook contact folder...
+        WebPanel contactFolderPanel = new WebPanel();
+        contactFolderPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+
+        WebLabel contactFolderLabel = new WebLabel("Outlook Folder: ");
+        contactFolderLabel.setFont(new Font("Calibri", Font.BOLD, 12));
+        contactFolderPanel.add(contactFolderLabel);
+
+        contactFolderBox = new WebComboBox();
+        tooltipText = "The Outlook Contact Folder to sync with";
+        TooltipManager.addTooltip(contactFolderBox, tooltipText);
+        contactFolderBox.addItem("Default");
+        contactFolderPanel.add(contactFolderBox);
+
+        contactFolderPanel.add(new WebSeparator());
+
+        WebButton listContactFolderButton = new WebButton("Get list");
+        listContactFolderButton.setFont(new Font("Calibri", Font.BOLD, 12));
+        tooltipText = "Get a list of all Outlook Contact Folders";
+        TooltipManager.addTooltip(listContactFolderButton, tooltipText);
+        listContactFolderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO
+            }
+        });
+        contactFolderPanel.add(listContactFolderButton);
+
+        northPanel.add(contactFolderPanel);
 
         // ...sync button and sync options...
         WebPanel runPanel = new WebPanel();
