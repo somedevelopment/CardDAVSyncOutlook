@@ -32,6 +32,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.httpclient.protocol.Protocol;
 import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
@@ -97,6 +98,10 @@ public class Main {
         System.exit(0);
     }
 
+    /**
+     * Sync a CardDAV address book (specified by URL) with a local Outlook
+     * address book.
+     */
     public void syncContacts(final String url,
             final boolean clearNumbers,
             final String region,
@@ -204,19 +209,13 @@ public class Main {
             }
         };
 
-        if (worker.isAlive()) {
-            // already running
-            return;
-        }
-        worker = new Thread(syncWorker);
-        worker.start();
+        this.runWorkerThreader(syncWorker);
     }
 
     /**
      * @author Swen Walkowski
      */
     public void syncAppointments() {
-        //Start Worker Thread for Update Text Area
         Runnable syncWorker = new Runnable() {
             @Override
             public void run() {
@@ -263,19 +262,13 @@ public class Main {
             }
         };
 
-        if (worker.isAlive()) {
-            // already running
-            return;
-        }
-        worker = new Thread(syncWorker);
-        worker.start();
+        this.runWorkerThreader(syncWorker);
     }
 
     /**
      * @author Swen Walkowski
      */
     public void exportICAL() {
-        //Start Worker Thread for Update Text Area
         Runnable syncWorker = new Runnable() {
             @Override
             public void run() {
@@ -304,12 +297,40 @@ public class Main {
                 Status.print("Export done");
             }
         };
+        this.runWorkerThreader(syncWorker);
+    }
 
+    /**
+     * Get a list of Outlook Contact Folders and add them to the userinterface.
+     */
+    public void listContactFolders() {
+        //Start Worker Thread for Update Text Area
+        Runnable syncWorker = new Runnable() {
+            @Override
+            public void run() {
+                Userinterface.resetTextPane();
+
+                //Get Outlook instance for Contacts
+                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(getWorkingDir(),
+                    ManageOutlookContacts.DEFAULT_CONTACT_FOLDER_NUM);
+                boolean opened = outlookContacts.openOutlook();
+                if (!opened) {
+                    Status.print("Can't open Outlook");
+                    return;
+                }
+
+                List<String> contactFolders = outlookContacts.getContactFolders();
+            }
+        };
+        this.runWorkerThreader(syncWorker);
+    }
+
+    private void runWorkerThreader(Runnable runnable) {
         if (worker.isAlive()) {
-            // already running
+            // a thread is already already running
             return;
         }
-        worker = new Thread(syncWorker);
+        worker = new Thread(runnable);
         worker.start();
     }
 
