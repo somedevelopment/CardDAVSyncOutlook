@@ -74,8 +74,9 @@ public abstract class ManageOutlook<T1, T2> {
             this.axc = new ActiveXComponent("Outlook.Application");
 
             //Wait some sec to open Outlook
+            // why? set to 2sec
             try {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
