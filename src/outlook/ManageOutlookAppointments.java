@@ -34,6 +34,8 @@ import main.Status;
 
 public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appointments> {
 
+    private final static int DEFAULT_CALENDAR_FOLDER_NUM = 10;
+
     private final Sensitivity senSensitivity;
 
     public ManageOutlookAppointments(String strWorkingDir, int intOutlookFolder) {
@@ -63,7 +65,8 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
     @Override
     public void loadContentFromOutlook(Appointments appointments) {
 
-        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder",
+                DEFAULT_CALENDAR_FOLDER_NUM).toDispatch();
         Dispatch dipAppointmentsItems = Dispatch.get(dipAppointmentsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
@@ -105,7 +108,9 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
     }
 
     public void saveAsICalender(String strWorkingDir, String strStartDate, String strEndDate) {
-        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+        Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace,
+                "GetDefaultFolder",
+                DEFAULT_CALENDAR_FOLDER_NUM).toDispatch();
         Dispatch dipCalendarSharing = Dispatch.get(dipAppointmentsFolder, "GetCalendarExporter").toDispatch();
 
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
