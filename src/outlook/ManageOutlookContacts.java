@@ -531,7 +531,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
     public List<String> getContactFolders() {
         Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace,
                 "GetDefaultFolder",
-                super.intOutlookFolder).toDispatch();
+                DEFAULT_CONTACT_FOLDER_NUM).toDispatch();
 
         Dispatch dipFolders = Dispatch.call(dipContactsFolder,
                 "Folders").toDispatch();
