@@ -20,7 +20,9 @@
 
 package main;
 
+import contact.Contact;
 import contact.Contacts;
+import contact.Contacts.Addressbook;
 import ezvcard.util.org.apache.commons.codec.binary.Hex;
 import java.awt.EventQueue;
 import java.io.File;
@@ -158,9 +160,8 @@ public class Main {
                         insecureSSL);
 
                 //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(strWorkingdir,
-                    ManageOutlookContacts.DEFAULT_CONTACT_FOLDER_NUM);
-                boolean opened = outlookContacts.openOutlook();
+                ManageOutlookContacts outlookManager = new ManageOutlookContacts(strWorkingdir);
+                boolean opened = outlookManager.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
                     return;
@@ -173,7 +174,7 @@ public class Main {
                 boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
                 if (!loaded) {
                     Status.print("Could not load WebDAV contacts");
-                    outlookContacts.closeOutlook(closeOutlook);
+                    outlookManager.closeOutlook(closeOutlook);
                     return;
                 }
 
@@ -181,7 +182,9 @@ public class Main {
                 window.setContactNumbers(contactNumberWebDAV + " WebDAV");
 
                 //Load Outlook Contacts
-                outlookContacts.loadContentFromOutlook(allContacts);
+                List<Contact> outlookContacts = outlookManager.loadOutlookContacts();
+                for(Contact contact: outlookContacts)
+                    allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, contact);
 
                 window.setContactNumbers(contactNumberWebDAV + " WebDAV / " + allContacts.numberOfContacts(Contacts.Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
 
@@ -191,7 +194,7 @@ public class Main {
                 //allContacts.printStatus();
 
                 //Write Data
-                outlookContacts.writeOutlookObjects(allContacts);
+                outlookManager.writeOutlookObjects(allContacts);
                 webDAVConnection.writeContacts(fullPath, allContacts);
 
                 //Save last Sync Uids
@@ -203,7 +206,7 @@ public class Main {
                 Status.print("Temporary Contact Pictures Files deleted");
 
                 //Close
-                outlookContacts.closeOutlook(closeOutlook);
+                outlookManager.closeOutlook(closeOutlook);
 
                 Status.print("End");
             }
@@ -225,10 +228,9 @@ public class Main {
 
                 // TODO Abfrage Sync Appointments
                 Status.print("Sync appointments");
-                int intOutlookFolder = 9;
 
                 //Get Outlook instance for Appointments
-                ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(workingDir, intOutlookFolder);
+                ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(workingDir);
                 boolean opened = outlookAppointments.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
@@ -282,7 +284,7 @@ public class Main {
                 String strWorkingdir = getWorkingDir();
 
                 //Get Outlook instance for Appointments
-                ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir, intOutlookFolder);
+                ManageOutlookAppointments outlookAppointments = new ManageOutlookAppointments(strWorkingdir);
                 boolean opened = outlookAppointments.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
@@ -311,8 +313,7 @@ public class Main {
                 Userinterface.resetTextPane();
 
                 //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(getWorkingDir(),
-                    ManageOutlookContacts.DEFAULT_CONTACT_FOLDER_NUM);
+                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(getWorkingDir());
                 boolean opened = outlookContacts.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");

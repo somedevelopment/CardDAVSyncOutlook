@@ -38,15 +38,12 @@ public abstract class ManageOutlook<T1, T2> {
     private Dispatch dipOutlook = null;
     protected String strWorkingDir;
 
-    protected int intOutlookFolder;
-
     /**
      * Constructors
      */
-    protected ManageOutlook(String strWorkingDir, int intOutlookFolder) {
+    protected ManageOutlook(String strWorkingDir) {
 
         this.strWorkingDir = strWorkingDir;
-        this.intOutlookFolder = intOutlookFolder;
 
         // add directory with jacob library (loaded later) to library path
         String workingDir = new File(System.getProperty("user.dir")).getAbsolutePath();
@@ -159,7 +156,4 @@ public abstract class ManageOutlook<T1, T2> {
     abstract protected Dispatch generatePutDispatchContent(T1 dataItem);
 
     abstract public void writeOutlookObjects(T2 allContent);
-
-    abstract public void loadContentFromOutlook(T2 allContent);
-
 }

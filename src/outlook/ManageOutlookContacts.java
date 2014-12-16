@@ -36,13 +36,13 @@ import utilities.LegacyCorrectionUtilities;
 
 public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
-    public static int DEFAULT_CONTACT_FOLDER_NUM = 10;
+    private final static int DEFAULT_CONTACT_FOLDER_NUM = 10;
 
     /**
      * Constructors
      */
-    public ManageOutlookContacts(String strWorkingDir, int intOutlookFolder) {
-        super(strWorkingDir, intOutlookFolder);
+    public ManageOutlookContacts(String strWorkingDir) {
+        super(strWorkingDir);
     }
 
     /**
@@ -78,15 +78,20 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
      * Interface Implementation Section
      *
      */
-    @Override
-    public void loadContentFromOutlook(Contacts contacts) {
 
-        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder", (Object) super.intOutlookFolder).toDispatch();
+    /**
+     *
+     * @param contacts
+     */
+    public List<Contact> loadOutlookContacts() {
+        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder",
+                DEFAULT_CONTACT_FOLDER_NUM).toDispatch();
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
 
         @SuppressWarnings("deprecation")
         int count = Dispatch.call(dipContactItems, "Count").toInt();
 
+        List<Contact> outlookContacts = new ArrayList(count);
         for (int i = 1; i <= count; i++) {
             Dispatch dipContact;
             dipContact = Dispatch.call(dipContactItems, "Item", i).toDispatch();
@@ -177,7 +182,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
             String strLastModificationTime = Dispatch.get(dipContact, "LastModificationTime").toString().trim();
 
             //Add Contact
-            contacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
+            Contact newContact = new Contact(strUid, strEntryID, strTitle, strFirstName, strMiddleName, strLastName, strSuffix,
                     strCompanyName, strJobTitle, strEmail1Address, strEmail2Address, strEmail3Address,
                     strWebPage, strMobileTelephoneNumber, strAssistantTelephoneNumber, strCallbackTelephoneNumber,
                     strCarTelephoneNumber, strCompanyMainTelephoneNumber, strOtherTelephoneNumber,
@@ -185,14 +190,18 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
                     strBusiness2TelephoneNumber, strBusinessFaxNumber, strHomeTelephoneNumber, strHome2TelephoneNumber, strHomeFaxNumber, strHomeAddressCity,
                     strHomeAddressCountry, strHomeAddressPostalCode, strHomeAddressState, strHomeAddressStreet,
                     strBusinessAddressCity, strBusinessAddressCountry, strBusinessAddressPostalCode, strBusinessAddressState,
-                    strBusinessAddressStreet, strBody, calBirthday, calAnniversary, strPathToTmpPicture, strLastModificationTime));
+                    strBusinessAddressStreet, strBody, calBirthday, calAnniversary, strPathToTmpPicture, strLastModificationTime);
 
-            Status.print("Load Outlook Contact " + strFirstName + ", " + strLastName);
+            outlookContacts.add(newContact);
+
+            Status.print("Loaded Outlook Contact " + strFirstName + ", " + strLastName);
 
             dipContact.safeRelease();
         }
         dipContactsFolder.safeRelease();
         dipContactItems.safeRelease();
+
+        return outlookContacts;
     }
 
     @Override

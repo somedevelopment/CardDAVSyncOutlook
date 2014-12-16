@@ -38,14 +38,14 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
 
     private final Sensitivity senSensitivity;
 
-    public ManageOutlookAppointments(String strWorkingDir, int intOutlookFolder) {
-        super(strWorkingDir, intOutlookFolder);
+    public ManageOutlookAppointments(String strWorkingDir) {
+        super(strWorkingDir);
 
         this.senSensitivity = null;
     }
 
-    public ManageOutlookAppointments(String strWorkingDir, int intOutlookFolder, Sensitivity senSensitivity) {
-        super(strWorkingDir, intOutlookFolder);
+    public ManageOutlookAppointments(String strWorkingDir, Sensitivity senSensitivity) {
+        super(strWorkingDir);
 
         this.senSensitivity = senSensitivity;
     }
@@ -62,7 +62,6 @@ public class ManageOutlookAppointments extends ManageOutlook<Appointment, Appoin
 
     }
 
-    @Override
     public void loadContentFromOutlook(Appointments appointments) {
 
         Dispatch dipAppointmentsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder",
