@@ -260,7 +260,7 @@ public class Userinterface {
         contactFolderBox = new WebComboBox();
         tooltipText = "The Outlook Contact Folder to sync with";
         TooltipManager.addTooltip(contactFolderBox, tooltipText);
-        contactFolderBox.addItem("Default");
+        contactFolderBox.addItem(DEFAULT_CONTACT_FOLDER);
         contactFolderPanel.add(contactFolderBox);
 
         contactFolderPanel.add(new WebSeparator());
@@ -373,6 +373,11 @@ public class Userinterface {
         urlField.setText(config.getString(Config.ACC_URL, ""));
         insecureSSLBox.setSelected(config.getBoolean(Config.ACC_SSL, false));
         savePasswordBox.setSelected(config.getBoolean(Config.ACC_SAVE_PASS, false));
+        String savedContactFolder = config.getString(Config.ACC_OUTLOOK_FOLDER, "");
+        if (!savedContactFolder.isEmpty()) {
+            contactFolderBox.addItem(savedContactFolder);
+            contactFolderBox.setSelectedItem(savedContactFolder);
+        }
 
         this.setTray();
     }
@@ -417,6 +422,10 @@ public class Userinterface {
         config.setProperty(Config.ACC_URL, urlField.getText());
         config.setProperty(Config.ACC_SSL, insecureSSLBox.isSelected());
         config.setProperty(Config.ACC_SAVE_PASS, savePasswordBox.isSelected());
+        String outlookFolder = "";
+        if (contactFolderBox.getSelectedIndex() != 0)
+            outlookFolder = (String) contactFolderBox.getSelectedItem();
+        config.setProperty(Config.ACC_OUTLOOK_FOLDER, outlookFolder);
         config.saveToFile();
         Status.print("Config Saved");
     }
