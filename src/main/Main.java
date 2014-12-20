@@ -130,12 +130,12 @@ public class Main {
                 String server = host.getProtocol() + "://" + host.getAuthority();
                 String fullPath = server + "/" + host.getPath();
 
-                if (clearNumbers) {
-                    if (region.length() == 0) {
-                        Status.print("Please set region code (two letter code)");
-                        return;
-                    }
+                if (clearNumbers && region.length() == 0) {
+                    Status.print("Please set region code (two letter code)");
+                    return;
                 }
+
+                String workingDir = getWorkingDir();
 
                 // path to sync file
                 String serverPart = host.getAuthority().replace(".", "&");
@@ -147,9 +147,12 @@ public class Main {
                     return;
                 }
                 String hostPathHash = Hex.encodeHexString(hashBytes).substring(0, 8);
-                String syncFilePath = getWorkingDir() + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
+                String syncFilePath = workingDir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
 
                 Status.print("Starting contact synchronization");
+
+                // initialize contact storage
+                Contacts allContacts = new Contacts(syncFilePath, region, clearNumbers);
 
                 //Connect WebDAV
                 ManageWebDAVContacts webDAVConnection = new ManageWebDAVContacts();
@@ -158,27 +161,23 @@ public class Main {
                         server,
                         insecureSSL);
 
-                //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookManager = new ManageOutlookContacts(getWorkingDir(), outlookFolder);
-                boolean opened = outlookManager.openOutlook();
-                if (!opened) {
-                    Status.print("Can't open Outlook");
-                    return;
-                }
-
-                //Build Addressbooks
-                Contacts allContacts = new Contacts(syncFilePath, region, clearNumbers);
-
                 //Load WebDAV Contacts, if connection true proceed
-                boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, getWorkingDir());
+                boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, workingDir);
                 if (!loaded) {
                     Status.print("Could not load WebDAV contacts");
-                    outlookManager.closeOutlook(closeOutlook);
                     return;
                 }
 
                 int contactNumberWebDAV = allContacts.numberOfContacts(Contacts.Addressbook.WEBDAVADDRESSBOOK);
                 window.setContactNumbers(contactNumberWebDAV + " WebDAV");
+
+                //Get Outlook instance for Contacts
+                ManageOutlookContacts outlookManager = new ManageOutlookContacts(workingDir, outlookFolder);
+                boolean opened = outlookManager.openOutlook();
+                if (!opened) {
+                    Status.print("Can't open Outlook");
+                    return;
+                }
 
                 //Load Outlook Contacts
                 List<Contact> outlookContacts = outlookManager.loadOutlookContacts();
