@@ -312,14 +312,14 @@ public class Main {
                 Userinterface.resetTextPane();
 
                 //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookContacts = new ManageOutlookContacts(getWorkingDir());
-                boolean opened = outlookContacts.openOutlook();
+                ManageOutlookContacts outlookManager = new ManageOutlookContacts(getWorkingDir());
+                boolean opened = outlookManager.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
                     return;
                 }
 
-                List<String> contactFolders = outlookContacts.getContactFolders();
+                List<String> contactFolders = outlookManager.getContactFolders();
                 Userinterface.setContactFolderItems(contactFolders);
             }
         };
