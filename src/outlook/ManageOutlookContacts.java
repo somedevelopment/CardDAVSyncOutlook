@@ -38,11 +38,19 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
     private final static int DEFAULT_CONTACT_FOLDER_NUM = 10;
 
+    private final String outlookFolder;
+
     /**
      * Constructors
      */
     public ManageOutlookContacts(String strWorkingDir) {
         super(strWorkingDir);
+        this.outlookFolder = "";
+    }
+
+    public ManageOutlookContacts(String strWorkingDir, String outlookFolder) {
+        super(strWorkingDir);
+        this.outlookFolder = outlookFolder;
     }
 
     /**

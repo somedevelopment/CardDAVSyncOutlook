@@ -137,8 +137,6 @@ public class Main {
                     }
                 }
 
-                String strWorkingdir = getWorkingDir();
-
                 // path to sync file
                 String serverPart = host.getAuthority().replace(".", "&");
                 byte[] hashBytes;
@@ -149,7 +147,7 @@ public class Main {
                     return;
                 }
                 String hostPathHash = Hex.encodeHexString(hashBytes).substring(0, 8);
-                String syncFilePath = strWorkingdir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
+                String syncFilePath = getWorkingDir() + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
 
                 Status.print("Starting contact synchronization");
 
@@ -161,7 +159,7 @@ public class Main {
                         insecureSSL);
 
                 //Get Outlook instance for Contacts
-                ManageOutlookContacts outlookManager = new ManageOutlookContacts(strWorkingdir);
+                ManageOutlookContacts outlookManager = new ManageOutlookContacts(getWorkingDir(), outlookFolder);
                 boolean opened = outlookManager.openOutlook();
                 if (!opened) {
                     Status.print("Can't open Outlook");
@@ -172,7 +170,7 @@ public class Main {
                 Contacts allContacts = new Contacts(syncFilePath, region, clearNumbers);
 
                 //Load WebDAV Contacts, if connection true proceed
-                boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, strWorkingdir);
+                boolean loaded = webDAVConnection.loadContactsFromWebDav(fullPath, allContacts, getWorkingDir());
                 if (!loaded) {
                     Status.print("Could not load WebDAV contacts");
                     outlookManager.closeOutlook(closeOutlook);
