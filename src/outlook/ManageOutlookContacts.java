@@ -232,7 +232,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
         for (Entry<String, Contact> currentOutlookEntry : contacts.getAddressbook(Addressbook.OUTLOOKADDRESSBOOK).entrySet()) {
 
-        	//Legacy correction UID call
+            //Legacy correction UID call
             if (LegacyCorrectionUtilities.bodyHasUID(currentOutlookEntry.getValue().getBody())) {
                 currentOutlookEntry.getValue().setBody(LegacyCorrectionUtilities.cleanBodyFromUID(currentOutlookEntry.getValue().getBody()));
                 if ((currentOutlookEntry.getValue().getStatus() == Contact.Status.READIN) ||
@@ -251,7 +251,6 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
                     currentOutlookEntry.getValue().setStatus(Contact.Status.CHANGED);
                 }
             }
-
 
             switch (currentOutlookEntry.getValue().getStatus()) {
                 case UIDADDED:
@@ -277,7 +276,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
                     Status.print("Delete Contact in Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
-                    super.deletOutlookItem(currentOutlookEntry.getValue().getEntryID());
+                    super.deleteOutlookItem(currentOutlookEntry.getValue().getEntryID());
                     listDelOutlookContacts.add(currentOutlookEntry.getValue());
                     break;
                 case READIN:

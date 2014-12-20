@@ -126,7 +126,7 @@ public abstract class ManageOutlook<T1, T2> {
         dipToUpdateItem.safeRelease();
     }
 
-    protected void deletOutlookItem(String strToDeleteItemID) {
+    protected void deleteOutlookItem(String strToDeleteItemID) {
         Dispatch dipItem = Dispatch.call(this.dipNamespace, "GetItemFromID", strToDeleteItemID).toDispatch();
 
         Dispatch.call(dipItem, "Delete");
