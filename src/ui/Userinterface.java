@@ -400,6 +400,9 @@ public class Userinterface {
         String url = urlField.getText().trim();
         String username = usernameField.getText().trim();
         String password = String.valueOf(passwordField.getPassword()).trim();
+        String outlookFolder = (String) contactFolderBox.getSelectedItem();
+        if (outlookFolder.equals(DEFAULT_CONTACT_FOLDER))
+            outlookFolder = "";
         boolean insecureSSL = insecureSSLBox.isSelected();
         boolean initMode = initModeBox.isSelected();
 
@@ -409,7 +412,16 @@ public class Userinterface {
         boolean clearNumbers = config.getBoolean(Config.GLOB_CORRECT_NUMBERS, false);
         String region = config.getString(Config.GLOB_REGION_CODE, "");
 
-        control.syncContacts(url, clearNumbers, region, username, password, insecureSSL, closeOutlook, initMode);
+        control.syncContacts(url,
+                clearNumbers,
+                region,
+                username,
+                password,
+                outlookFolder,
+                insecureSSL,
+                closeOutlook,
+                initMode);
+        
         // TODO, for testing a appointments sync
         //control.syncAppointments();
     }
@@ -477,7 +489,6 @@ public class Userinterface {
 
         // workaround: hidden dialog, so that the popup menu disappears when
         // focus is lost
-        /* Initialize the hidden dialog as a headless, titleless dialog window */
         final WebDialog hiddenDialog = new WebDialog ();
         hiddenDialog.setUndecorated(true);
 

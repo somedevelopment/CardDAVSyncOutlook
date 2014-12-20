@@ -109,6 +109,7 @@ public class Main {
             final String region,
             final String username,
             final String password,
+            final String outlookFolder,
             final boolean insecureSSL,
             final boolean closeOutlook,
             final boolean initMode) {
@@ -278,8 +279,6 @@ public class Main {
 
                 // TODO Abfrage Save as iCal
                 Status.print("Save Outlook as iCal");
-
-                int intOutlookFolder = 9;
 
                 String strWorkingdir = getWorkingDir();
 
