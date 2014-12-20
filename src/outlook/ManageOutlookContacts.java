@@ -20,6 +20,7 @@
 package outlook;
 
 import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
 import contact.Contact;
 import contact.Contacts;
 import contact.Contacts.Addressbook;
@@ -81,11 +82,23 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
         return strPathToTmpPicture;
     }
 
-    /**
-     *
-     * Interface Implementation Section
-     *
-     */
+    protected String createNewContact() {
+    Dispatch dipItem = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
+
+    if (!this.outlookFolder.isEmpty()) {
+        // TODO
+    }
+
+    // need to save the item. Before, the entry ID is null
+    // TODO is saving twice a good idea?
+    Dispatch.call(dipItem, "Save");
+
+    String strNewItemEntryID = Dispatch.get(dipItem, "EntryID").toString().trim();
+
+    dipItem.safeRelease();
+
+    return strNewItemEntryID;
+}
 
     /**
      *
@@ -257,7 +270,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
                     Status.print("Write New Contact to Outlook " +
                             currentOutlookEntry.getValue().getFirstName() + ", " +
                             currentOutlookEntry.getValue().getLastName());
-                    currentOutlookEntry.getValue().setEntryID(super.getNewOutlookItem());
+                    currentOutlookEntry.getValue().setEntryID(this.createNewContact());
                     super.updateOutlookItem(generatePutDispatchContent(currentOutlookEntry.getValue()));
                     break;
                 case DELETE:

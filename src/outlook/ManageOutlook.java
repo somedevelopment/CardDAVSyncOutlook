@@ -35,7 +35,7 @@ public abstract class ManageOutlook<T1, T2> {
     private ActiveXComponent axc = null;
 
     protected Dispatch dipNamespace = null;
-    private Dispatch dipOutlook = null;
+    protected Dispatch dipOutlook = null;
     protected String strWorkingDir;
 
     /**
@@ -118,20 +118,6 @@ public abstract class ManageOutlook<T1, T2> {
      */
     protected Dispatch getOutlookItem(String strToUpdateItemID) {
         return Dispatch.call(this.dipNamespace, "GetItemFromID", strToUpdateItemID).toDispatch();
-    }
-
-    protected String getNewOutlookItem() {
-        Dispatch dipItem = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
-
-        // need to save the item. Before, the entry ID is null
-        // TODO is saving twice a good idea?
-        Dispatch.call(dipItem, "Save");
-
-        String strNewItemEntryID = Dispatch.get(dipItem, "EntryID").toString().trim();
-
-        dipItem.safeRelease();
-
-        return strNewItemEntryID;
     }
 
     protected void updateOutlookItem(Dispatch dipToUpdateItem) {
