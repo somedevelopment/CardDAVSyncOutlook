@@ -181,6 +181,11 @@ public class Main {
 
                 //Load Outlook Contacts
                 List<Contact> outlookContacts = outlookManager.loadOutlookContacts();
+                if (outlookContacts == null) {
+                    Status.print("Can't load Outlook contacts");
+                    outlookManager.closeOutlook(closeOutlook);
+                    return;
+                }
                 for(Contact contact: outlookContacts)
                     allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, contact);
 
