@@ -19,6 +19,7 @@
  */
 package outlook;
 
+import com.jacob.com.ComFailException;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;
 import contact.Contact;
@@ -83,13 +84,29 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
     }
 
     protected String createNewContact() {
-    Dispatch dipItem = Dispatch.call(this.dipOutlook, "CreateItem", new Variant(2)).toDispatch();
-
-    if (!this.outlookFolder.isEmpty()) {
-        // TODO
+    Variant contactVar = new Variant(2);
+    Dispatch dipItem;
+    if (this.outlookFolder.isEmpty()) {
+        dipItem = Dispatch.call(this.dipOutlook,
+                "CreateItem",
+                contactVar).toDispatch();
+    } else {
+        // create item with 'add' call, this will later save the
+        // item to the folder on 'save' call
+        Dispatch defaultFolder = Dispatch.call(this.dipNamespace,
+                "GetDefaultFolder",
+                DEFAULT_CONTACT_FOLDER_NUM).toDispatch();
+        Dispatch contactsFolder = Dispatch.call(defaultFolder,
+                "Folders",
+                this.outlookFolder).toDispatch();
+        Dispatch items = Dispatch.call(contactsFolder,
+                "Items").toDispatch();
+        dipItem = Dispatch.call(items,
+                "Add",
+                contactVar).toDispatch();
     }
 
-    // need to save the item. Before, the entry ID is null
+    // need to save the item now. Before, the entry ID is null
     // TODO is saving twice a good idea?
     Dispatch.call(dipItem, "Save");
 
@@ -105,12 +122,26 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
      * @param contacts
      */
     public List<Contact> loadOutlookContacts() {
-        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace, "GetDefaultFolder",
+        Dispatch dipContactsFolder = Dispatch.call(this.dipNamespace,
+                "GetDefaultFolder",
                 DEFAULT_CONTACT_FOLDER_NUM).toDispatch();
+
+        if (!this.outlookFolder.isEmpty()) {
+            try {
+                dipContactsFolder = Dispatch.call(dipContactsFolder,
+                        "Folders",
+                        this.outlookFolder).toDispatch();
+            } catch (ComFailException e) {
+                e.printStackTrace();
+                Status.print("Can't open Outlook Contact Folder: " + this.outlookFolder);
+                return null;
+            }
+            Status.print("Opened Outlook Contact Folder: " + this.outlookFolder);
+        }
+
         Dispatch dipContactItems = Dispatch.get(dipContactsFolder, "items").toDispatch();
 
-        @SuppressWarnings("deprecation")
-        int count = Dispatch.call(dipContactItems, "Count").toInt();
+        int count = Dispatch.call(dipContactItems, "Count").getInt();
 
         List<Contact> outlookContacts = new ArrayList(count);
         for (int i = 1; i <= count; i++) {
@@ -225,6 +256,12 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
         return outlookContacts;
     }
 
+    /**
+     *
+     * Interface Implementation Section
+     *
+     */
+
     @Override
     public void writeOutlookObjects(Contacts contacts) {
 
@@ -297,7 +334,7 @@ public class ManageOutlookContacts extends ManageOutlook<Contact, Contacts> {
 
     @Override
     protected Dispatch generatePutDispatchContent(Contact dataItem) {
-        Contact dataContact = (Contact) dataItem;
+        Contact dataContact = dataItem;
         Dispatch dipContact = super.getOutlookItem(dataContact.getEntryID());
         SimpleDateFormat dataFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy", Locale.ENGLISH);
 
