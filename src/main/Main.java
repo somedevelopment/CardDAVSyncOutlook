@@ -139,15 +139,19 @@ public class Main {
 
                 // path to sync file
                 String serverPart = host.getAuthority().replace(".", "&");
-                byte[] hashBytes;
+                MessageDigest md;
                 try {
-                     hashBytes = MessageDigest.getInstance("MD5").digest(host.getPath().getBytes());
+                    md = MessageDigest.getInstance("MD5");
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                     return;
                 }
-                String hostPathHash = Hex.encodeHexString(hashBytes).substring(0, 8);
-                String syncFilePath = workingDir + "lastSync_" + serverPart + "_" + hostPathHash + ".txt";
+                byte[] hashBytes = md.digest(host.getPath().getBytes());
+                String hash = Hex.encodeHexString(hashBytes).substring(0, 8);
+                String syncFilePath = workingDir + "lastSync_" + serverPart;
+                if (!outlookFolder.isEmpty())
+                    syncFilePath += "_" + outlookFolder;
+                syncFilePath += "_" + hash + ".txt";
 
                 Status.print("Starting contact synchronization");
 
@@ -189,7 +193,10 @@ public class Main {
                 for(Contact contact: outlookContacts)
                     allContacts.addContact(Addressbook.OUTLOOKADDRESSBOOK, contact);
 
-                window.setContactNumbers(contactNumberWebDAV + " WebDAV / " + allContacts.numberOfContacts(Contacts.Addressbook.OUTLOOKADDRESSBOOK).toString() + " Outlook");
+                window.setContactNumbers(contactNumberWebDAV +
+                        " WebDAV / " +
+                        allContacts.numberOfContacts(Addressbook.OUTLOOKADDRESSBOOK).toString() +
+                        " Outlook");
 
                 //Compare and modify Contacts
                 Status.print("Compare Adress Books");
