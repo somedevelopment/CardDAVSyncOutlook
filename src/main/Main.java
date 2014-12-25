@@ -377,7 +377,7 @@ public class Main {
                         .getLocation()
                         .getPath())
                         .getName();
-                    System.out.println("Usage: java "+className+" [--singlerun]");
+                    System.out.println("Usage: java -jar"+className+" [--singlerun]");
                     return;
             }
         }
