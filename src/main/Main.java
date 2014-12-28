@@ -39,12 +39,14 @@ import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.httpclient.protocol.Protocol;
 import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
 import ui.Userinterface;
+import utilities.Config;
 import utilities.Log;
 import webdav.EasySSLProtocolSocketFactory;
 import webdav.ManageWebDAVContacts;
@@ -378,6 +380,12 @@ public class Main {
         Options options = new Options();
         options.addOption("h", "help", false, "show this help message");
         options.addOption("s", "singlerun", false, "single synchronization mode");
+        options.addOption(OptionBuilder.withArgName("config_file")
+                .hasArg()
+                .withDescription("use given config file")
+                .withLongOpt("config")
+                .create("c")
+        );
 
         CommandLineParser parser = new BasicParser();
         CommandLine cmd;
@@ -393,6 +401,9 @@ public class Main {
             return;
         }
         boolean singleRun = cmd.hasOption("s");
+        if (cmd.hasOption("c")) {
+            Config.setFile(cmd.getOptionValue("c"));
+        }
 
         System.out.println("START");
 
