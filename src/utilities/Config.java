@@ -50,31 +50,40 @@ public final class Config extends PropertiesConfiguration {
         try {
             this.save();
         } catch (ConfigurationException e) {
-            System.out.println("can't save configuration");
+            System.err.println("can't save configuration");
             e.printStackTrace();
         }
     }
 
-    private static void initialize() {
-
+    private static void initialize(String filePath) {
         INSTANCE = new Config();
         INSTANCE.setListDelimiter((char) 9);
 
         //String confDir = "conf";
         //new File(confDir).mkdir();
-        String filePath = "conf" + File.separator + "config.properties";
         INSTANCE.setFileName(filePath);
-
+        File configFile = new File(filePath);
         try {
             INSTANCE.load(filePath);
         } catch (ConfigurationException e) {
-            System.out.println("Configuration not found. Using default values");
+            System.out.println("Configuration file not found: "
+                    + configFile.getAbsolutePath()
+                    + "\n  (Using default values)");
         }
+    }
+
+    public static void setFile(String filePath) {
+        if (INSTANCE != null) {
+            System.err.println("configuration file already loaded");
+            return;
+        }
+        initialize(filePath);
     }
 
     public static Config getInstance() {
         if (INSTANCE == null) {
-            initialize();
+            String filePath = "conf" + File.separator + "config.properties";
+            initialize(filePath);
         }
         return INSTANCE;
     }
