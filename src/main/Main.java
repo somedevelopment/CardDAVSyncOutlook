@@ -35,6 +35,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
+import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.httpclient.protocol.Protocol;
 import outlook.ManageOutlookAppointments;
 import outlook.ManageOutlookContacts;
@@ -351,6 +357,11 @@ public class Main {
         return strWorkingdir;
     }
 
+    private static void showHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("java -jar CardDAVSyncOutlook.jar", options, true);
+    }
+
     /**
      * Launch the application.
      */
@@ -362,25 +373,28 @@ public class Main {
             System.out.println("can't set up logging");
             e.printStackTrace();
         }
-        System.out.println("START");
 
         // parse args
-        boolean singleRun = false;
-        for (String arg : args) {
-            switch (arg) {
-                case "--singlerun":
-                    singleRun = true;
-                    break;
-                default:
-                    String className = new java.io.File(Main.class.getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .getPath())
-                        .getName();
-                    System.out.println("Usage: java -jar"+className+" [--singlerun]");
-                    return;
-            }
+        Options options = new Options();
+        options.addOption("h", "help", false, "show this help message");
+        options.addOption("s", "singlerun", false, "single synchronization mode");
+
+        CommandLineParser parser = new BasicParser();
+        CommandLine cmd;
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println("can't parse arguments: "+e.getMessage());
+            showHelp(options);
+            return;
         }
+        if (cmd.hasOption("h")) {
+            showHelp(options);
+            return;
+        }
+        boolean singleRun = cmd.hasOption("s");
+
+        System.out.println("START");
 
         Main main = new Main();
         main.run(singleRun);
