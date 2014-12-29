@@ -61,8 +61,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
@@ -421,7 +419,7 @@ public class Userinterface {
                 insecureSSL,
                 closeOutlook,
                 initMode);
-        
+
         // TODO, for testing a appointments sync
         //control.syncAppointments();
     }
@@ -558,8 +556,7 @@ public class Userinterface {
     }
 
     static Image getImage(String fileName) {
-        Path filePath = Paths.get(RES_PATH, fileName);
-        URL imageUrl = ClassLoader.getSystemResource(filePath.toString());
+        URL imageUrl = ClassLoader.getSystemResource(RES_PATH + "/" + fileName);
         if (imageUrl == null) {
             System.out.println("can't find image resource");
             return new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
