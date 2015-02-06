@@ -19,25 +19,9 @@
  */
 package contact;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
-
-import javax.imageio.ImageIO;
-
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
-
-import utilities.LegacyCorrectionUtilities;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.parameter.AddressType;
@@ -56,6 +40,20 @@ import ezvcard.property.Telephone;
 import ezvcard.property.Title;
 import ezvcard.property.Uid;
 import ezvcard.property.Url;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import utilities.LegacyCorrectionUtilities;
 
 public class Contact {
 
@@ -115,12 +113,17 @@ public class Contact {
         this.getContactAsString();
 
         if (this.vcard.getPhotos().size() > 0) {
-            this.strPathToContactPicture = strWorkingDir + Math.random() + ".jpg";
-            File tmpFile = new File(strPathToContactPicture);
-            try {
-                org.apache.commons.io.FileUtils.writeByteArrayToFile(tmpFile, this.vcard.getPhotos().get(0).getData());
-            } catch (IOException e) {
-                e.printStackTrace();
+            Photo photo = this.vcard.getPhotos().get(0);
+            byte[] photoData = photo.getData();
+            // data can be null
+            if (photoData != null) {
+                this.strPathToContactPicture = strWorkingDir + Math.random() + ".jpg";
+                File tmpFile = new File(strPathToContactPicture);
+                try {
+                    FileUtils.writeByteArrayToFile(tmpFile, photoData);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
