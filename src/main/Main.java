@@ -264,8 +264,8 @@ public class Main {
                 //Close
                 //outlookAppointments.closeOutlook(closeOutlook);
 
-                String user = "swen";
-                String password = "tzu468hgf";
+                String user = "xxx";
+                String password = "xxx";
 
                 URL url;
                 try {
