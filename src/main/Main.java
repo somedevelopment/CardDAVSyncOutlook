@@ -56,7 +56,7 @@ import webdav.ManageWebDAVContacts;
  * @author Alexander Bikadorov <abiku@cs.tu-berlin.de>
  */
 public class Main {
-    private static final String VERSION = "0.04";
+    public static final String VERSION = "0.04";
 
     private ServerSocket run = null;
     private Userinterface window;
