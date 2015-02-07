@@ -56,6 +56,7 @@ import webdav.ManageWebDAVContacts;
  * @author Alexander Bikadorov <abiku@cs.tu-berlin.de>
  */
 public class Main {
+    private static final String VERSION = "0.04";
 
     private ServerSocket run = null;
     private Userinterface window;
@@ -405,7 +406,7 @@ public class Main {
             Config.setFile(cmd.getOptionValue("c"));
         }
 
-        System.out.println("START");
+        System.out.println("START - " +VERSION);
 
         Main main = new Main();
         main.run(singleRun);
